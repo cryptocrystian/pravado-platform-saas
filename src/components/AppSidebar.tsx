@@ -51,38 +51,40 @@ export function AppSidebar() {
   const [activeItem, setActiveItem] = useState("Dashboard");
 
   return (
-    <Sidebar className="border-r border-border-gray">
-      <SidebarHeader className="bg-accent text-white p-4">
-        <div className="flex items-center space-x-3">
-          <div className="w-8 h-8 bg-pravado-crimson rounded-lg flex items-center justify-center">
-            <span className="text-white font-bold text-lg">P</span>
+    <Sidebar className="border-r border-border-gray shadow-sm">
+      <SidebarHeader className="bg-accent text-white p-3 shadow-sm">
+        <div className="flex items-center space-x-2">
+          <div className="w-6 h-6 bg-pravado-crimson rounded-md flex items-center justify-center">
+            <span className="text-white font-bold text-sm">P</span>
           </div>
           <div>
-            <h2 className="text-xl font-bold">PRAVADO</h2>
-            <p className="text-xs text-gray-200">Marketing Operating System</p>
+            <h2 className="text-lg font-semibold">PRAVADO</h2>
+            <p className="text-xs text-gray-200 opacity-90">Marketing Operating System</p>
           </div>
         </div>
       </SidebarHeader>
       
-      <SidebarContent className="bg-white">
-        <SidebarGroup>
-          <SidebarGroupLabel className="text-professional-gray">Platform</SidebarGroupLabel>
+      <SidebarContent className="bg-soft-gray">
+        <SidebarGroup className="px-3 py-4">
+          <SidebarGroupLabel className="text-professional-gray text-xs font-medium uppercase tracking-wide mb-2 px-2">Platform</SidebarGroupLabel>
           <SidebarGroupContent>
-            <SidebarMenu>
+            <SidebarMenu className="space-y-1">
               {menuItems.map((item) => (
                 <SidebarMenuItem key={item.title}>
                   <SidebarMenuButton asChild>
                     <a 
                       href={item.url} 
                       onClick={() => setActiveItem(item.title)}
-                      className={`flex items-center space-x-3 p-3 rounded-md transition-colors ${
+                      className={`flex items-center space-x-3 p-3 rounded-lg transition-all duration-200 ease-in-out group ${
                         activeItem === item.title 
-                          ? 'bg-enterprise-blue text-white' 
-                          : 'hover:bg-soft-gray text-professional-gray'
+                          ? 'bg-enterprise-blue text-white shadow-sm' 
+                          : 'hover:bg-white text-professional-gray hover:shadow-sm'
                       }`}
                     >
-                      <item.icon className="h-5 w-5" />
-                      <span className="font-medium">{item.title}</span>
+                      <item.icon className={`h-5 w-5 transition-colors ${
+                        activeItem === item.title ? 'text-white' : 'text-gray-500 group-hover:text-enterprise-blue'
+                      }`} />
+                      <span className="font-medium text-sm">{item.title}</span>
                     </a>
                   </SidebarMenuButton>
                 </SidebarMenuItem>
@@ -92,10 +94,10 @@ export function AppSidebar() {
         </SidebarGroup>
       </SidebarContent>
       
-      <SidebarFooter className="bg-white p-4 border-t border-border-gray">
-        <div className="flex items-center space-x-3">
-          <div className="w-10 h-10 bg-soft-gray rounded-full flex items-center justify-center">
-            <User className="h-5 w-5 text-professional-gray" />
+      <SidebarFooter className="bg-soft-gray p-4 border-t border-border-gray">
+        <div className="flex items-center space-x-3 p-3 rounded-lg bg-white shadow-sm hover:shadow-md transition-shadow duration-200">
+          <div className="w-10 h-10 bg-gradient-to-br from-enterprise-blue to-pravado-purple rounded-full flex items-center justify-center">
+            <User className="h-5 w-5 text-white" />
           </div>
           <div className="flex-1">
             <p className="text-sm font-medium text-professional-gray">Sarah Johnson</p>
