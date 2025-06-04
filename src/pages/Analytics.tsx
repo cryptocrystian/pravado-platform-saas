@@ -4,14 +4,20 @@ import { BaseLayout } from '@/components/BaseLayout';
 import { Card } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { Calendar, BarChart3, TrendingUp, Users, Eye, MousePointer } from 'lucide-react';
+import { Calendar, BarChart3, TrendingUp, Users, Eye, MousePointer, Search, Brain } from 'lucide-react';
 import { EmptyState } from '@/components/EmptyState';
+import { CitationMonitoring } from '@/components/CitationMonitoring';
+import { CitationAnalytics } from '@/components/CitationAnalytics';
+import { useCitationMonitoring } from '@/hooks/useCitationMonitoring';
 
 const Analytics = () => {
+  const { citations, analytics, isLoading } = useCitationMonitoring();
+
   const analyticsMetrics = [
     { title: "Total Visitors", value: "0", icon: Users, color: "enterprise-blue" },
     { title: "Page Views", value: "0", icon: Eye, color: "pravado-orange" },
     { title: "Conversion Rate", value: "0%", icon: MousePointer, color: "pravado-purple" },
+    { title: "AI Citations", value: citations.length.toString(), icon: Brain, color: "pravado-crimson" },
   ];
 
   return (
@@ -22,7 +28,7 @@ const Analytics = () => {
           <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between mb-8">
             <div>
               <h1 className="text-3xl font-bold text-professional-gray mb-2">Analytics</h1>
-              <p className="text-gray-600">Track performance across all your marketing channels</p>
+              <p className="text-gray-600">Track performance across all your marketing channels and AI platforms</p>
             </div>
             <div className="mt-4 lg:mt-0 flex space-x-3">
               <Button variant="outline">
@@ -37,7 +43,7 @@ const Analytics = () => {
           </div>
 
           {/* Key Metrics */}
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
+          <div className="grid grid-cols-1 md:grid-cols-4 gap-6 mb-8">
             {analyticsMetrics.map((metric, index) => (
               <Card key={index} className="p-6 bg-white border border-border-gray hover:shadow-lg transition-shadow">
                 <div className="flex items-center justify-between mb-2">
@@ -57,23 +63,24 @@ const Analytics = () => {
               <h2 className="text-xl font-semibold text-professional-gray">Performance Dashboard</h2>
             </div>
             <div className="p-6">
-              <Tabs defaultValue="overview" className="w-full">
-                <TabsList className="grid w-full grid-cols-5">
-                  <TabsTrigger value="overview">Overview</TabsTrigger>
+              <Tabs defaultValue="ai-citations" className="w-full">
+                <TabsList className="grid w-full grid-cols-6">
+                  <TabsTrigger value="ai-citations">AI Citations</TabsTrigger>
+                  <TabsTrigger value="citation-analytics">Citation Analytics</TabsTrigger>
                   <TabsTrigger value="traffic">Traffic</TabsTrigger>
                   <TabsTrigger value="content">Content</TabsTrigger>
                   <TabsTrigger value="campaigns">Campaigns</TabsTrigger>
                   <TabsTrigger value="conversion">Conversion</TabsTrigger>
                 </TabsList>
-                <TabsContent value="overview" className="mt-6">
-                  <EmptyState
-                    icon={BarChart3}
-                    title="No analytics data"
-                    description="Connect your analytics tools to start tracking performance metrics."
-                    actionLabel="Connect Analytics"
-                    onAction={() => console.log('Connect analytics')}
-                  />
+                
+                <TabsContent value="ai-citations" className="mt-6">
+                  <CitationMonitoring />
                 </TabsContent>
+                
+                <TabsContent value="citation-analytics" className="mt-6">
+                  <CitationAnalytics citations={citations} />
+                </TabsContent>
+                
                 <TabsContent value="traffic" className="mt-6">
                   <EmptyState
                     icon={TrendingUp}
