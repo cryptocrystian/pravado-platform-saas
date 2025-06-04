@@ -75,29 +75,29 @@ export function AppSidebar() {
 
   return (
     <Sidebar className="border-r border-border-gray shadow-lg">
-      <SidebarHeader className="bg-accent text-white p-4 shadow-md">
-        <div className="flex items-center space-x-3">
-          <div className="w-8 h-8 bg-pravado-crimson rounded-lg flex items-center justify-center shadow-sm">
-            <span className="text-white font-bold text-lg">P</span>
+      <SidebarHeader className="bg-accent text-white p-3 shadow-md">
+        <div className="flex items-center space-x-2">
+          <div className="w-6 h-6 bg-pravado-crimson rounded-lg flex items-center justify-center shadow-sm">
+            <span className="text-white font-bold text-sm">P</span>
           </div>
           <div>
-            <h2 className="text-xl font-bold">PRAVADO</h2>
+            <h2 className="text-lg font-bold">PRAVADO</h2>
             <p className="text-xs text-blue-100 opacity-90">Marketing Operating System</p>
           </div>
         </div>
       </SidebarHeader>
       
       <SidebarContent className="bg-soft-gray">
-        <SidebarGroup className="px-4 py-6">
-          <SidebarGroupLabel className="text-gray-500 text-xs font-semibold uppercase tracking-wide mb-4 px-3">Platform</SidebarGroupLabel>
+        <SidebarGroup className="px-3 py-2">
+          <SidebarGroupLabel className="text-gray-500 text-xs font-semibold uppercase tracking-wide mb-2 px-2">Platform</SidebarGroupLabel>
           <SidebarGroupContent>
-            <SidebarMenu className="space-y-2">
+            <SidebarMenu className="space-y-1">
               {menuItems.map((item) => (
                 <SidebarMenuItem key={item.title}>
                   <SidebarMenuButton asChild>
                     <Link 
                       to={item.url}
-                      className={`flex items-center space-x-3 px-4 py-3 rounded-lg transition-all duration-200 ease-in-out group ${
+                      className={`flex items-center space-x-2 px-3 py-2 rounded-lg transition-all duration-200 ease-in-out group ${
                         location.pathname === item.url
                           ? item.title === 'CiteMind™' 
                             ? 'bg-pravado-purple text-white shadow-sm' 
@@ -105,7 +105,7 @@ export function AppSidebar() {
                           : 'hover:bg-slate-100 text-slate-600'
                       }`}
                     >
-                      <item.icon className={`h-5 w-5 transition-colors duration-200 ${
+                      <item.icon className={`h-4 w-4 transition-colors duration-200 ${
                         location.pathname === item.url 
                           ? 'text-white' 
                           : item.title === 'CiteMind™'
@@ -126,11 +126,11 @@ export function AppSidebar() {
         </SidebarGroup>
       </SidebarContent>
       
-      <SidebarFooter className="bg-soft-gray p-4 border-t border-border-gray">
-        <div className="space-y-3">
-          <div className="flex items-center space-x-3 p-4 rounded-lg bg-white shadow-sm">
-            <div className="w-12 h-12 bg-gradient-to-br from-enterprise-blue to-pravado-purple rounded-full flex items-center justify-center shadow-sm">
-              <User className="h-6 w-6 text-white" />
+      <SidebarFooter className="bg-soft-gray p-3 border-t border-border-gray">
+        <div className="space-y-2">
+          <div className="flex items-center space-x-2 p-3 rounded-lg bg-white shadow-sm">
+            <div className="w-10 h-10 bg-gradient-to-br from-enterprise-blue to-pravado-purple rounded-full flex items-center justify-center shadow-sm">
+              <User className="h-5 w-5 text-white" />
             </div>
             <div className="flex-1 min-w-0">
               <p className="text-sm font-semibold text-professional-gray truncate">{userName}</p>
@@ -141,7 +141,7 @@ export function AppSidebar() {
           <Button
             variant="ghost"
             onClick={handleSignOut}
-            className="w-full justify-start text-gray-600 hover:text-red-600 hover:bg-red-50"
+            className="w-full justify-start text-gray-600 hover:text-red-600 hover:bg-red-50 py-2"
           >
             <LogOut className="h-4 w-4 mr-2" />
             Sign Out
