@@ -1,94 +1,88 @@
-
 import React, { useState } from 'react';
 import { Button } from '@/components/ui/button';
+import { Label } from '@/components/ui/label';
+import { Input } from '@/components/ui/input';
 
-export function LoginForm({ onLogin }: { onLogin: () => void }) {
+interface LoginFormProps {
+  onLogin: () => void;
+}
+
+export function LoginForm({ onLogin }: LoginFormProps) {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const [isLoading, setIsLoading] = useState(false);
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    onLogin();
+    setIsLoading(true);
+    
+    // Simulate login
+    setTimeout(() => {
+      setIsLoading(false);
+      onLogin();
+    }, 1000);
   };
 
   return (
-    <div className="min-h-screen bg-white flex items-center justify-center px-4">
-      <div className="max-w-md w-full space-y-8">
-        <div className="text-center">
-          <div className="flex justify-center mb-4">
-            <div className="w-16 h-16 bg-pravado-crimson rounded-xl flex items-center justify-center">
-              <span className="text-white font-bold text-2xl">P</span>
+    <div className="min-h-screen bg-soft-gray flex items-center justify-center p-4">
+      <div className="max-w-md w-full">
+        <div className="bg-white rounded-lg shadow-lg p-8 border border-border-gray">
+          {/* Header */}
+          <div className="text-center mb-8">
+            <div className="flex items-center justify-center space-x-3 mb-4">
+              <div className="w-10 h-10 bg-pravado-crimson rounded-lg flex items-center justify-center">
+                <span className="text-white font-bold text-xl">P</span>
+              </div>
+              <div>
+                <h1 className="text-2xl font-bold text-professional-gray">PRAVADO</h1>
+                <p className="text-sm text-gray-500">Marketing Operating System</p>
+              </div>
             </div>
           </div>
-          <h2 className="text-3xl font-bold text-professional-gray">PRAVADO</h2>
-          <p className="mt-2 text-sm text-gray-600">Marketing Operating System</p>
-          <p className="mt-4 text-lg text-professional-gray">Sign in to your account</p>
-        </div>
-        
-        <form className="mt-8 space-y-6" onSubmit={handleSubmit}>
-          <div className="space-y-4">
+
+          {/* Form */}
+          <form onSubmit={handleSubmit} className="space-y-6">
             <div>
-              <label htmlFor="email" className="block text-sm font-medium text-professional-gray">
-                Email address
-              </label>
-              <input
+              <Label htmlFor="email" className="text-professional-gray">Email Address</Label>
+              <Input
                 id="email"
-                name="email"
                 type="email"
-                required
-                className="mt-1 block w-full px-3 py-2 border border-border-gray rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-enterprise-blue focus:border-enterprise-blue"
-                placeholder="Enter your email"
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
+                placeholder="Enter your email"
+                required
+                className="mt-1"
               />
             </div>
-            
+
             <div>
-              <label htmlFor="password" className="block text-sm font-medium text-professional-gray">
-                Password
-              </label>
-              <input
+              <Label htmlFor="password" className="text-professional-gray">Password</Label>
+              <Input
                 id="password"
-                name="password"
                 type="password"
-                required
-                className="mt-1 block w-full px-3 py-2 border border-border-gray rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-enterprise-blue focus:border-enterprise-blue"
-                placeholder="Enter your password"
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
+                placeholder="Enter your password"
+                required
+                className="mt-1"
               />
             </div>
-          </div>
 
-          <div className="flex items-center justify-between">
-            <div className="flex items-center">
-              <input
-                id="remember-me"
-                name="remember-me"
-                type="checkbox"
-                className="h-4 w-4 text-enterprise-blue focus:ring-enterprise-blue border-border-gray rounded"
-              />
-              <label htmlFor="remember-me" className="ml-2 block text-sm text-professional-gray">
-                Remember me
-              </label>
-            </div>
-
-            <div className="text-sm">
-              <a href="#" className="font-medium text-enterprise-blue hover:text-enterprise-blue/90">
-                Forgot your password?
-              </a>
-            </div>
-          </div>
-
-          <div>
-            <Button
-              type="submit"
-              className="w-full bg-enterprise-blue hover:bg-enterprise-blue/90 text-white py-2 px-4 rounded-md font-medium"
+            <Button 
+              type="submit" 
+              className="w-full" 
+              disabled={isLoading}
             >
-              Sign in to PRAVADO
+              {isLoading ? 'Signing In...' : 'Sign In'}
             </Button>
+          </form>
+
+          <div className="mt-6 text-center">
+            <a href="#" className="text-sm text-enterprise-blue hover:underline">
+              Forgot your password?
+            </a>
           </div>
-        </form>
+        </div>
       </div>
     </div>
   );
