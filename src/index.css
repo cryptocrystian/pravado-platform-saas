@@ -6,15 +6,15 @@
 @layer base {
   :root {
     --background: 0 0% 100%;
-    --foreground: 220 13% 26%;
+    --foreground: 218 11% 30%;
 
     --card: 0 0% 100%;
-    --card-foreground: 220 13% 26%;
+    --card-foreground: 218 11% 30%;
 
     --popover: 0 0% 100%;
-    --popover-foreground: 220 13% 26%;
+    --popover-foreground: 218 11% 30%;
 
-    --primary: 348 95% 49%;
+    --primary: 219 70% 41%;
     --primary-foreground: 0 0% 100%;
 
     --secondary: 16 100% 61%;
@@ -31,7 +31,7 @@
 
     --border: 214.3 31.8% 91.4%;
     --input: 214.3 31.8% 91.4%;
-    --ring: 348 95% 49%;
+    --ring: 219 70% 41%;
 
     --radius: 0.5rem;
   }

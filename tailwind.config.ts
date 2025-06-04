@@ -26,7 +26,7 @@ export default {
 				background: 'hsl(var(--background))',
 				foreground: 'hsl(var(--foreground))',
 				primary: {
-					DEFAULT: '#c3073f',
+					DEFAULT: '#1e40af',
 					foreground: '#ffffff'
 				},
 				secondary: {
@@ -53,6 +53,13 @@ export default {
 					DEFAULT: 'hsl(var(--card))',
 					foreground: 'hsl(var(--card-foreground))'
 				},
+				'pravado-crimson': '#c3073f',
+				'pravado-orange': '#ff6b35',
+				'pravado-purple': '#6f2dbd',
+				'enterprise-blue': '#1e40af',
+				'soft-gray': '#f8fafc',
+				'professional-gray': '#334155',
+				'border-gray': '#e2e8f0',
 			},
 			borderRadius: {
 				lg: 'var(--radius)',

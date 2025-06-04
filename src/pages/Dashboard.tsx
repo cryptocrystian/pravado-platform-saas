@@ -8,10 +8,10 @@ import { DashboardContent } from '@/components/DashboardContent';
 const Dashboard = () => {
   return (
     <SidebarProvider>
-      <div className="min-h-screen flex w-full bg-white">
+      <div className="min-h-screen flex w-full bg-soft-gray">
         <AppSidebar />
         <main className="flex-1">
-          <div className="p-4 border-b border-gray-200">
+          <div className="p-4 border-b border-border-gray bg-white">
             <SidebarTrigger />
           </div>
           <DashboardContent />

@@ -48,10 +48,10 @@ const menuItems = [
 
 export function AppSidebar() {
   return (
-    <Sidebar className="border-r border-gray-200">
+    <Sidebar className="border-r border-border-gray">
       <SidebarHeader className="bg-accent text-white p-4">
         <div className="flex items-center space-x-2">
-          <div className="w-8 h-8 bg-primary rounded-lg flex items-center justify-center">
+          <div className="w-8 h-8 bg-pravado-crimson rounded-lg flex items-center justify-center">
             <span className="text-white font-bold text-lg">P</span>
           </div>
           <div>
@@ -62,15 +62,15 @@ export function AppSidebar() {
       </SidebarHeader>
       <SidebarContent className="bg-white">
         <SidebarGroup>
-          <SidebarGroupLabel>Platform</SidebarGroupLabel>
+          <SidebarGroupLabel className="text-professional-gray">Platform</SidebarGroupLabel>
           <SidebarGroupContent>
             <SidebarMenu>
               {menuItems.map((item) => (
                 <SidebarMenuItem key={item.title}>
                   <SidebarMenuButton asChild>
-                    <a href={item.url} className="flex items-center space-x-3 p-3 hover:bg-gray-50 rounded-md transition-colors">
-                      <item.icon className="h-5 w-5 text-accent" />
-                      <span className="font-medium text-gray-700">{item.title}</span>
+                    <a href={item.url} className="flex items-center space-x-3 p-3 hover:bg-soft-gray rounded-md transition-colors">
+                      <item.icon className="h-5 w-5 text-professional-gray" />
+                      <span className="font-medium text-professional-gray">{item.title}</span>
                     </a>
                   </SidebarMenuButton>
                 </SidebarMenuItem>
