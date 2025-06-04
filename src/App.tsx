@@ -12,6 +12,7 @@ import Dashboard from "./pages/Dashboard";
 import ContentMarketing from "./pages/ContentMarketing";
 import PublicRelations from "./pages/PublicRelations";
 import SEOIntelligence from "./pages/SEOIntelligence";
+import AICitations from "./pages/AICitations";
 import Analytics from "./pages/Analytics";
 import Settings from "./pages/Settings";
 import AITesting from "./pages/AITesting";
@@ -48,6 +49,11 @@ const App = () => (
             <Route path="/seo-intelligence" element={
               <ProtectedRoute>
                 <SEOIntelligence />
+              </ProtectedRoute>
+            } />
+            <Route path="/ai-citations" element={
+              <ProtectedRoute>
+                <AICitations />
               </ProtectedRoute>
             } />
             <Route path="/analytics" element={

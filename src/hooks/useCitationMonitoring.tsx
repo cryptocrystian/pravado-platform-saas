@@ -33,11 +33,29 @@ export function useCitationMonitoring() {
     platforms: ['openai', 'anthropic', 'perplexity', 'gemini', 'huggingface']
   });
 
+  // Get current user's tenant ID
+  const { data: userProfile } = useQuery({
+    queryKey: ['userProfile', user?.id],
+    queryFn: async () => {
+      if (!user) return null;
+      
+      const { data, error } = await supabase
+        .from('user_profiles')
+        .select('tenant_id')
+        .eq('id', user.id)
+        .single();
+      
+      if (error) throw error;
+      return data;
+    },
+    enabled: !!user,
+  });
+
   // Fetch citation monitoring configuration
   const { data: monitoringConfig, isLoading: configLoading } = useQuery({
     queryKey: ['citationConfig', user?.id],
     queryFn: async () => {
-      if (!user) return null;
+      if (!user || !userProfile?.tenant_id) return null;
       
       const { data, error } = await supabase
         .from('citation_monitoring_config')
@@ -48,14 +66,14 @@ export function useCitationMonitoring() {
       if (error && error.code !== 'PGRST116') throw error;
       return data;
     },
-    enabled: !!user,
+    enabled: !!user && !!userProfile?.tenant_id,
   });
 
   // Fetch recent citations
   const { data: citations, isLoading: citationsLoading } = useQuery({
     queryKey: ['citations', user?.id],
     queryFn: async () => {
-      if (!user) return [];
+      if (!user || !userProfile?.tenant_id) return [];
       
       const { data, error } = await supabase
         .from('ai_citations')
@@ -67,7 +85,7 @@ export function useCitationMonitoring() {
       if (error) throw error;
       return data || [];
     },
-    enabled: !!user,
+    enabled: !!user && !!userProfile?.tenant_id,
     refetchInterval: 30000, // Refetch every 30 seconds for real-time updates
   });
 
@@ -75,7 +93,7 @@ export function useCitationMonitoring() {
   const { data: analytics, isLoading: analyticsLoading } = useQuery({
     queryKey: ['citationAnalytics', user?.id],
     queryFn: async () => {
-      if (!user) return null;
+      if (!user || !userProfile?.tenant_id) return null;
       
       const { data, error } = await supabase
         .from('citation_analytics')
@@ -86,18 +104,19 @@ export function useCitationMonitoring() {
       if (error && error.code !== 'PGRST116') throw error;
       return data;
     },
-    enabled: !!user,
+    enabled: !!user && !!userProfile?.tenant_id,
   });
 
   // Update monitoring configuration
   const updateConfigMutation = useMutation({
     mutationFn: async (newConfig: Partial<MonitoringConfig>) => {
-      if (!user) throw new Error('User not authenticated');
+      if (!user || !userProfile?.tenant_id) throw new Error('User not authenticated');
       
       const { data, error } = await supabase
         .from('citation_monitoring_config')
         .upsert({
           user_id: user.id,
+          tenant_id: userProfile.tenant_id,
           ...newConfig,
           updated_at: new Date().toISOString()
         })
@@ -115,7 +134,7 @@ export function useCitationMonitoring() {
   // Start monitoring mutation
   const startMonitoringMutation = useMutation({
     mutationFn: async (queries: string[]) => {
-      if (!user) throw new Error('User not authenticated');
+      if (!user || !userProfile?.tenant_id) throw new Error('User not authenticated');
       
       const results: CitationResult[] = [];
       
@@ -134,6 +153,7 @@ export function useCitationMonitoring() {
           .from('ai_citations')
           .insert(results.map(result => ({
             user_id: user.id,
+            tenant_id: userProfile.tenant_id,
             platform: result.platform,
             model: result.model,
             query: result.query,
@@ -164,11 +184,12 @@ export function useCitationMonitoring() {
         keywords: config.keywords
       });
       
-      if (user && result.mentions.length > 0) {
+      if (user && userProfile?.tenant_id && result.mentions.length > 0) {
         const { error } = await supabase
           .from('ai_citations')
           .insert({
             user_id: user.id,
+            tenant_id: userProfile.tenant_id,
             platform: result.platform,
             model: result.model,
             query: result.query,
@@ -191,7 +212,7 @@ export function useCitationMonitoring() {
 
   // Real-time monitoring
   useEffect(() => {
-    if (!user || config.frequency !== 'realtime' || !config.keywords.length) return;
+    if (!user || !userProfile?.tenant_id || config.frequency !== 'realtime' || !config.keywords.length) return;
     
     const interval = setInterval(async () => {
       try {
@@ -208,7 +229,7 @@ export function useCitationMonitoring() {
     }, 60000); // Every minute for real-time
     
     return () => clearInterval(interval);
-  }, [user, config.frequency, config.brandName, config.keywords.length]);
+  }, [user, userProfile?.tenant_id, config.frequency, config.brandName, config.keywords.length]);
 
   const updateConfig = useCallback((newConfig: Partial<MonitoringConfig>) => {
     setConfig(prev => ({ ...prev, ...newConfig }));

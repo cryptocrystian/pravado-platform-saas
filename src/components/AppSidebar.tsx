@@ -1,7 +1,7 @@
 
 import React, { useState } from 'react';
 import { useLocation, Link } from 'react-router-dom';
-import { LayoutDashboard, MessageSquare, Users, Search, Activity, Settings, User, LogOut } from 'lucide-react';
+import { LayoutDashboard, MessageSquare, Users, Search, Activity, Settings, User, LogOut, Brain } from 'lucide-react';
 import {
   Sidebar,
   SidebarContent,
@@ -38,6 +38,11 @@ const menuItems = [
     title: "SEO Intelligence",
     url: "/seo-intelligence",
     icon: Search,
+  },
+  {
+    title: "AI Citations",
+    url: "/ai-citations",
+    icon: Brain,
   },
   {
     title: "Analytics",
