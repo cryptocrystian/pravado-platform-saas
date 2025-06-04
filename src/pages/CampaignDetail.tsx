@@ -30,7 +30,7 @@ export default function CampaignDetail() {
   const { data: campaign, isLoading: campaignLoading } = useCampaign(id!);
   const { data: content } = useContent();
 
-  const campaignContent = content?.filter(c => c.campaign_id === id) || [];
+  const campaignContent = content?.filter(c => (c as any).campaign_id === id) || [];
 
   if (campaignLoading) {
     return (
@@ -59,11 +59,11 @@ export default function CampaignDetail() {
     );
   }
 
-  const budgetAllocation = campaign.budget_allocation as any || { content: 40, pr: 30, seo: 30 };
-  const actualSpend = campaign.actual_spend || 0;
+  const budgetAllocation = (campaign as any).budget_allocation || { content: 40, pr: 30, seo: 30 };
+  const actualSpend = (campaign as any).actual_spend || 0;
   const totalBudget = campaign.budget || 0;
   const spendPercentage = totalBudget > 0 ? (actualSpend / totalBudget) * 100 : 0;
-  const milestones = campaign.milestones as any[] || [];
+  const milestones = (campaign as any).milestones || [];
 
   const getStatusColor = (status: string) => {
     switch (status) {
@@ -167,7 +167,7 @@ export default function CampaignDetail() {
               <div>
                 <p className="text-sm text-gray-600">Milestones</p>
                 <p className="text-2xl font-bold text-professional-gray">
-                  {milestones.filter(m => m.completed).length}/{milestones.length}
+                  {milestones.filter((m: any) => m.completed).length}/{milestones.length}
                 </p>
               </div>
               <Target className="h-8 w-8 text-pravado-crimson" />
@@ -340,7 +340,7 @@ export default function CampaignDetail() {
                 </div>
               ) : (
                 <div className="space-y-4">
-                  {milestones.map((milestone, index) => (
+                  {milestones.map((milestone: any, index: number) => (
                     <div key={index} className="border rounded-lg p-4">
                       <div className="flex items-center justify-between">
                         <div>

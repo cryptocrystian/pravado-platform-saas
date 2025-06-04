@@ -5,9 +5,27 @@ import { useUserTenant } from './useUserData';
 import { useToast } from '@/hooks/use-toast';
 import { Database } from '@/integrations/supabase/types';
 
-export type ContentPiece = Database['public']['Tables']['content_pieces']['Row'];
-export type ContentPieceInsert = Database['public']['Tables']['content_pieces']['Insert'];
-export type ContentPieceUpdate = Database['public']['Tables']['content_pieces']['Update'];
+export type ContentPiece = Database['public']['Tables']['content_pieces']['Row'] & {
+  campaign_id?: string;
+  target_platforms?: string[];
+  scheduled_date?: string;
+  ai_optimized?: boolean;
+  campaigns?: any;
+};
+
+export type ContentPieceInsert = Database['public']['Tables']['content_pieces']['Insert'] & {
+  campaign_id?: string;
+  target_platforms?: string[];
+  scheduled_date?: string;
+  ai_optimized?: boolean;
+};
+
+export type ContentPieceUpdate = Database['public']['Tables']['content_pieces']['Update'] & {
+  campaign_id?: string;
+  target_platforms?: string[];
+  scheduled_date?: string;
+  ai_optimized?: boolean;
+};
 
 export function useContent() {
   const { data: userTenant } = useUserTenant();
@@ -70,7 +88,7 @@ export function useCreateContent() {
         .insert({
           ...content,
           tenant_id: userTenant?.id,
-        });
+        } as any);
 
       if (error) throw error;
     },
@@ -101,7 +119,7 @@ export function useUpdateContent() {
     mutationFn: async ({ id, updates }: { id: string; updates: ContentPieceUpdate }) => {
       const { error } = await supabase
         .from('content_pieces')
-        .update(updates)
+        .update(updates as any)
         .eq('id', id)
         .eq('tenant_id', userTenant?.id);
 

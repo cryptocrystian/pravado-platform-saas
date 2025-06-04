@@ -115,7 +115,7 @@ export function CreateContentModal({ onContentCreated, selectedDate, defaultCamp
         status: data.status,
         created_by: user.id,
         tenant_id: userTenant.id,
-      });
+      } as any);
 
       form.reset();
       setOpen(false);

@@ -27,7 +27,7 @@ const ContentMarketing = () => {
     const matchesSearch = item.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
                          item.content_body?.toLowerCase().includes(searchTerm.toLowerCase());
     const matchesStatus = statusFilter === 'all' || item.status === statusFilter;
-    const matchesCampaign = campaignFilter === 'all' || item.campaign_id === campaignFilter;
+    const matchesCampaign = campaignFilter === 'all' || (item as any).campaign_id === campaignFilter;
     
     return matchesSearch && matchesStatus && matchesCampaign;
   }) || [];
@@ -220,16 +220,16 @@ const ContentMarketing = () => {
                           </div>
                           
                           <div className="space-y-2">
-                            {item.target_platforms && item.target_platforms.length > 0 && (
+                            {(item as any).target_platforms && (item as any).target_platforms.length > 0 && (
                               <div className="flex flex-wrap gap-1">
-                                {item.target_platforms.slice(0, 3).map((platform, idx) => (
+                                {(item as any).target_platforms.slice(0, 3).map((platform: string, idx: number) => (
                                   <span key={idx} className="text-xs bg-soft-gray px-2 py-1 rounded capitalize">
                                     {platform}
                                   </span>
                                 ))}
-                                {item.target_platforms.length > 3 && (
+                                {(item as any).target_platforms.length > 3 && (
                                   <span className="text-xs bg-soft-gray px-2 py-1 rounded">
-                                    +{item.target_platforms.length - 3} more
+                                    +{(item as any).target_platforms.length - 3} more
                                   </span>
                                 )}
                               </div>
@@ -242,9 +242,9 @@ const ContentMarketing = () => {
                               )}
                             </div>
                             
-                            {item.scheduled_date && (
+                            {(item as any).scheduled_date && (
                               <p className="text-xs text-blue-600">
-                                Scheduled: {format(new Date(item.scheduled_date), 'MMM dd, yyyy')}
+                                Scheduled: {format(new Date((item as any).scheduled_date), 'MMM dd, yyyy')}
                               </p>
                             )}
                           </div>
@@ -275,16 +275,16 @@ const ContentMarketing = () => {
                           </div>
                           
                           <div className="space-y-2">
-                            {item.target_platforms && item.target_platforms.length > 0 && (
+                            {(item as any).target_platforms && (item as any).target_platforms.length > 0 && (
                               <div className="flex flex-wrap gap-1">
-                                {item.target_platforms.slice(0, 3).map((platform, idx) => (
+                                {(item as any).target_platforms.slice(0, 3).map((platform: string, idx: number) => (
                                   <span key={idx} className="text-xs bg-soft-gray px-2 py-1 rounded capitalize">
                                     {platform}
                                   </span>
                                 ))}
-                                {item.target_platforms.length > 3 && (
+                                {(item as any).target_platforms.length > 3 && (
                                   <span className="text-xs bg-soft-gray px-2 py-1 rounded">
-                                    +{item.target_platforms.length - 3} more
+                                    +{(item as any).target_platforms.length - 3} more
                                   </span>
                                 )}
                               </div>
@@ -297,9 +297,9 @@ const ContentMarketing = () => {
                               )}
                             </div>
                             
-                            {item.scheduled_date && (
+                            {(item as any).scheduled_date && (
                               <p className="text-xs text-blue-600">
-                                Scheduled: {format(new Date(item.scheduled_date), 'MMM dd, yyyy')}
+                                Scheduled: {format(new Date((item as any).scheduled_date), 'MMM dd, yyyy')}
                               </p>
                             )}
                           </div>
