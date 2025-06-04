@@ -1,4 +1,6 @@
 
+import { supabase } from '@/integrations/supabase/client';
+
 interface TTSConfig {
   voiceType: 'male' | 'female';
   speed: number;
@@ -11,44 +13,22 @@ interface AudioSegment {
 }
 
 export class GoogleTTSService {
-  private apiKey: string;
-  
-  constructor(apiKey: string) {
-    this.apiKey = apiKey;
-  }
-
   async synthesizeSpeech(text: string, config: TTSConfig = { voiceType: 'female', speed: 1.0, pitch: 0 }): Promise<string> {
-    const voiceName = config.voiceType === 'male' 
-      ? 'en-US-Neural2-D' 
-      : 'en-US-Neural2-F';
-
     try {
-      const response = await fetch('https://texttospeech.googleapis.com/v1/text:synthesize', {
-        method: 'POST',
-        headers: {
-          'Authorization': `Bearer ${this.apiKey}`,
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          input: { text: this.preprocessText(text) },
-          voice: {
-            languageCode: 'en-US',
-            name: voiceName,
-          },
-          audioConfig: {
-            audioEncoding: 'MP3',
-            speakingRate: config.speed,
-            pitch: config.pitch,
-            sampleRateHertz: 24000,
-          },
-        }),
+      console.log('Starting TTS synthesis for text:', text.substring(0, 100) + '...');
+      
+      const { data, error } = await supabase.functions.invoke('google-tts', {
+        body: {
+          text: this.preprocessText(text),
+          voiceConfig: config
+        }
       });
 
-      if (!response.ok) {
-        throw new Error(`TTS API error: ${response.statusText}`);
+      if (error) {
+        throw new Error(`TTS synthesis error: ${error.message}`);
       }
 
-      const data = await response.json();
+      console.log('TTS synthesis completed successfully');
       return data.audioContent;
     } catch (error) {
       console.error('TTS synthesis error:', error);
@@ -90,6 +70,7 @@ export class GoogleTTSService {
     // In production, you'd want to synthesize each segment separately and concatenate audio
     const fullText = segments.map(s => s.text).join(' ');
     
+    console.log('Creating podcast episode for:', pressRelease.title);
     return await this.synthesizeSpeech(fullText, { voiceType: 'female', speed: 1.0, pitch: 0 });
   }
 }
