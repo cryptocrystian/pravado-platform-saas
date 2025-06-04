@@ -34,7 +34,8 @@ import { Textarea } from '@/components/ui/textarea';
 import { Button } from '@/components/ui/button';
 import { Calendar } from '@/components/ui/calendar';
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
-import { CalendarIcon, Plus } from 'lucide-react';
+import { Slider } from '@/components/ui/slider';
+import { CalendarIcon, Plus, Target, Users, DollarSign } from 'lucide-react';
 import { format } from 'date-fns';
 import { cn } from '@/lib/utils';
 import { useToast } from '@/hooks/use-toast';
@@ -48,6 +49,10 @@ const campaignSchema = z.object({
   budget: z.string().optional(),
   goals: z.string().optional(),
   target_audience: z.string().optional(),
+  roi_target: z.string().optional(),
+  content_allocation: z.number().min(0).max(100),
+  pr_allocation: z.number().min(0).max(100),
+  seo_allocation: z.number().min(0).max(100),
 });
 
 type CampaignFormData = z.infer<typeof campaignSchema>;
@@ -69,6 +74,7 @@ interface CreateCampaignModalProps {
 export function CreateCampaignModal({ onCampaignCreated }: CreateCampaignModalProps) {
   const [open, setOpen] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
+  const [milestones, setMilestones] = useState<Array<{title: string, date: Date | undefined, description: string}>>([]);
   const { user } = useAuth();
   const { data: userTenant } = useUserTenant();
   const { toast } = useToast();
@@ -82,8 +88,29 @@ export function CreateCampaignModal({ onCampaignCreated }: CreateCampaignModalPr
       budget: '',
       goals: '',
       target_audience: '',
+      roi_target: '',
+      content_allocation: 40,
+      pr_allocation: 30,
+      seo_allocation: 30,
     },
   });
+
+  const watchedAllocations = form.watch(['content_allocation', 'pr_allocation', 'seo_allocation']);
+  const totalAllocation = watchedAllocations.reduce((sum, val) => sum + (val || 0), 0);
+
+  const addMilestone = () => {
+    setMilestones([...milestones, { title: '', date: undefined, description: '' }]);
+  };
+
+  const updateMilestone = (index: number, field: string, value: any) => {
+    const updated = [...milestones];
+    updated[index] = { ...updated[index], [field]: value };
+    setMilestones(updated);
+  };
+
+  const removeMilestone = (index: number) => {
+    setMilestones(milestones.filter((_, i) => i !== index));
+  };
 
   const onSubmit = async (data: CampaignFormData) => {
     if (!userTenant?.id || !user?.id) {
@@ -95,31 +122,20 @@ export function CreateCampaignModal({ onCampaignCreated }: CreateCampaignModalPr
       return;
     }
 
+    if (totalAllocation !== 100) {
+      toast({
+        title: "Error",
+        description: "Budget allocation must total 100%",
+        variant: "destructive",
+      });
+      return;
+    }
+
     setIsLoading(true);
 
     try {
-      // Parse JSON fields
-      let goals = {};
-      let targetAudience = {};
-
-      if (data.goals) {
-        try {
-          goals = JSON.parse(data.goals);
-        } catch {
-          goals = { description: data.goals };
-        }
-      }
-
-      if (data.target_audience) {
-        try {
-          targetAudience = JSON.parse(data.target_audience);
-        } catch {
-          targetAudience = { description: data.target_audience };
-        }
-      }
-
       const { error } = await supabase
-        .from('campaigns' as any)
+        .from('campaigns')
         .insert({
           tenant_id: userTenant.id,
           name: data.name,
@@ -128,14 +144,23 @@ export function CreateCampaignModal({ onCampaignCreated }: CreateCampaignModalPr
           start_date: data.start_date?.toISOString() || null,
           end_date: data.end_date?.toISOString() || null,
           budget: data.budget ? parseFloat(data.budget) : null,
-          goals,
-          target_audience: targetAudience,
+          goals: data.goals ? { description: data.goals, roi_target: data.roi_target } : {},
+          target_audience: data.target_audience ? { description: data.target_audience } : {},
+          budget_allocation: {
+            content: data.content_allocation,
+            pr: data.pr_allocation,
+            seo: data.seo_allocation
+          },
+          milestones: milestones.filter(m => m.title && m.date).map(m => ({
+            title: m.title,
+            date: m.date?.toISOString(),
+            description: m.description,
+            completed: false
+          })),
           created_by: user.id,
         });
 
-      if (error) {
-        throw error;
-      }
+      if (error) throw error;
 
       toast({
         title: "Success",
@@ -143,6 +168,7 @@ export function CreateCampaignModal({ onCampaignCreated }: CreateCampaignModalPr
       });
 
       form.reset();
+      setMilestones([]);
       setOpen(false);
       onCampaignCreated?.();
     } catch (error) {
@@ -165,75 +191,174 @@ export function CreateCampaignModal({ onCampaignCreated }: CreateCampaignModalPr
           Create Campaign
         </Button>
       </DialogTrigger>
-      <DialogContent className="sm:max-w-[600px] max-h-[90vh] overflow-y-auto">
-        <DialogHeader className="sticky top-0 bg-background z-10 pb-4">
+      <DialogContent className="sm:max-w-[800px] max-h-[90vh] overflow-hidden flex flex-col">
+        <DialogHeader className="flex-shrink-0 pb-4">
           <DialogTitle>Create New Campaign</DialogTitle>
           <DialogDescription>
-            Set up a new marketing campaign to drive your business goals.
+            Set up a comprehensive marketing campaign with budget allocation and milestone planning.
           </DialogDescription>
         </DialogHeader>
         
-        <div className="overflow-y-auto flex-1 px-1">
+        <div className="flex-1 overflow-y-auto px-1">
           <Form {...form}>
             <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6 pb-6">
-              <FormField
-                control={form.control}
-                name="name"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>Campaign Name *</FormLabel>
-                    <FormControl>
-                      <Input placeholder="Enter campaign name" {...field} />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-
-              <FormField
-                control={form.control}
-                name="description"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>Description</FormLabel>
-                    <FormControl>
-                      <Textarea 
-                        placeholder="Describe your campaign objectives and approach"
-                        className="resize-none"
-                        rows={3}
-                        {...field}
-                      />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-
-              <FormField
-                control={form.control}
-                name="campaign_type"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>Campaign Type</FormLabel>
-                    <Select onValueChange={field.onChange} defaultValue={field.value}>
+              {/* Basic Information */}
+              <div className="space-y-4">
+                <h3 className="text-lg font-semibold text-professional-gray flex items-center">
+                  <Target className="h-5 w-5 mr-2 text-enterprise-blue" />
+                  Campaign Details
+                </h3>
+                
+                <FormField
+                  control={form.control}
+                  name="name"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>Campaign Name *</FormLabel>
                       <FormControl>
-                        <SelectTrigger>
-                          <SelectValue placeholder="Select campaign type" />
-                        </SelectTrigger>
+                        <Input placeholder="Enter campaign name" {...field} />
                       </FormControl>
-                      <SelectContent>
-                        {campaignTypeOptions.map((option) => (
-                          <SelectItem key={option.value} value={option.value}>
-                            {option.label}
-                          </SelectItem>
-                        ))}
-                      </SelectContent>
-                    </Select>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
 
+                <FormField
+                  control={form.control}
+                  name="description"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>Description</FormLabel>
+                      <FormControl>
+                        <Textarea 
+                          placeholder="Describe your campaign objectives and approach"
+                          className="resize-none"
+                          rows={3}
+                          {...field}
+                        />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+
+                <FormField
+                  control={form.control}
+                  name="campaign_type"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>Campaign Type</FormLabel>
+                      <Select onValueChange={field.onChange} defaultValue={field.value}>
+                        <FormControl>
+                          <SelectTrigger>
+                            <SelectValue placeholder="Select campaign type" />
+                          </SelectTrigger>
+                        </FormControl>
+                        <SelectContent>
+                          {campaignTypeOptions.map((option) => (
+                            <SelectItem key={option.value} value={option.value}>
+                              {option.label}
+                            </SelectItem>
+                          ))}
+                        </SelectContent>
+                      </Select>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+              </div>
+
+              {/* Budget & Allocation */}
+              <div className="space-y-4">
+                <h3 className="text-lg font-semibold text-professional-gray flex items-center">
+                  <DollarSign className="h-5 w-5 mr-2 text-pravado-orange" />
+                  Budget & Allocation
+                </h3>
+                
+                <FormField
+                  control={form.control}
+                  name="budget"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>Total Budget ($)</FormLabel>
+                      <FormControl>
+                        <Input 
+                          type="number" 
+                          placeholder="0.00" 
+                          step="0.01"
+                          {...field} 
+                        />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+
+                <div className="grid grid-cols-1 gap-4">
+                  <FormField
+                    control={form.control}
+                    name="content_allocation"
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormLabel>Content Marketing: {field.value}%</FormLabel>
+                        <FormControl>
+                          <Slider
+                            value={[field.value]}
+                            onValueChange={(value) => field.onChange(value[0])}
+                            max={100}
+                            step={5}
+                            className="w-full"
+                          />
+                        </FormControl>
+                      </FormItem>
+                    )}
+                  />
+                  
+                  <FormField
+                    control={form.control}
+                    name="pr_allocation"
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormLabel>Public Relations: {field.value}%</FormLabel>
+                        <FormControl>
+                          <Slider
+                            value={[field.value]}
+                            onValueChange={(value) => field.onChange(value[0])}
+                            max={100}
+                            step={5}
+                            className="w-full"
+                          />
+                        </FormControl>
+                      </FormItem>
+                    )}
+                  />
+                  
+                  <FormField
+                    control={form.control}
+                    name="seo_allocation"
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormLabel>SEO Intelligence: {field.value}%</FormLabel>
+                        <FormControl>
+                          <Slider
+                            value={[field.value]}
+                            onValueChange={(value) => field.onChange(value[0])}
+                            max={100}
+                            step={5}
+                            className="w-full"
+                          />
+                        </FormControl>
+                      </FormItem>
+                    )}
+                  />
+                </div>
+                
+                <div className={`text-sm font-medium ${totalAllocation === 100 ? 'text-green-600' : 'text-red-600'}`}>
+                  Total Allocation: {totalAllocation}% {totalAllocation !== 100 && '(Must equal 100%)'}
+                </div>
+              </div>
+
+              {/* Timeline & Dates */}
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                 <FormField
                   control={form.control}
@@ -318,25 +443,7 @@ export function CreateCampaignModal({ onCampaignCreated }: CreateCampaignModalPr
                 />
               </div>
 
-              <FormField
-                control={form.control}
-                name="budget"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>Budget ($)</FormLabel>
-                    <FormControl>
-                      <Input 
-                        type="number" 
-                        placeholder="0.00" 
-                        step="0.01"
-                        {...field} 
-                      />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-
+              {/* Goals & ROI */}
               <FormField
                 control={form.control}
                 name="goals"
@@ -356,40 +463,133 @@ export function CreateCampaignModal({ onCampaignCreated }: CreateCampaignModalPr
                 )}
               />
 
-              <FormField
-                control={form.control}
-                name="target_audience"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>Target Audience</FormLabel>
-                    <FormControl>
-                      <Textarea 
-                        placeholder="Describe your target audience demographics and personas"
-                        className="resize-none"
-                        rows={2}
-                        {...field}
-                      />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                <FormField
+                  control={form.control}
+                  name="target_audience"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>Target Audience</FormLabel>
+                      <FormControl>
+                        <Textarea 
+                          placeholder="Describe your target audience"
+                          className="resize-none"
+                          rows={2}
+                          {...field}
+                        />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
 
-              <div className="sticky bottom-0 bg-background pt-4 border-t flex justify-end space-x-3">
-                <Button
-                  type="button"
-                  variant="outline"
-                  onClick={() => setOpen(false)}
-                  disabled={isLoading}
-                >
-                  Cancel
-                </Button>
-                <Button type="submit" disabled={isLoading}>
-                  {isLoading ? "Creating..." : "Create Campaign"}
-                </Button>
+                <FormField
+                  control={form.control}
+                  name="roi_target"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>ROI Target (%)</FormLabel>
+                      <FormControl>
+                        <Input 
+                          type="number" 
+                          placeholder="15" 
+                          {...field}
+                        />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+              </div>
+
+              {/* Milestones */}
+              <div className="space-y-4">
+                <div className="flex items-center justify-between">
+                  <h3 className="text-lg font-semibold text-professional-gray flex items-center">
+                    <Target className="h-5 w-5 mr-2 text-pravado-purple" />
+                    Milestones
+                  </h3>
+                  <Button type="button" variant="outline" size="sm" onClick={addMilestone}>
+                    <Plus className="h-4 w-4 mr-2" />
+                    Add Milestone
+                  </Button>
+                </div>
+                
+                {milestones.map((milestone, index) => (
+                  <div key={index} className="border rounded-lg p-4 space-y-3">
+                    <div className="flex items-center justify-between">
+                      <Input
+                        placeholder="Milestone title"
+                        value={milestone.title}
+                        onChange={(e) => updateMilestone(index, 'title', e.target.value)}
+                        className="flex-1 mr-2"
+                      />
+                      <Button 
+                        type="button" 
+                        variant="outline" 
+                        size="sm"
+                        onClick={() => removeMilestone(index)}
+                      >
+                        Remove
+                      </Button>
+                    </div>
+                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                      <Popover>
+                        <PopoverTrigger asChild>
+                          <Button
+                            variant="outline"
+                            className={cn(
+                              "w-full pl-3 text-left font-normal",
+                              !milestone.date && "text-muted-foreground"
+                            )}
+                          >
+                            {milestone.date ? (
+                              format(milestone.date, "PPP")
+                            ) : (
+                              <span>Pick date</span>
+                            )}
+                            <CalendarIcon className="ml-auto h-4 w-4 opacity-50" />
+                          </Button>
+                        </PopoverTrigger>
+                        <PopoverContent className="w-auto p-0" align="start">
+                          <Calendar
+                            mode="single"
+                            selected={milestone.date}
+                            onSelect={(date) => updateMilestone(index, 'date', date)}
+                            disabled={(date) => date < new Date()}
+                            initialFocus
+                            className="pointer-events-auto"
+                          />
+                        </PopoverContent>
+                      </Popover>
+                      <Input
+                        placeholder="Description"
+                        value={milestone.description}
+                        onChange={(e) => updateMilestone(index, 'description', e.target.value)}
+                      />
+                    </div>
+                  </div>
+                ))}
               </div>
             </form>
           </Form>
+        </div>
+
+        <div className="flex-shrink-0 border-t pt-4 flex justify-end space-x-3">
+          <Button
+            type="button"
+            variant="outline"
+            onClick={() => setOpen(false)}
+            disabled={isLoading}
+          >
+            Cancel
+          </Button>
+          <Button 
+            onClick={form.handleSubmit(onSubmit)} 
+            disabled={isLoading || totalAllocation !== 100}
+          >
+            {isLoading ? "Creating..." : "Create Campaign"}
+          </Button>
         </div>
       </DialogContent>
     </Dialog>

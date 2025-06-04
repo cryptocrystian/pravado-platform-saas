@@ -1,5 +1,6 @@
 
 import React, { useState } from 'react';
+import { Link } from 'react-router-dom';
 import { BaseLayout } from '@/components/BaseLayout';
 import { CreateCampaignModal } from '@/components/CreateCampaignModal';
 import { CampaignCard } from '@/components/CampaignCard';
@@ -7,7 +8,7 @@ import { LoadingSpinner } from '@/components/LoadingSpinner';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
-import { Search, Plus } from 'lucide-react';
+import { Search, Plus, Eye } from 'lucide-react';
 import { useCampaigns, useDeleteCampaign, Campaign } from '@/hooks/useCampaigns';
 import { useToast } from '@/hooks/use-toast';
 
@@ -29,8 +30,11 @@ export default function Campaigns() {
     return matchesSearch && matchesStatus && matchesType;
   }) || [];
 
+  const handleView = (campaign: Campaign) => {
+    // Navigation to detail page is handled by Link component
+  };
+
   const handleEdit = (campaign: Campaign) => {
-    // Navigate to edit page - will implement in next iteration
     console.log('Edit campaign:', campaign.id);
     toast({
       title: "Feature Coming Soon",
@@ -139,13 +143,23 @@ export default function Campaigns() {
         ) : (
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
             {filteredCampaigns.map((campaign) => (
-              <CampaignCard
-                key={campaign.id}
-                campaign={campaign}
-                onEdit={handleEdit}
-                onDelete={handleDelete}
-                onDuplicate={handleDuplicate}
-              />
+              <div key={campaign.id} className="relative">
+                <CampaignCard
+                  campaign={campaign}
+                  onEdit={handleEdit}
+                  onDelete={handleDelete}
+                  onDuplicate={handleDuplicate}
+                />
+                <Link 
+                  to={`/campaigns/${campaign.id}`}
+                  className="absolute top-4 right-4 z-10"
+                >
+                  <Button variant="outline" size="sm">
+                    <Eye className="h-4 w-4 mr-1" />
+                    View
+                  </Button>
+                </Link>
+              </div>
             ))}
           </div>
         )}

@@ -19,6 +19,7 @@ import Settings from "./pages/Settings";
 import AITesting from "./pages/AITesting";
 import NotFound from "./pages/NotFound";
 import Campaigns from "./pages/Campaigns";
+import CampaignDetail from "./pages/CampaignDetail";
 
 const queryClient = new QueryClient();
 
