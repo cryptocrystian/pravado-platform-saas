@@ -14,6 +14,7 @@ import PublicRelations from "./pages/PublicRelations";
 import SEOIntelligence from "./pages/SEOIntelligence";
 import AICitations from "./pages/AICitations";
 import Analytics from "./pages/Analytics";
+import CiteMind from "./pages/CiteMind";
 import Settings from "./pages/Settings";
 import AITesting from "./pages/AITesting";
 import NotFound from "./pages/NotFound";
@@ -59,6 +60,11 @@ const App = () => (
             <Route path="/analytics" element={
               <ProtectedRoute>
                 <Analytics />
+              </ProtectedRoute>
+            } />
+            <Route path="/citemind" element={
+              <ProtectedRoute>
+                <CiteMind />
               </ProtectedRoute>
             } />
             <Route path="/settings" element={

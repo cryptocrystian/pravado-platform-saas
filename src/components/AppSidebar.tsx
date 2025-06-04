@@ -50,6 +50,11 @@ const menuItems = [
     icon: Activity,
   },
   {
+    title: "CiteMind™",
+    url: "/citemind",
+    icon: Brain,
+  },
+  {
     title: "Settings",
     url: "/settings",
     icon: Settings,
@@ -94,14 +99,24 @@ export function AppSidebar() {
                       to={item.url}
                       className={`flex items-center space-x-3 px-4 py-3 rounded-lg transition-all duration-200 ease-in-out group ${
                         location.pathname === item.url
-                          ? 'bg-enterprise-blue text-white shadow-sm' 
+                          ? item.title === 'CiteMind™' 
+                            ? 'bg-pravado-purple text-white shadow-sm' 
+                            : 'bg-enterprise-blue text-white shadow-sm'
                           : 'hover:bg-slate-100 text-slate-600'
                       }`}
                     >
                       <item.icon className={`h-5 w-5 transition-colors duration-200 ${
-                        location.pathname === item.url ? 'text-white' : 'text-slate-500 group-hover:text-enterprise-blue'
+                        location.pathname === item.url 
+                          ? 'text-white' 
+                          : item.title === 'CiteMind™'
+                            ? 'text-pravado-purple group-hover:text-pravado-purple'
+                            : 'text-slate-500 group-hover:text-enterprise-blue'
                       }`} />
-                      <span className="font-medium text-sm">{item.title}</span>
+                      <span className={`font-medium text-sm ${
+                        item.title === 'CiteMind™' ? 'font-semibold' : ''
+                      }`}>
+                        {item.title}
+                      </span>
                     </Link>
                   </SidebarMenuButton>
                 </SidebarMenuItem>
