@@ -30,13 +30,13 @@ export function useCampaigns() {
       if (!userTenant?.id) return [];
       
       const { data, error } = await supabase
-        .from('campaigns' as any)
+        .from('campaigns')
         .select('*')
         .eq('tenant_id', userTenant.id)
         .order('created_at', { ascending: false });
 
       if (error) throw error;
-      return (data || []) as Campaign[];
+      return (data || []) as unknown as Campaign[];
     },
     enabled: !!userTenant?.id,
   });
@@ -51,14 +51,14 @@ export function useCampaign(id: string) {
       if (!userTenant?.id || !id) return null;
       
       const { data, error } = await supabase
-        .from('campaigns' as any)
+        .from('campaigns')
         .select('*')
         .eq('id', id)
         .eq('tenant_id', userTenant.id)
         .single();
 
       if (error) throw error;
-      return (data || null) as Campaign | null;
+      return (data || null) as unknown as Campaign | null;
     },
     enabled: !!userTenant?.id && !!id,
   });
@@ -73,13 +73,13 @@ export function useCampaignMetrics() {
       if (!userTenant?.id) return null;
       
       const { data, error } = await supabase
-        .from('campaigns' as any)
+        .from('campaigns')
         .select('status')
         .eq('tenant_id', userTenant.id);
 
       if (error) throw error;
       
-      const campaigns = (data || []) as { status: string }[];
+      const campaigns = (data || []) as unknown as { status: string }[];
       
       const metrics = {
         total: campaigns.length,
@@ -104,7 +104,7 @@ export function useDeleteCampaign() {
   return useMutation({
     mutationFn: async (campaignId: string) => {
       const { error } = await supabase
-        .from('campaigns' as any)
+        .from('campaigns')
         .delete()
         .eq('id', campaignId)
         .eq('tenant_id', userTenant?.id);
@@ -138,7 +138,7 @@ export function useUpdateCampaign() {
   return useMutation({
     mutationFn: async ({ id, updates }: { id: string; updates: Partial<Campaign> }) => {
       const { error } = await supabase
-        .from('campaigns' as any)
+        .from('campaigns')
         .update(updates)
         .eq('id', id)
         .eq('tenant_id', userTenant?.id);
