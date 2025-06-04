@@ -36,7 +36,7 @@ export function useCampaigns() {
         .order('created_at', { ascending: false });
 
       if (error) throw error;
-      return data as Campaign[];
+      return (data || []) as Campaign[];
     },
     enabled: !!userTenant?.id,
   });
@@ -58,7 +58,7 @@ export function useCampaign(id: string) {
         .single();
 
       if (error) throw error;
-      return data as Campaign;
+      return (data || null) as Campaign | null;
     },
     enabled: !!userTenant?.id && !!id,
   });
@@ -79,13 +79,15 @@ export function useCampaignMetrics() {
 
       if (error) throw error;
       
+      const campaigns = (data || []) as { status: string }[];
+      
       const metrics = {
-        total: data.length,
-        draft: data.filter((c: any) => c.status === 'draft').length,
-        active: data.filter((c: any) => c.status === 'active').length,
-        completed: data.filter((c: any) => c.status === 'completed').length,
-        paused: data.filter((c: any) => c.status === 'paused').length,
-        cancelled: data.filter((c: any) => c.status === 'cancelled').length,
+        total: campaigns.length,
+        draft: campaigns.filter((c: any) => c.status === 'draft').length,
+        active: campaigns.filter((c: any) => c.status === 'active').length,
+        completed: campaigns.filter((c: any) => c.status === 'completed').length,
+        paused: campaigns.filter((c: any) => c.status === 'paused').length,
+        cancelled: campaigns.filter((c: any) => c.status === 'cancelled').length,
       };
       
       return metrics;
