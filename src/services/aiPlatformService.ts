@@ -17,7 +17,7 @@ export interface CitationResult {
   timestamp: string;
 }
 
-class AIPlat formService {
+class AIPlatformService {
   private readonly endpoints = {
     openai: 'https://api.openai.com/v1/chat/completions',
     anthropic: 'https://api.anthropic.com/v1/messages',
