@@ -48,18 +48,17 @@ const Index = () => {
             <p className="text-xl text-blue-100 mb-8 max-w-2xl mx-auto">
               The complete platform for marketing executives to automate, optimize, and scale their operations with AI-powered insights.
             </p>
-            <div className="space-x-4">
+            <div className="flex flex-col sm:flex-row gap-4 justify-center items-center">
               <Button 
                 size="lg"
-                className="bg-white text-enterprise-blue hover:bg-gray-100"
+                className="bg-white text-enterprise-blue hover:bg-gray-100 font-semibold px-8 py-3 text-lg"
                 onClick={() => navigate('/auth?mode=signup')}
               >
                 Get Started Free
               </Button>
               <Button 
                 size="lg"
-                variant="outline"
-                className="border-white text-white hover:bg-white hover:text-enterprise-blue"
+                className="bg-transparent border-2 border-white text-white hover:bg-white hover:text-enterprise-blue font-semibold px-8 py-3 text-lg transition-all duration-200"
                 onClick={() => navigate('/auth')}
               >
                 Sign In
@@ -127,7 +126,7 @@ const Index = () => {
           </p>
           <Button 
             size="lg"
-            className="bg-enterprise-blue hover:bg-enterprise-blue/90"
+            className="bg-enterprise-blue hover:bg-enterprise-blue/90 font-semibold px-8 py-3 text-lg"
             onClick={() => navigate('/auth?mode=signup')}
           >
             Start Your Free Trial
