@@ -78,7 +78,48 @@ const Analytics = () => {
                 </TabsContent>
                 
                 <TabsContent value="citation-analytics" className="mt-6">
-                  <CitationAnalytics citations={citations} />
+                  <div className="space-y-4">
+                    <h3 className="text-lg font-semibold text-professional-gray">Citation Analytics</h3>
+                    {citations.length > 0 ? (
+                      <div className="grid gap-4">
+                        {citations.slice(0, 5).map((citation, index) => (
+                          <Card key={index} className="p-4 border border-border-gray">
+                            <div className="flex items-start justify-between">
+                              <div className="flex-1">
+                                <div className="flex items-center space-x-2 mb-2">
+                                  <span className="text-sm font-medium text-enterprise-blue capitalize">
+                                    {citation.platform}
+                                  </span>
+                                  <span className={`text-xs px-2 py-1 rounded ${
+                                    citation.sentiment === 'positive' ? 'bg-green-100 text-green-800' :
+                                    citation.sentiment === 'negative' ? 'bg-red-100 text-red-800' :
+                                    'bg-gray-100 text-gray-800'
+                                  }`}>
+                                    {citation.sentiment}
+                                  </span>
+                                </div>
+                                <p className="text-sm text-professional-gray mb-2">
+                                  <strong>Query:</strong> {citation.query}
+                                </p>
+                                <p className="text-sm text-gray-600">
+                                  {citation.mentions.length > 0 ? citation.mentions[0] : citation.response.substring(0, 150) + '...'}
+                                </p>
+                              </div>
+                              <div className="text-xs text-gray-500">
+                                {new Date(citation.timestamp).toLocaleDateString()}
+                              </div>
+                            </div>
+                          </Card>
+                        ))}
+                      </div>
+                    ) : (
+                      <EmptyState
+                        icon={Brain}
+                        title="No citation data"
+                        description="AI citation analytics will appear here once monitoring starts."
+                      />
+                    )}
+                  </div>
                 </TabsContent>
                 
                 <TabsContent value="traffic" className="mt-6">
