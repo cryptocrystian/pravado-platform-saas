@@ -30,7 +30,7 @@ export function useCampaigns() {
       if (!userTenant?.id) return [];
       
       const { data, error } = await supabase
-        .from('campaigns')
+        .from('campaigns' as any)
         .select('*')
         .eq('tenant_id', userTenant.id)
         .order('created_at', { ascending: false });
@@ -51,7 +51,7 @@ export function useCampaign(id: string) {
       if (!userTenant?.id || !id) return null;
       
       const { data, error } = await supabase
-        .from('campaigns')
+        .from('campaigns' as any)
         .select('*')
         .eq('id', id)
         .eq('tenant_id', userTenant.id)
@@ -73,7 +73,7 @@ export function useCampaignMetrics() {
       if (!userTenant?.id) return null;
       
       const { data, error } = await supabase
-        .from('campaigns')
+        .from('campaigns' as any)
         .select('status')
         .eq('tenant_id', userTenant.id);
 
@@ -81,11 +81,11 @@ export function useCampaignMetrics() {
       
       const metrics = {
         total: data.length,
-        draft: data.filter(c => c.status === 'draft').length,
-        active: data.filter(c => c.status === 'active').length,
-        completed: data.filter(c => c.status === 'completed').length,
-        paused: data.filter(c => c.status === 'paused').length,
-        cancelled: data.filter(c => c.status === 'cancelled').length,
+        draft: data.filter((c: any) => c.status === 'draft').length,
+        active: data.filter((c: any) => c.status === 'active').length,
+        completed: data.filter((c: any) => c.status === 'completed').length,
+        paused: data.filter((c: any) => c.status === 'paused').length,
+        cancelled: data.filter((c: any) => c.status === 'cancelled').length,
       };
       
       return metrics;
@@ -102,7 +102,7 @@ export function useDeleteCampaign() {
   return useMutation({
     mutationFn: async (campaignId: string) => {
       const { error } = await supabase
-        .from('campaigns')
+        .from('campaigns' as any)
         .delete()
         .eq('id', campaignId)
         .eq('tenant_id', userTenant?.id);
@@ -136,7 +136,7 @@ export function useUpdateCampaign() {
   return useMutation({
     mutationFn: async ({ id, updates }: { id: string; updates: Partial<Campaign> }) => {
       const { error } = await supabase
-        .from('campaigns')
+        .from('campaigns' as any)
         .update(updates)
         .eq('id', id)
         .eq('tenant_id', userTenant?.id);

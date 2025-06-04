@@ -119,7 +119,7 @@ export function CreateCampaignModal({ onCampaignCreated }: CreateCampaignModalPr
       }
 
       const { error } = await supabase
-        .from('campaigns')
+        .from('campaigns' as any)
         .insert({
           tenant_id: userTenant.id,
           name: data.name,

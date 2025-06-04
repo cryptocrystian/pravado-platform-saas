@@ -18,6 +18,7 @@ import CiteMind from "./pages/CiteMind";
 import Settings from "./pages/Settings";
 import AITesting from "./pages/AITesting";
 import NotFound from "./pages/NotFound";
+import Campaigns from "./pages/Campaigns";
 
 const queryClient = new QueryClient();
 
