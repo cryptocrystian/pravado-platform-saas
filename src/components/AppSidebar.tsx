@@ -1,5 +1,6 @@
 
 import React, { useState } from 'react';
+import { useLocation, Link } from 'react-router-dom';
 import { LayoutDashboard, MessageSquare, Users, Search, Activity, Settings, User } from 'lucide-react';
 import {
   Sidebar,
@@ -17,38 +18,38 @@ import {
 const menuItems = [
   {
     title: "Dashboard",
-    url: "#dashboard",
+    url: "/dashboard",
     icon: LayoutDashboard,
   },
   {
     title: "Content Marketing",
-    url: "#content-marketing",
+    url: "/content-marketing",
     icon: MessageSquare,
   },
   {
     title: "Public Relations",
-    url: "#public-relations",
+    url: "/public-relations",
     icon: Users,
   },
   {
     title: "SEO Intelligence",
-    url: "#seo-intelligence",
+    url: "/seo-intelligence",
     icon: Search,
   },
   {
     title: "Analytics",
-    url: "#analytics",
+    url: "/analytics",
     icon: Activity,
   },
   {
     title: "Settings",
-    url: "#settings",
+    url: "/settings",
     icon: Settings,
   },
 ];
 
 export function AppSidebar() {
-  const [activeItem, setActiveItem] = useState("Dashboard");
+  const location = useLocation();
 
   return (
     <Sidebar className="border-r border-border-gray shadow-lg">
@@ -72,20 +73,19 @@ export function AppSidebar() {
               {menuItems.map((item) => (
                 <SidebarMenuItem key={item.title}>
                   <SidebarMenuButton asChild>
-                    <a 
-                      href={item.url} 
-                      onClick={() => setActiveItem(item.title)}
+                    <Link 
+                      to={item.url}
                       className={`flex items-center space-x-3 px-4 py-3 rounded-lg transition-all duration-200 ease-in-out group ${
-                        activeItem === item.title 
+                        location.pathname === item.url
                           ? 'bg-enterprise-blue text-white shadow-sm' 
                           : 'hover:bg-slate-100 text-slate-600'
                       }`}
                     >
                       <item.icon className={`h-5 w-5 transition-colors duration-200 ${
-                        activeItem === item.title ? 'text-white' : 'text-slate-500 group-hover:text-enterprise-blue'
+                        location.pathname === item.url ? 'text-white' : 'text-slate-500 group-hover:text-enterprise-blue'
                       }`} />
                       <span className="font-medium text-sm">{item.title}</span>
-                    </a>
+                    </Link>
                   </SidebarMenuButton>
                 </SidebarMenuItem>
               ))}

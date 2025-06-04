@@ -4,7 +4,12 @@ import { SidebarTrigger } from '@/components/ui/sidebar';
 import { Button } from '@/components/ui/button';
 import { Bell, Search, User } from 'lucide-react';
 
-export function DashboardHeader() {
+interface DashboardHeaderProps {
+  title?: string;
+  breadcrumb?: string;
+}
+
+export function DashboardHeader({ title = "Dashboard", breadcrumb }: DashboardHeaderProps) {
   return (
     <header className="bg-white border-b border-border-gray px-6 py-4">
       <div className="flex items-center justify-between">
@@ -14,7 +19,7 @@ export function DashboardHeader() {
             <nav className="flex space-x-2 text-sm text-professional-gray">
               <span>PRAVADO</span>
               <span>/</span>
-              <span className="text-enterprise-blue font-medium">Dashboard</span>
+              <span className="text-enterprise-blue font-medium">{breadcrumb || title}</span>
             </nav>
           </div>
         </div>
