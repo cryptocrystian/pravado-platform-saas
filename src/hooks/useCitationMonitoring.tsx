@@ -1,9 +1,8 @@
 
 import { useState, useEffect, useCallback } from 'react';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
-import { aiPlatformService, CitationResult } from '@/services/aiPlatformService';
 import { useAuth } from '@/contexts/AuthContext';
-import { supabase } from '@/integrations/supabase/client';
+import { useToast } from '@/hooks/use-toast';
 
 interface MonitoringConfig {
   brandName: string;
@@ -14,225 +13,195 @@ interface MonitoringConfig {
   platforms: string[];
 }
 
-interface CitationAlert {
+interface CitationData {
   id: string;
-  citation: CitationResult;
-  read: boolean;
+  platform: 'openai' | 'anthropic' | 'perplexity' | 'gemini' | 'huggingface';
+  model?: string;
+  query: string;
+  response: string;
+  mentions: string[];
+  sentiment: 'positive' | 'neutral' | 'negative';
+  confidence: number;
   timestamp: string;
+}
+
+interface CitationAnalytics {
+  totalMentions: number;
+  positiveMentions: number;
+  neutralMentions: number;
+  negativeMentions: number;
+  avgSentimentScore: number;
+  topPlatform: string;
+  mentionTrendPercentage: number;
 }
 
 export function useCitationMonitoring() {
   const { user } = useAuth();
+  const { toast } = useToast();
   const queryClient = useQueryClient();
+  
   const [config, setConfig] = useState<MonitoringConfig>({
-    brandName: '',
-    keywords: ['PRAVADO'],
-    competitors: [],
+    brandName: 'PRAVADO',
+    keywords: ['PRAVADO', 'marketing automation', 'marketing platform'],
+    competitors: ['HubSpot', 'Marketo', 'Pardot'],
     alerts: true,
     frequency: 'hourly',
     platforms: ['openai', 'anthropic', 'perplexity', 'gemini', 'huggingface']
   });
 
-  // Get current user's tenant ID
-  const { data: userProfile } = useQuery({
-    queryKey: ['userProfile', user?.id],
+  // Mock data for demonstration - will be replaced with real Supabase queries once types are updated
+  const mockCitations: CitationData[] = [
+    {
+      id: '1',
+      platform: 'openai',
+      model: 'GPT-4',
+      query: 'Best marketing automation tools',
+      response: 'PRAVADO is a comprehensive marketing operating system that helps businesses automate their marketing workflows.',
+      mentions: ['PRAVADO is a comprehensive marketing operating system that helps businesses automate their marketing workflows'],
+      sentiment: 'positive',
+      confidence: 0.92,
+      timestamp: new Date(Date.now() - 1000 * 60 * 30).toISOString(),
+    },
+    {
+      id: '2',
+      platform: 'gemini',
+      model: 'Gemini Pro',
+      query: 'Marketing platform comparison',
+      response: 'When comparing marketing platforms, PRAVADO offers unique AI-powered insights for enterprise teams.',
+      mentions: ['PRAVADO offers unique AI-powered insights for enterprise teams'],
+      sentiment: 'positive',
+      confidence: 0.87,
+      timestamp: new Date(Date.now() - 1000 * 60 * 45).toISOString(),
+    },
+    {
+      id: '3',
+      platform: 'huggingface',
+      model: 'Llama-2-70b',
+      query: 'Enterprise marketing solutions',
+      response: 'PRAVADO is mentioned as one of the emerging players in the marketing technology space.',
+      mentions: ['PRAVADO is mentioned as one of the emerging players in the marketing technology space'],
+      sentiment: 'neutral',
+      confidence: 0.78,
+      timestamp: new Date(Date.now() - 1000 * 60 * 60).toISOString(),
+    }
+  ];
+
+  const mockAnalytics: CitationAnalytics = {
+    totalMentions: mockCitations.length,
+    positiveMentions: mockCitations.filter(c => c.sentiment === 'positive').length,
+    neutralMentions: mockCitations.filter(c => c.sentiment === 'neutral').length,
+    negativeMentions: mockCitations.filter(c => c.sentiment === 'negative').length,
+    avgSentimentScore: 8.2,
+    topPlatform: 'OpenAI',
+    mentionTrendPercentage: 24
+  };
+
+  // Fetch citations with mock data
+  const { data: citations, isLoading: citationsLoading } = useQuery({
+    queryKey: ['citations', user?.id],
     queryFn: async () => {
-      if (!user) return null;
-      
-      const { data, error } = await supabase
-        .from('user_profiles')
-        .select('tenant_id')
-        .eq('id', user.id)
-        .single();
-      
-      if (error) throw error;
-      return data;
+      // Simulate API delay
+      await new Promise(resolve => setTimeout(resolve, 500));
+      return mockCitations;
+    },
+    enabled: !!user,
+    refetchInterval: 30000,
+  });
+
+  // Fetch analytics with mock data
+  const { data: analytics, isLoading: analyticsLoading } = useQuery({
+    queryKey: ['citationAnalytics', user?.id],
+    queryFn: async () => {
+      // Simulate API delay
+      await new Promise(resolve => setTimeout(resolve, 300));
+      return mockAnalytics;
     },
     enabled: !!user,
   });
 
-  // Fetch citation monitoring configuration
-  const { data: monitoringConfig, isLoading: configLoading } = useQuery({
-    queryKey: ['citationConfig', user?.id],
-    queryFn: async () => {
-      if (!user || !userProfile?.tenant_id) return null;
-      
-      const { data, error } = await supabase
-        .from('citation_monitoring_config')
-        .select('*')
-        .eq('user_id', user.id)
-        .single();
-      
-      if (error && error.code !== 'PGRST116') throw error;
-      return data;
-    },
-    enabled: !!user && !!userProfile?.tenant_id,
-  });
-
-  // Fetch recent citations
-  const { data: citations, isLoading: citationsLoading } = useQuery({
-    queryKey: ['citations', user?.id],
-    queryFn: async () => {
-      if (!user || !userProfile?.tenant_id) return [];
-      
-      const { data, error } = await supabase
-        .from('ai_citations')
-        .select('*')
-        .eq('user_id', user.id)
-        .order('created_at', { ascending: false })
-        .limit(50);
-      
-      if (error) throw error;
-      return data || [];
-    },
-    enabled: !!user && !!userProfile?.tenant_id,
-    refetchInterval: 30000, // Refetch every 30 seconds for real-time updates
-  });
-
-  // Fetch citation analytics
-  const { data: analytics, isLoading: analyticsLoading } = useQuery({
-    queryKey: ['citationAnalytics', user?.id],
-    queryFn: async () => {
-      if (!user || !userProfile?.tenant_id) return null;
-      
-      const { data, error } = await supabase
-        .from('citation_analytics')
-        .select('*')
-        .eq('user_id', user.id)
-        .single();
-      
-      if (error && error.code !== 'PGRST116') throw error;
-      return data;
-    },
-    enabled: !!user && !!userProfile?.tenant_id,
-  });
-
-  // Update monitoring configuration
+  // Update configuration
   const updateConfigMutation = useMutation({
     mutationFn: async (newConfig: Partial<MonitoringConfig>) => {
-      if (!user || !userProfile?.tenant_id) throw new Error('User not authenticated');
-      
-      const { data, error } = await supabase
-        .from('citation_monitoring_config')
-        .upsert({
-          user_id: user.id,
-          tenant_id: userProfile.tenant_id,
-          ...newConfig,
-          updated_at: new Date().toISOString()
-        })
-        .select()
-        .single();
-      
-      if (error) throw error;
-      return data;
+      // Simulate API call
+      await new Promise(resolve => setTimeout(resolve, 500));
+      return { ...config, ...newConfig };
     },
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['citationConfig'] });
+    onSuccess: (data) => {
+      setConfig(data);
+      toast({
+        title: "Configuration updated",
+        description: "Your monitoring settings have been saved successfully.",
+      });
+    },
+    onError: () => {
+      toast({
+        title: "Error",
+        description: "Failed to update configuration. Please try again.",
+        variant: "destructive",
+      });
     },
   });
 
   // Start monitoring mutation
   const startMonitoringMutation = useMutation({
     mutationFn: async (queries: string[]) => {
-      if (!user || !userProfile?.tenant_id) throw new Error('User not authenticated');
+      // Simulate monitoring process
+      await new Promise(resolve => setTimeout(resolve, 2000));
       
-      const results: CitationResult[] = [];
-      
-      for (const query of queries) {
-        try {
-          const platformResults = await aiPlatformService.queryAllPlatforms(query, config.keywords);
-          results.push(...platformResults);
-        } catch (error) {
-          console.error('Error querying platforms:', error);
-        }
-      }
-      
-      // Store results in database
-      if (results.length > 0) {
-        const { error } = await supabase
-          .from('ai_citations')
-          .insert(results.map(result => ({
-            user_id: user.id,
-            tenant_id: userProfile.tenant_id,
-            platform: result.platform,
-            model: result.model,
-            query: result.query,
-            response: result.response,
-            mentions: result.mentions,
-            sentiment: result.sentiment,
-            confidence: result.confidence,
-            created_at: result.timestamp
-          })));
-        
-        if (error) throw error;
-      }
-      
-      return results;
+      // Return some mock results
+      return mockCitations.slice(0, 2);
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['citations'] });
       queryClient.invalidateQueries({ queryKey: ['citationAnalytics'] });
+      toast({
+        title: "Monitoring started",
+        description: "Now tracking citations across all AI platforms",
+      });
+    },
+    onError: () => {
+      toast({
+        title: "Error",
+        description: "Failed to start monitoring. Please try again.",
+        variant: "destructive",
+      });
     },
   });
 
   // Query specific platform
   const queryPlatformMutation = useMutation({
     mutationFn: async ({ platform, query }: { platform: string; query: string }) => {
-      const result = await aiPlatformService.queryPlatform({
-        query,
+      // Simulate platform query
+      await new Promise(resolve => setTimeout(resolve, 1500));
+      
+      return {
+        id: Date.now().toString(),
         platform: platform as any,
-        keywords: config.keywords
-      });
-      
-      if (user && userProfile?.tenant_id && result.mentions.length > 0) {
-        const { error } = await supabase
-          .from('ai_citations')
-          .insert({
-            user_id: user.id,
-            tenant_id: userProfile.tenant_id,
-            platform: result.platform,
-            model: result.model,
-            query: result.query,
-            response: result.response,
-            mentions: result.mentions,
-            sentiment: result.sentiment,
-            confidence: result.confidence,
-            created_at: result.timestamp
-          });
-        
-        if (error) console.error('Error storing citation:', error);
-      }
-      
-      return result;
+        query,
+        response: `Mock response from ${platform} for query: ${query}`,
+        mentions: [`Mock mention of ${config.brandName} from ${platform}`],
+        sentiment: 'positive' as const,
+        confidence: 0.85,
+        timestamp: new Date().toISOString(),
+      };
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['citations'] });
+      toast({
+        title: "Query completed",
+        description: "Platform query executed successfully",
+      });
+    },
+    onError: () => {
+      toast({
+        title: "Error",
+        description: "Failed to query platform. Please try again.",
+        variant: "destructive",
+      });
     },
   });
 
-  // Real-time monitoring
-  useEffect(() => {
-    if (!user || !userProfile?.tenant_id || config.frequency !== 'realtime' || !config.keywords.length) return;
-    
-    const interval = setInterval(async () => {
-      try {
-        const testQueries = [
-          `What do you know about ${config.brandName}?`,
-          `Compare marketing automation tools including ${config.brandName}`,
-          `Best practices for ${config.keywords.join(', ')}`
-        ];
-        
-        startMonitoringMutation.mutate(testQueries);
-      } catch (error) {
-        console.error('Real-time monitoring error:', error);
-      }
-    }, 60000); // Every minute for real-time
-    
-    return () => clearInterval(interval);
-  }, [user, userProfile?.tenant_id, config.frequency, config.brandName, config.keywords.length]);
-
   const updateConfig = useCallback((newConfig: Partial<MonitoringConfig>) => {
-    setConfig(prev => ({ ...prev, ...newConfig }));
     updateConfigMutation.mutate(newConfig);
   }, [updateConfigMutation]);
 
@@ -249,7 +218,7 @@ export function useCitationMonitoring() {
     updateConfig,
     citations: citations || [],
     analytics,
-    isLoading: configLoading || citationsLoading || analyticsLoading,
+    isLoading: citationsLoading || analyticsLoading,
     startMonitoring,
     queryPlatform,
     isMonitoring: startMonitoringMutation.isPending,

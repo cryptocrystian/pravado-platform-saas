@@ -18,7 +18,6 @@ import {
   Bell,
   Settings,
   Plus,
-  Trash2,
   Play,
   Pause,
   RefreshCw,
@@ -27,7 +26,6 @@ import {
   CheckCircle
 } from 'lucide-react';
 import { useCitationMonitoring } from '@/hooks/useCitationMonitoring';
-import { useToast } from '@/hooks/use-toast';
 
 const platformIcons = {
   openai: Brain,
@@ -56,7 +54,6 @@ export default function AICitations() {
   const [newKeyword, setNewKeyword] = useState('');
   const [newCompetitor, setNewCompetitor] = useState('');
   const [isConfiguring, setIsConfiguring] = useState(false);
-  const { toast } = useToast();
 
   const handleAddKeyword = () => {
     if (newKeyword.trim() && !config.keywords.includes(newKeyword.trim())) {
@@ -64,10 +61,6 @@ export default function AICitations() {
         keywords: [...config.keywords, newKeyword.trim()]
       });
       setNewKeyword('');
-      toast({
-        title: "Keyword added",
-        description: `Now monitoring "${newKeyword.trim()}" across all AI platforms`,
-      });
     }
   };
 
@@ -77,10 +70,6 @@ export default function AICitations() {
         competitors: [...config.competitors, newCompetitor.trim()]
       });
       setNewCompetitor('');
-      toast({
-        title: "Competitor added",
-        description: `Now monitoring "${newCompetitor.trim()}" for competitive intelligence`,
-      });
     }
   };
 
@@ -98,11 +87,6 @@ export default function AICitations() {
 
   const handleStartMonitoring = async () => {
     if (!config.brandName || config.keywords.length === 0) {
-      toast({
-        title: "Configuration required",
-        description: "Please add a brand name and at least one keyword before starting monitoring",
-        variant: "destructive",
-      });
       return;
     }
 
@@ -114,21 +98,13 @@ export default function AICitations() {
       ];
       
       await startMonitoring(testQueries);
-      toast({
-        title: "Monitoring started",
-        description: "Now tracking citations across all AI platforms",
-      });
     } catch (error) {
-      toast({
-        title: "Error",
-        description: "Failed to start monitoring. Please try again.",
-        variant: "destructive",
-      });
+      console.error('Failed to start monitoring:', error);
     }
   };
 
   return (
-    <BaseLayout>
+    <BaseLayout title="AI Citation Monitoring">
       <div className="p-6 space-y-6">
         {/* Header */}
         <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between">
@@ -340,14 +316,14 @@ export default function AICitations() {
                     </div>
                   ) : (
                     citations.slice(0, 10).map((citation, index) => {
-                      const PlatformIcon = platformIcons[citation.platform as keyof typeof platformIcons];
+                      const PlatformIcon = platformIcons[citation.platform];
                       return (
                         <div key={index} className="border border-border-gray rounded-lg p-4 hover:shadow-md transition-shadow">
                           <div className="flex items-start justify-between mb-3">
                             <div className="flex items-center space-x-3">
                               <PlatformIcon className="h-5 w-5 text-enterprise-blue" />
                               <div>
-                                <Badge className={platformColors[citation.platform as keyof typeof platformColors]}>
+                                <Badge className={platformColors[citation.platform]}>
                                   {citation.platform}
                                 </Badge>
                                 {citation.model && (
@@ -396,7 +372,7 @@ export default function AICitations() {
                   <TrendingUp className="h-5 w-5 text-pravado-orange" />
                   <h3 className="font-semibold text-professional-gray">Mention Trend</h3>
                 </div>
-                <p className="text-2xl font-bold text-pravado-orange">+24%</p>
+                <p className="text-2xl font-bold text-pravado-orange">+{analytics?.mentionTrendPercentage || 0}%</p>
                 <p className="text-xs text-gray-500">vs last week</p>
               </Card>
               
@@ -405,7 +381,7 @@ export default function AICitations() {
                   <BarChart3 className="h-5 w-5 text-enterprise-blue" />
                   <h3 className="font-semibold text-professional-gray">Avg Sentiment</h3>
                 </div>
-                <p className="text-2xl font-bold text-enterprise-blue">8.2/10</p>
+                <p className="text-2xl font-bold text-enterprise-blue">{analytics?.avgSentimentScore || 0}/10</p>
                 <p className="text-xs text-gray-500">Positive sentiment</p>
               </Card>
               
@@ -414,8 +390,8 @@ export default function AICitations() {
                   <AlertCircle className="h-5 w-5 text-pravado-purple" />
                   <h3 className="font-semibold text-professional-gray">Top Platform</h3>
                 </div>
-                <p className="text-2xl font-bold text-pravado-purple">OpenAI</p>
-                <p className="text-xs text-gray-500">42% of mentions</p>
+                <p className="text-2xl font-bold text-pravado-purple">{analytics?.topPlatform || 'N/A'}</p>
+                <p className="text-xs text-gray-500">Most mentions</p>
               </Card>
             </div>
 
