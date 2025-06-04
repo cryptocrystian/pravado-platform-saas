@@ -36,7 +36,7 @@ export function useCampaigns() {
         .order('created_at', { ascending: false });
 
       if (error) throw error;
-      return (data || []) as unknown as Campaign[];
+      return data || [];
     },
     enabled: !!userTenant?.id,
   });
@@ -58,7 +58,7 @@ export function useCampaign(id: string) {
         .single();
 
       if (error) throw error;
-      return (data || null) as unknown as Campaign | null;
+      return data;
     },
     enabled: !!userTenant?.id && !!id,
   });
@@ -79,7 +79,7 @@ export function useCampaignMetrics() {
 
       if (error) throw error;
       
-      const campaigns = (data || []) as unknown as { status: string }[];
+      const campaigns = data || [];
       
       const metrics = {
         total: campaigns.length,

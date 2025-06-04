@@ -160,6 +160,65 @@ export type Database = {
           },
         ]
       }
+      campaigns: {
+        Row: {
+          budget: number | null
+          campaign_type: string
+          created_at: string
+          created_by: string | null
+          description: string | null
+          end_date: string | null
+          goals: Json | null
+          id: string
+          name: string
+          start_date: string | null
+          status: string
+          target_audience: Json | null
+          tenant_id: string
+          updated_at: string
+        }
+        Insert: {
+          budget?: number | null
+          campaign_type: string
+          created_at?: string
+          created_by?: string | null
+          description?: string | null
+          end_date?: string | null
+          goals?: Json | null
+          id?: string
+          name: string
+          start_date?: string | null
+          status?: string
+          target_audience?: Json | null
+          tenant_id: string
+          updated_at?: string
+        }
+        Update: {
+          budget?: number | null
+          campaign_type?: string
+          created_at?: string
+          created_by?: string | null
+          description?: string | null
+          end_date?: string | null
+          goals?: Json | null
+          id?: string
+          name?: string
+          start_date?: string | null
+          status?: string
+          target_audience?: Json | null
+          tenant_id?: string
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "campaigns_tenant_id_fkey"
+            columns: ["tenant_id"]
+            isOneToOne: false
+            referencedRelation: "tenants"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       content_pieces: {
         Row: {
           comment_count: number | null
