@@ -3,23 +3,9 @@ import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { supabase } from '@/integrations/supabase/client';
 import { useUserTenant } from './useUserData';
 import { useToast } from '@/hooks/use-toast';
+import { Database } from '@/integrations/supabase/types';
 
-export interface Campaign {
-  id: string;
-  tenant_id: string;
-  name: string;
-  description: string | null;
-  campaign_type: 'content_only' | 'pr_only' | 'seo_only' | 'content_pr' | 'content_seo' | 'pr_seo' | 'integrated';
-  status: 'draft' | 'active' | 'paused' | 'completed' | 'cancelled';
-  start_date: string | null;
-  end_date: string | null;
-  budget: number | null;
-  goals: any;
-  target_audience: any;
-  created_by: string | null;
-  created_at: string;
-  updated_at: string;
-}
+export type Campaign = Database['public']['Tables']['campaigns']['Row'];
 
 export function useCampaigns() {
   const { data: userTenant } = useUserTenant();
