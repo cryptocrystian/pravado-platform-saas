@@ -4,29 +4,36 @@ import { Card } from '@/components/ui/card';
 import { MetricCard } from '@/components/MetricCard';
 import { MetricCardSkeleton } from '@/components/MetricCardSkeleton';
 import { Button } from '@/components/ui/button';
-import { Plus, TrendingUp, Users, FileText, Target, Clock } from 'lucide-react';
+import { CreateCampaignModal } from '@/components/CreateCampaignModal';
+import { Plus, TrendingUp, Users, FileText, Target, Clock, ArrowRight } from 'lucide-react';
 import { useUserProfile, useDashboardMetrics, useUserTenant } from '@/hooks/useUserData';
+import { useCampaignMetrics, useCampaigns } from '@/hooks/useCampaigns';
 import { useAuth } from '@/contexts/AuthContext';
+import { Link } from 'react-router-dom';
 
 export function DashboardContent() {
   const { user } = useAuth();
   const { data: userProfile, isLoading: profileLoading } = useUserProfile();
   const { data: userTenant, isLoading: tenantLoading } = useUserTenant();
   const { data: metrics, isLoading: metricsLoading } = useDashboardMetrics();
+  const { data: campaignMetrics, isLoading: campaignMetricsLoading } = useCampaignMetrics();
+  const { data: campaigns, isLoading: campaignsLoading, refetch: refetchCampaigns } = useCampaigns();
 
-  const isLoading = profileLoading || tenantLoading || metricsLoading;
+  const isLoading = profileLoading || tenantLoading || metricsLoading || campaignMetricsLoading;
 
   const userName = userProfile?.full_name || user?.user_metadata?.full_name || 'User';
   const workspaceName = userTenant?.name || 'Your Workspace';
 
+  const recentCampaigns = campaigns?.slice(0, 3) || [];
+
   const metricsData = [
     {
       title: "Active Campaigns",
-      value: metrics?.activeCampaigns?.toString() || "0",
+      value: campaignMetrics?.active?.toString() || "0",
       icon: TrendingUp,
       description: "Running marketing campaigns",
       accentColor: "#c3073f", // PRAVADO crimson
-      trend: metrics?.activeCampaigns > 0 ? 'up' as const : 'neutral' as const
+      trend: (campaignMetrics?.active || 0) > 0 ? 'up' as const : 'neutral' as const
     },
     {
       title: "Content Pieces",
@@ -45,12 +52,12 @@ export function DashboardContent() {
       trend: metrics?.seoKeywords > 0 ? 'up' as const : 'neutral' as const
     },
     {
-      title: "Team Members",
-      value: metrics?.teamMembers?.toString() || "1",
+      title: "Total Campaigns",
+      value: campaignMetrics?.total?.toString() || "0",
       icon: Users,
-      description: "Active platform users",
+      description: "All campaign initiatives",
       accentColor: "#6f2dbd", // PRAVADO purple
-      trend: 'up' as const
+      trend: (campaignMetrics?.total || 0) > 0 ? 'up' as const : 'neutral' as const
     }
   ];
 
@@ -63,6 +70,11 @@ export function DashboardContent() {
     
     if (userTenant) {
       activities.push("Dashboard configured successfully");
+    }
+
+    // Add recent campaign activities
+    if (recentCampaigns.length > 0) {
+      activities.push(`Latest campaign: ${recentCampaigns[0].name}`);
     }
     
     return activities;
@@ -84,13 +96,7 @@ export function DashboardContent() {
               )}
             </div>
             <div className="mt-6 lg:mt-0 animate-fade-in" style={{ animationDelay: '200ms' }}>
-              <Button 
-                className="bg-white text-enterprise-blue hover:bg-gray-100 transition-all duration-200 hover:shadow-lg hover:scale-105 focus:ring-2 focus:ring-white focus:ring-offset-2 focus:ring-offset-enterprise-blue"
-                onClick={() => console.log('Create campaign')}
-              >
-                <Plus className="h-5 w-5 mr-2" />
-                Create Campaign
-              </Button>
+              <CreateCampaignModal onCampaignCreated={refetchCampaigns} />
             </div>
           </div>
         </div>
@@ -136,14 +142,9 @@ export function DashboardContent() {
             <Card className="p-6 bg-white border border-border-gray hover:shadow-xl transition-all duration-300 hover:-translate-y-1 animate-fade-in">
               <h3 className="text-lg font-semibold text-professional-gray mb-4">Quick Actions</h3>
               <div className="space-y-3">
-                <Button 
-                  variant="outline" 
-                  className="w-full justify-start hover:bg-blue-50 hover:border-enterprise-blue transition-all duration-200 focus:ring-2 focus:ring-enterprise-blue focus:ring-offset-2"
-                  onClick={() => console.log('Create campaign')}
-                >
-                  <Plus className="h-4 w-4 mr-2" />
-                  Create New Campaign
-                </Button>
+                <div className="w-full">
+                  <CreateCampaignModal onCampaignCreated={refetchCampaigns} />
+                </div>
                 <Button 
                   variant="outline" 
                   className="w-full justify-start hover:bg-blue-50 hover:border-enterprise-blue transition-all duration-200 focus:ring-2 focus:ring-enterprise-blue focus:ring-offset-2"
@@ -163,22 +164,45 @@ export function DashboardContent() {
               </div>
             </Card>
 
-            {/* Getting Started */}
+            {/* Recent Campaigns */}
             <Card className="p-6 bg-white border border-border-gray hover:shadow-xl transition-all duration-300 hover:-translate-y-1 animate-fade-in" style={{ animationDelay: '100ms' }}>
-              <h3 className="text-lg font-semibold text-professional-gray mb-4">Getting Started</h3>
-              <div className="space-y-4">
-                <div className="flex items-center space-x-3 transition-all duration-200 hover:bg-soft-gray p-2 rounded-md cursor-pointer">
-                  <div className="w-3 h-3 bg-pravado-orange rounded-full animate-pulse"></div>
-                  <span className="text-sm text-professional-gray">Set up your first campaign</span>
-                </div>
-                <div className="flex items-center space-x-3 transition-all duration-200 hover:bg-soft-gray p-2 rounded-md cursor-pointer">
-                  <div className="w-3 h-3 bg-border-gray rounded-full"></div>
-                  <span className="text-sm text-professional-gray">Invite team members</span>
-                </div>
-                <div className="flex items-center space-x-3 transition-all duration-200 hover:bg-soft-gray p-2 rounded-md cursor-pointer">
-                  <div className="w-3 h-3 bg-border-gray rounded-full"></div>
-                  <span className="text-sm text-professional-gray">Configure analytics</span>
-                </div>
+              <div className="flex items-center justify-between mb-4">
+                <h3 className="text-lg font-semibold text-professional-gray">Recent Campaigns</h3>
+                <Link to="/campaigns">
+                  <Button variant="ghost" size="sm" className="text-enterprise-blue hover:text-enterprise-blue/80">
+                    View All
+                    <ArrowRight className="h-4 w-4 ml-1" />
+                  </Button>
+                </Link>
+              </div>
+              <div className="space-y-3">
+                {campaignsLoading ? (
+                  <div className="text-sm text-gray-500">Loading campaigns...</div>
+                ) : recentCampaigns.length > 0 ? (
+                  recentCampaigns.map((campaign, index) => (
+                    <div 
+                      key={campaign.id}
+                      className="flex items-center justify-between p-3 rounded-lg bg-soft-gray hover:bg-gray-100 transition-colors"
+                    >
+                      <div>
+                        <p className="font-medium text-sm text-professional-gray">{campaign.name}</p>
+                        <p className="text-xs text-gray-500">{campaign.campaign_type.replace('_', ' ')}</p>
+                      </div>
+                      <div className={`px-2 py-1 rounded-full text-xs font-medium ${
+                        campaign.status === 'active' ? 'bg-green-100 text-green-800' :
+                        campaign.status === 'draft' ? 'bg-gray-100 text-gray-800' :
+                        'bg-blue-100 text-blue-800'
+                      }`}>
+                        {campaign.status}
+                      </div>
+                    </div>
+                  ))
+                ) : (
+                  <div className="text-center py-4">
+                    <p className="text-sm text-gray-500 mb-3">No campaigns created yet</p>
+                    <CreateCampaignModal onCampaignCreated={refetchCampaigns} />
+                  </div>
+                )}
               </div>
             </Card>
 

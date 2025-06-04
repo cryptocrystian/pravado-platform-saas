@@ -37,6 +37,11 @@ const App = () => (
                 <Dashboard />
               </ProtectedRoute>
             } />
+            <Route path="/campaigns" element={
+              <ProtectedRoute>
+                <Campaigns />
+              </ProtectedRoute>
+            } />
             <Route path="/content-marketing" element={
               <ProtectedRoute>
                 <ContentMarketing />
