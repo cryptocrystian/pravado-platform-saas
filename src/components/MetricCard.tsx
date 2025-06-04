@@ -8,15 +8,15 @@ interface MetricCardProps {
   value: string;
   icon: LucideIcon;
   description: string;
-  color: string;
+  accentColor: string;
 }
 
-export function MetricCard({ title, value, icon: Icon, description, color }: MetricCardProps) {
+export function MetricCard({ title, value, icon: Icon, description, accentColor }: MetricCardProps) {
   return (
-    <Card className={`p-6 bg-white border-l-4 border-l-${color} border border-border-gray transition-all hover:shadow-md`}>
+    <Card className={`p-6 bg-white border-l-4 transition-all hover:shadow-md`} style={{ borderLeftColor: accentColor }}>
       <div className="flex items-center justify-between mb-4">
-        <Icon className={`h-8 w-8 text-${color}`} />
-        <div className={`text-3xl font-bold text-${color}`}>
+        <Icon className="h-8 w-8 text-professional-gray" />
+        <div className="text-3xl font-bold text-professional-gray">
           {value}
         </div>
       </div>

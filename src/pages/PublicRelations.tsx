@@ -9,9 +9,9 @@ import { EmptyState } from '@/components/EmptyState';
 
 const PublicRelations = () => {
   const prMetrics = [
-    { title: "Media Contacts", value: "0", icon: Users, color: "enterprise-blue" },
-    { title: "Press Releases", value: "0", icon: Newspaper, color: "pravado-orange" },
-    { title: "Active Campaigns", value: "0", icon: TrendingUp, color: "pravado-purple" },
+    { title: "Media Contacts", value: "0", icon: Users, accentColor: "#6f2dbd" }, // PRAVADO purple
+    { title: "Press Releases", value: "0", icon: Newspaper, accentColor: "#1e40af" }, // Enterprise blue
+    { title: "Active Campaigns", value: "0", icon: TrendingUp, accentColor: "#c3073f" }, // PRAVADO crimson
   ];
 
   return (
@@ -39,10 +39,10 @@ const PublicRelations = () => {
           {/* Metrics */}
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
             {prMetrics.map((metric, index) => (
-              <Card key={index} className="p-6 bg-white border border-border-gray hover:shadow-lg transition-shadow">
+              <Card key={index} className="p-6 bg-white border-l-4 hover:shadow-lg transition-shadow" style={{ borderLeftColor: metric.accentColor }}>
                 <div className="flex items-center justify-between mb-2">
-                  <metric.icon className={`h-8 w-8 text-${metric.color}`} />
-                  <div className={`text-2xl font-bold text-${metric.color}`}>
+                  <metric.icon className="h-8 w-8 text-professional-gray" />
+                  <div className="text-2xl font-bold text-professional-gray">
                     {metric.value}
                   </div>
                 </div>

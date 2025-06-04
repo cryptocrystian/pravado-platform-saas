@@ -12,28 +12,28 @@ export function DashboardContent() {
       value: "0",
       icon: TrendingUp,
       description: "Running marketing campaigns",
-      color: "enterprise-blue"
+      accentColor: "#c3073f" // PRAVADO crimson
     },
     {
       title: "Content Pieces",
       value: "0",
       icon: FileText,
       description: "Published content assets",
-      color: "pravado-orange"
+      accentColor: "#059669" // Success green
     },
     {
       title: "SEO Keywords",
       value: "0",
       icon: Target,
       description: "Tracked search terms",
-      color: "pravado-purple"
+      accentColor: "#1e40af" // Enterprise blue
     },
     {
       title: "Team Members",
       value: "1",
       icon: Users,
       description: "Active platform users",
-      color: "enterprise-blue"
+      accentColor: "#6f2dbd" // PRAVADO purple
     }
   ];
 
@@ -77,7 +77,7 @@ export function DashboardContent() {
                   value={metric.value}
                   icon={metric.icon}
                   description={metric.description}
-                  color={metric.color}
+                  accentColor={metric.accentColor}
                 />
               ))}
             </div>
