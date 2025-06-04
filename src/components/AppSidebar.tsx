@@ -1,7 +1,7 @@
 
 import React, { useState } from 'react';
 import { useLocation, Link } from 'react-router-dom';
-import { LayoutDashboard, MessageSquare, Users, Search, Activity, Settings, User } from 'lucide-react';
+import { LayoutDashboard, MessageSquare, Users, Search, Activity, Settings, User, LogOut } from 'lucide-react';
 import {
   Sidebar,
   SidebarContent,
@@ -14,6 +14,9 @@ import {
   SidebarHeader,
   SidebarFooter,
 } from '@/components/ui/sidebar';
+import { useAuth } from '@/contexts/AuthContext';
+import { useUserProfile } from '@/hooks/useUserData';
+import { Button } from '@/components/ui/button';
 
 const menuItems = [
   {
@@ -50,6 +53,15 @@ const menuItems = [
 
 export function AppSidebar() {
   const location = useLocation();
+  const { signOut, user } = useAuth();
+  const { data: userProfile } = useUserProfile();
+
+  const userName = userProfile?.full_name || user?.user_metadata?.full_name || 'User';
+  const userRole = userProfile?.role || 'Marketing Professional';
+
+  const handleSignOut = () => {
+    signOut();
+  };
 
   return (
     <Sidebar className="border-r border-border-gray shadow-lg">
@@ -95,14 +107,25 @@ export function AppSidebar() {
       </SidebarContent>
       
       <SidebarFooter className="bg-soft-gray p-4 border-t border-border-gray">
-        <div className="flex items-center space-x-3 p-4 rounded-lg bg-white shadow-sm hover:shadow-md transition-all duration-200">
-          <div className="w-12 h-12 bg-gradient-to-br from-enterprise-blue to-pravado-purple rounded-full flex items-center justify-center shadow-sm">
-            <User className="h-6 w-6 text-white" />
+        <div className="space-y-3">
+          <div className="flex items-center space-x-3 p-4 rounded-lg bg-white shadow-sm">
+            <div className="w-12 h-12 bg-gradient-to-br from-enterprise-blue to-pravado-purple rounded-full flex items-center justify-center shadow-sm">
+              <User className="h-6 w-6 text-white" />
+            </div>
+            <div className="flex-1 min-w-0">
+              <p className="text-sm font-semibold text-professional-gray truncate">{userName}</p>
+              <p className="text-xs text-slate-500 truncate">{userRole}</p>
+            </div>
           </div>
-          <div className="flex-1">
-            <p className="text-sm font-semibold text-professional-gray">Sarah Johnson</p>
-            <p className="text-xs text-slate-500">Marketing Director</p>
-          </div>
+          
+          <Button
+            variant="ghost"
+            onClick={handleSignOut}
+            className="w-full justify-start text-gray-600 hover:text-red-600 hover:bg-red-50"
+          >
+            <LogOut className="h-4 w-4 mr-2" />
+            Sign Out
+          </Button>
         </div>
       </SidebarFooter>
     </Sidebar>

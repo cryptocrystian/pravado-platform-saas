@@ -5,46 +5,48 @@ import { MetricCard } from '@/components/MetricCard';
 import { MetricCardSkeleton } from '@/components/MetricCardSkeleton';
 import { Button } from '@/components/ui/button';
 import { Plus, TrendingUp, Users, FileText, Target, Clock } from 'lucide-react';
+import { useUserProfile, useDashboardMetrics, useUserTenant } from '@/hooks/useUserData';
+import { useAuth } from '@/contexts/AuthContext';
 
 export function DashboardContent() {
-  const [isLoading, setIsLoading] = useState(true);
+  const { user } = useAuth();
+  const { data: userProfile, isLoading: profileLoading } = useUserProfile();
+  const { data: userTenant, isLoading: tenantLoading } = useUserTenant();
+  const { data: metrics, isLoading: metricsLoading } = useDashboardMetrics();
 
-  // Simulate loading state
-  useEffect(() => {
-    const timer = setTimeout(() => {
-      setIsLoading(false);
-    }, 1500);
-    return () => clearTimeout(timer);
-  }, []);
+  const isLoading = profileLoading || tenantLoading || metricsLoading;
 
-  const metrics = [
+  const userName = userProfile?.full_name || user?.user_metadata?.full_name || 'User';
+  const workspaceName = userTenant?.name || 'Your Workspace';
+
+  const metricsData = [
     {
       title: "Active Campaigns",
-      value: "0",
+      value: metrics?.activeCampaigns?.toString() || "0",
       icon: TrendingUp,
       description: "Running marketing campaigns",
       accentColor: "#c3073f", // PRAVADO crimson
-      trend: 'neutral' as const
+      trend: metrics?.activeCampaigns > 0 ? 'up' as const : 'neutral' as const
     },
     {
       title: "Content Pieces",
-      value: "0",
+      value: metrics?.contentPieces?.toString() || "0",
       icon: FileText,
       description: "Published content assets",
       accentColor: "#059669", // Success green
-      trend: 'neutral' as const
+      trend: metrics?.contentPieces > 0 ? 'up' as const : 'neutral' as const
     },
     {
       title: "SEO Keywords",
-      value: "0",
+      value: metrics?.seoKeywords?.toString() || "0",
       icon: Target,
       description: "Tracked search terms",
       accentColor: "#1e40af", // Enterprise blue
-      trend: 'neutral' as const
+      trend: metrics?.seoKeywords > 0 ? 'up' as const : 'neutral' as const
     },
     {
       title: "Team Members",
-      value: "1",
+      value: metrics?.teamMembers?.toString() || "1",
       icon: Users,
       description: "Active platform users",
       accentColor: "#6f2dbd", // PRAVADO purple
@@ -52,11 +54,19 @@ export function DashboardContent() {
     }
   ];
 
-  const recentActivities = [
-    "Platform setup completed",
-    "Welcome to PRAVADO Marketing OS",
-    "Dashboard configured successfully"
-  ];
+  const getRecentActivities = () => {
+    const activities = ["Platform setup completed"];
+    
+    if (userProfile) {
+      activities.push(`Welcome to ${workspaceName}!`);
+    }
+    
+    if (userTenant) {
+      activities.push("Dashboard configured successfully");
+    }
+    
+    return activities;
+  };
 
   return (
     <div className="flex-1 bg-soft-gray min-h-screen">
@@ -65,8 +75,13 @@ export function DashboardContent() {
         <div className="max-w-7xl mx-auto">
           <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between">
             <div className="animate-fade-in">
-              <h1 className="text-3xl lg:text-4xl font-bold mb-2">Welcome back, Sarah!</h1>
+              <h1 className="text-3xl lg:text-4xl font-bold mb-2">
+                Welcome back, {userName}!
+              </h1>
               <p className="text-lg text-blue-100">Ready to accelerate your marketing success?</p>
+              {workspaceName && (
+                <p className="text-sm text-blue-200 mt-1">Working in: {workspaceName}</p>
+              )}
             </div>
             <div className="mt-6 lg:mt-0 animate-fade-in" style={{ animationDelay: '200ms' }}>
               <Button 
@@ -95,7 +110,7 @@ export function DashboardContent() {
                 ))
               ) : (
                 // Actual metric cards
-                metrics.map((metric, index) => (
+                metricsData.map((metric, index) => (
                   <div 
                     key={index} 
                     className="animate-fade-in"
@@ -174,7 +189,7 @@ export function DashboardContent() {
                 <h3 className="text-lg font-semibold text-professional-gray">Recent Activity</h3>
               </div>
               <div className="space-y-3">
-                {recentActivities.map((activity, index) => (
+                {getRecentActivities().map((activity, index) => (
                   <div 
                     key={index} 
                     className="flex items-start space-x-3 transition-all duration-200 hover:bg-soft-gray p-2 rounded-md cursor-pointer"
