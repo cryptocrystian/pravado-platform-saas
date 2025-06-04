@@ -51,38 +51,38 @@ export function AppSidebar() {
   const [activeItem, setActiveItem] = useState("Dashboard");
 
   return (
-    <Sidebar className="border-r border-border-gray shadow-sm">
-      <SidebarHeader className="bg-accent text-white p-3 shadow-sm">
-        <div className="flex items-center space-x-2">
-          <div className="w-6 h-6 bg-pravado-crimson rounded-md flex items-center justify-center">
-            <span className="text-white font-bold text-sm">P</span>
+    <Sidebar className="border-r border-border-gray shadow-lg">
+      <SidebarHeader className="bg-accent text-white p-4 shadow-md">
+        <div className="flex items-center space-x-3">
+          <div className="w-8 h-8 bg-pravado-crimson rounded-lg flex items-center justify-center shadow-sm">
+            <span className="text-white font-bold text-lg">P</span>
           </div>
           <div>
-            <h2 className="text-lg font-semibold">PRAVADO</h2>
-            <p className="text-xs text-gray-200 opacity-90">Marketing Operating System</p>
+            <h2 className="text-xl font-bold">PRAVADO</h2>
+            <p className="text-xs text-blue-100 opacity-90">Marketing Operating System</p>
           </div>
         </div>
       </SidebarHeader>
       
       <SidebarContent className="bg-soft-gray">
-        <SidebarGroup className="px-3 py-4">
-          <SidebarGroupLabel className="text-professional-gray text-xs font-medium uppercase tracking-wide mb-2 px-2">Platform</SidebarGroupLabel>
+        <SidebarGroup className="px-4 py-6">
+          <SidebarGroupLabel className="text-gray-500 text-xs font-semibold uppercase tracking-wide mb-4 px-3">Platform</SidebarGroupLabel>
           <SidebarGroupContent>
-            <SidebarMenu className="space-y-1">
+            <SidebarMenu className="space-y-2">
               {menuItems.map((item) => (
                 <SidebarMenuItem key={item.title}>
                   <SidebarMenuButton asChild>
                     <a 
                       href={item.url} 
                       onClick={() => setActiveItem(item.title)}
-                      className={`flex items-center space-x-3 p-3 rounded-lg transition-all duration-200 ease-in-out group ${
+                      className={`flex items-center space-x-3 px-4 py-3 rounded-lg transition-all duration-200 ease-in-out group ${
                         activeItem === item.title 
                           ? 'bg-enterprise-blue text-white shadow-sm' 
-                          : 'hover:bg-white text-professional-gray hover:shadow-sm'
+                          : 'hover:bg-slate-100 text-slate-600'
                       }`}
                     >
-                      <item.icon className={`h-5 w-5 transition-colors ${
-                        activeItem === item.title ? 'text-white' : 'text-gray-500 group-hover:text-enterprise-blue'
+                      <item.icon className={`h-5 w-5 transition-colors duration-200 ${
+                        activeItem === item.title ? 'text-white' : 'text-slate-500 group-hover:text-enterprise-blue'
                       }`} />
                       <span className="font-medium text-sm">{item.title}</span>
                     </a>
@@ -95,13 +95,13 @@ export function AppSidebar() {
       </SidebarContent>
       
       <SidebarFooter className="bg-soft-gray p-4 border-t border-border-gray">
-        <div className="flex items-center space-x-3 p-3 rounded-lg bg-white shadow-sm hover:shadow-md transition-shadow duration-200">
-          <div className="w-10 h-10 bg-gradient-to-br from-enterprise-blue to-pravado-purple rounded-full flex items-center justify-center">
-            <User className="h-5 w-5 text-white" />
+        <div className="flex items-center space-x-3 p-4 rounded-lg bg-white shadow-sm hover:shadow-md transition-all duration-200">
+          <div className="w-12 h-12 bg-gradient-to-br from-enterprise-blue to-pravado-purple rounded-full flex items-center justify-center shadow-sm">
+            <User className="h-6 w-6 text-white" />
           </div>
           <div className="flex-1">
-            <p className="text-sm font-medium text-professional-gray">Sarah Johnson</p>
-            <p className="text-xs text-gray-500">Marketing Director</p>
+            <p className="text-sm font-semibold text-professional-gray">Sarah Johnson</p>
+            <p className="text-xs text-slate-500">Marketing Director</p>
           </div>
         </div>
       </SidebarFooter>
