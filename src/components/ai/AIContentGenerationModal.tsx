@@ -115,9 +115,20 @@ export function AIContentGenerationModal({ onContentGenerated, trigger }: AICont
       // Convert keywords string to array
       const keywords = data.seo_keywords ? data.seo_keywords.split(',').map(k => k.trim()) : [];
 
+      // Ensure all required fields are present
       const request = {
-        ...data,
+        prompt: data.prompt,
+        content_type: data.content_type,
+        ai_provider: data.ai_provider,
+        model: data.model,
+        brand_voice_profile_id: data.brand_voice_profile_id,
+        tone: data.tone,
+        industry: data.industry,
+        audience_target: data.audience_target,
         seo_keywords: keywords,
+        platform_optimization: data.platform_optimization,
+        word_count: data.word_count,
+        temperature: data.temperature,
       };
 
       // Use streaming for real-time response

@@ -85,7 +85,7 @@ export function useAIUsageAnalytics() {
     queryFn: async () => {
       if (!userTenant?.id) return null;
       
-      // This would be implemented with proper analytics queries
+      // Mock analytics data for now
       return {
         monthly_usage: 1250,
         monthly_limit: 5000,
