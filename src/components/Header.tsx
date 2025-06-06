@@ -2,6 +2,7 @@
 import React from 'react';
 import { Button } from '@/components/ui/button';
 import { Menu, X } from 'lucide-react';
+import { PravadoLogo } from '@/components/PravadoLogo';
 
 const Header = () => {
   const [isMenuOpen, setIsMenuOpen] = React.useState(false);
@@ -10,11 +11,8 @@ const Header = () => {
     <header className="bg-accent text-white relative z-50">
       <div className="container mx-auto px-4 py-4">
         <div className="flex items-center justify-between">
-          <div className="flex items-center space-x-2">
-            <div className="w-8 h-8 bg-primary rounded-lg flex items-center justify-center">
-              <span className="text-white font-bold text-lg">S</span>
-            </div>
-            <span className="text-xl font-bold">SaasFlow</span>
+          <div className="flex items-center">
+            <PravadoLogo variant="compact" />
           </div>
           
           <nav className="hidden md:flex items-center space-x-8">

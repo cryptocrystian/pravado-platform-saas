@@ -17,6 +17,8 @@ import {
 import { useAuth } from '@/contexts/AuthContext';
 import { useUserProfile } from '@/hooks/useUserData';
 import { Button } from '@/components/ui/button';
+import { PravadoLogo } from '@/components/PravadoLogo';
+import { useIsMobile } from '@/hooks/use-mobile';
 
 const menuItems = [
   {
@@ -71,6 +73,7 @@ export function AppSidebar() {
   const location = useLocation();
   const { signOut, user } = useAuth();
   const { data: userProfile } = useUserProfile();
+  const isMobile = useIsMobile();
 
   const userName = userProfile?.full_name || user?.user_metadata?.full_name || 'User';
   const userRole = userProfile?.role || 'Marketing Professional';
@@ -79,18 +82,21 @@ export function AppSidebar() {
     signOut();
   };
 
+  // Determine logo variant based on screen size
+  const getLogoVariant = () => {
+    if (isMobile) return 'icon-only';
+    return 'full';
+  };
+
   return (
     <Sidebar className="border-r border-border-gray shadow-lg">
       <SidebarHeader className="bg-accent text-white p-3 shadow-md">
-        <div className="flex items-center space-x-2">
-          <div className="w-6 h-6 bg-pravado-crimson rounded-lg flex items-center justify-center shadow-sm">
-            <span className="text-white font-bold text-sm">P</span>
-          </div>
-          <div>
-            <h2 className="text-lg font-bold">PRAVADO</h2>
-            <p className="text-xs text-blue-100 opacity-90">Marketing Operating System</p>
-          </div>
-        </div>
+        <Link 
+          to="/dashboard" 
+          className="flex items-center justify-center hover:opacity-90 transition-opacity"
+        >
+          <PravadoLogo variant={getLogoVariant()} />
+        </Link>
       </SidebarHeader>
       
       <SidebarContent className="bg-soft-gray">

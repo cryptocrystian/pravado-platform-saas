@@ -3,6 +3,8 @@ import React from 'react';
 import { SidebarTrigger } from '@/components/ui/sidebar';
 import { Button } from '@/components/ui/button';
 import { Bell, Search, User } from 'lucide-react';
+import { PravadoLogo } from '@/components/PravadoLogo';
+import { useIsMobile } from '@/hooks/use-mobile';
 
 interface DashboardHeaderProps {
   title?: string;
@@ -10,11 +12,21 @@ interface DashboardHeaderProps {
 }
 
 export function DashboardHeader({ title = "Dashboard", breadcrumb }: DashboardHeaderProps) {
+  const isMobile = useIsMobile();
+
   return (
     <header className="bg-white border-b border-border-gray px-6 py-4">
       <div className="flex items-center justify-between">
         <div className="flex items-center space-x-4">
           <SidebarTrigger className="lg:hidden" />
+          
+          {/* Show logo on mobile when sidebar is collapsed */}
+          {isMobile && (
+            <div className="sm:hidden">
+              <PravadoLogo variant="icon-only" />
+            </div>
+          )}
+          
           <div className="hidden sm:block">
             <nav className="flex space-x-2 text-sm text-professional-gray">
               <span>PRAVADO</span>
