@@ -56,8 +56,8 @@ export default function CiteMindRealTimeDashboard() {
     setNewQuery({ query_text: '', target_keywords: '', platforms: ['openai', 'anthropic', 'perplexity', 'gemini'] });
   };
 
-  const totalCitations = citationResults?.reduce((sum, result) => sum + result.citations_found.length, 0) || 0;
-  const avgSentiment = citationResults?.reduce((sum, result) => sum + result.sentiment_score, 0) / (citationResults?.length || 1) || 0;
+  const totalCitations = citationResults?.reduce((sum, result) => sum + (result.citations_found?.length || 0), 0) || 0;
+  const avgSentiment = citationResults?.reduce((sum, result) => sum + (result.sentiment_score || 0), 0) / (citationResults?.length || 1) || 0;
   const totalEpisodes = podcastEpisodes?.length || 0;
   const publishedEpisodes = podcastEpisodes?.filter(ep => ep.status === 'published').length || 0;
 
@@ -176,7 +176,7 @@ export default function CiteMindRealTimeDashboard() {
                         <div className="flex-1">
                           <p className="font-medium text-sm">{query.query_text}</p>
                           <div className="flex gap-2 mt-1">
-                            {query.target_keywords.map((keyword, idx) => (
+                            {query.target_keywords?.map((keyword, idx) => (
                               <Badge key={idx} variant="secondary" className="text-xs">
                                 {keyword}
                               </Badge>
@@ -229,16 +229,16 @@ export default function CiteMindRealTimeDashboard() {
                           variant={result.sentiment_score > 0 ? 'default' : result.sentiment_score < 0 ? 'destructive' : 'secondary'}
                           className="text-xs"
                         >
-                          Sentiment: {(result.sentiment_score * 100).toFixed(0)}%
+                          Sentiment: {((result.sentiment_score || 0) * 100).toFixed(0)}%
                         </Badge>
                         <Badge variant="outline" className="text-xs">
-                          Confidence: {(result.confidence_score * 100).toFixed(0)}%
+                          Confidence: {((result.confidence_score || 0) * 100).toFixed(0)}%
                         </Badge>
                       </div>
                     </div>
                     <div className="space-y-2">
                       <div className="flex gap-2">
-                        {result.citations_found.map((citation, idx) => (
+                        {result.citations_found?.map((citation, idx) => (
                           <Badge key={idx} className="bg-pravado-purple text-white text-xs">
                             {citation}
                           </Badge>
@@ -253,6 +253,12 @@ export default function CiteMindRealTimeDashboard() {
                     </div>
                   </div>
                 ))}
+                {!citationResults?.length && (
+                  <div className="text-center py-8 text-gray-500">
+                    <Brain className="w-12 h-12 mx-auto mb-4 opacity-50" />
+                    <p>No citations found yet. Create a monitoring query to get started!</p>
+                  </div>
+                )}
               </div>
             </CardContent>
           </Card>
@@ -309,6 +315,12 @@ export default function CiteMindRealTimeDashboard() {
                       </div>
                     </div>
                   ))}
+                  {!podcastEpisodes?.length && (
+                    <div className="text-center py-8 text-gray-500">
+                      <Radio className="w-12 h-12 mx-auto mb-4 opacity-50" />
+                      <p>No podcast episodes yet. Generate content to create episodes!</p>
+                    </div>
+                  )}
                 </div>
               </CardContent>
             </Card>
@@ -413,6 +425,12 @@ export default function CiteMindRealTimeDashboard() {
                       </div>
                     </div>
                   ))}
+                  {!citationAnalytics?.length && (
+                    <div className="text-center py-8 text-gray-500">
+                      <BarChart3 className="w-12 h-12 mx-auto mb-4 opacity-50" />
+                      <p>Analytics will appear as citation data is collected.</p>
+                    </div>
+                  )}
                 </div>
               </CardContent>
             </Card>
