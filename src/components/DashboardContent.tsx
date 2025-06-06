@@ -1,11 +1,11 @@
 
-import React, { useState, useEffect } from 'react';
+import React from 'react';
 import { Card } from '@/components/ui/card';
 import { MetricCard } from '@/components/MetricCard';
 import { MetricCardSkeleton } from '@/components/MetricCardSkeleton';
 import { Button } from '@/components/ui/button';
 import { CreateCampaignModal } from '@/components/CreateCampaignModal';
-import { Plus, TrendingUp, Users, FileText, Target, Clock, ArrowRight, Brain, AlertTriangle } from 'lucide-react';
+import { TrendingUp, FileText, Target, Clock, ArrowRight, Brain, AlertTriangle } from 'lucide-react';
 import { useUserProfile, useDashboardMetrics, useUserTenant } from '@/hooks/useUserData';
 import { useCampaignMetrics, useCampaigns } from '@/hooks/useCampaigns';
 import { useAutomateMethodologyProgress } from '@/hooks/useAutomateData';
@@ -61,7 +61,7 @@ export function DashboardContent() {
       icon: FileText,
       description: "Published content assets",
       accentColor: "#059669", // Success green
-      trend: metrics?.contentPieces > 0 ? 'up' as const : 'neutral' as const
+      trend: (metrics?.contentPieces || 0) > 0 ? 'up' as const : 'neutral' as const
     },
     {
       title: "SEO Keywords",
@@ -69,7 +69,7 @@ export function DashboardContent() {
       icon: Target,
       description: "Tracked search terms",
       accentColor: "#1e40af", // Enterprise blue
-      trend: metrics?.seoKeywords > 0 ? 'up' as const : 'neutral' as const
+      trend: (metrics?.seoKeywords || 0) > 0 ? 'up' as const : 'neutral' as const
     }
   ];
 
@@ -164,7 +164,7 @@ export function DashboardContent() {
                   </h3>
                 </div>
                 <p className="text-yellow-700 mt-2">
-                  {lowAdherenceCampaigns.length} campaign(s) have low AUTOMATE methodology adherence (< 60%). 
+                  {lowAdherenceCampaigns.length} campaign(s) have low AUTOMATE methodology adherence (&lt; 60%). 
                   Complete methodology steps to improve campaign performance.
                 </p>
                 <div className="mt-4 flex space-x-3">
