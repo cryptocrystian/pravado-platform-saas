@@ -23,6 +23,8 @@ import CampaignDetail from "./pages/CampaignDetail";
 import AutomateHub from "./pages/AutomateHub";
 import AssessAudit from "./pages/AssessAudit";
 import HelpCenter from "./pages/HelpCenter";
+import BetaProgram from "./pages/BetaProgram";
+import CustomerSuccess from "./pages/CustomerSuccess";
 
 const queryClient = new QueryClient();
 
@@ -90,6 +92,16 @@ const App = () => (
             <Route path="/help" element={
               <ProtectedRoute>
                 <HelpCenter />
+              </ProtectedRoute>
+            } />
+            <Route path="/beta" element={
+              <ProtectedRoute>
+                <BetaProgram />
+              </ProtectedRoute>
+            } />
+            <Route path="/customer-success" element={
+              <ProtectedRoute>
+                <CustomerSuccess />
               </ProtectedRoute>
             } />
             <Route path="/settings" element={
