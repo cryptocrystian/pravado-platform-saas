@@ -16,7 +16,8 @@ import {
   Brain,
   CheckCircle,
   AlertTriangle,
-  Lightbulb
+  Lightbulb,
+  FileText
 } from 'lucide-react';
 import { EmptyState } from '@/components/EmptyState';
 
