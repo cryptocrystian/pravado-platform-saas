@@ -38,14 +38,14 @@ export function PravadoLogo({ variant = 'navbar', className = '' }: PravadoLogoP
 
   if (variant === 'landing') {
     return (
-      <div className={`flex items-center space-x-4 ${className}`}>
+      <div className={`flex items-center space-x-6 ${className}`}>
         <img 
           src={logoSrc}
           alt="PRAVADO"
-          className="h-12 w-12 object-contain flex-shrink-0"
+          className="h-16 w-16 object-contain flex-shrink-0"
           loading="eager"
         />
-        <span className="text-3xl font-bold text-white leading-tight">PRAVADO</span>
+        <span className="text-5xl lg:text-6xl font-bold text-white leading-tight">PRAVADO</span>
       </div>
     );
   }
