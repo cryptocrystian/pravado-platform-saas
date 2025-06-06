@@ -21,6 +21,7 @@ import {
   Globe,
   Brain
 } from 'lucide-react';
+import { PravadoLogo } from '@/components/PravadoLogo';
 
 const Index = () => {
   const { user, loading } = useAuth();
@@ -65,13 +66,8 @@ const Index = () => {
       <div className="bg-gradient-to-br from-enterprise-blue via-pravado-navy to-pravado-purple text-white">
         <div className="max-w-7xl mx-auto px-4 py-20 lg:py-28">
           <div className="text-center">
-            <div className="flex items-center justify-center space-x-3 mb-8">
-              <img 
-                src="/lovable-uploads/b6e060fa-91ad-4bda-9b7e-330354ecd57b.png"
-                alt="PRAVADO - Marketing Operating System"
-                className="h-24 lg:h-32 w-auto object-contain"
-                loading="eager"
-              />
+            <div className="flex items-center justify-center mb-12">
+              <PravadoLogo variant="hero" className="justify-center" />
             </div>
             
             <Badge className="bg-white/10 backdrop-blur-sm text-white border border-white/20 px-6 py-3 mb-8 text-lg font-semibold">
