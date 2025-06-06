@@ -1,3 +1,4 @@
+
 import React, { useState } from 'react';
 import { BaseLayout } from '@/components/BaseLayout';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
@@ -40,13 +41,13 @@ const SEOIntelligencePro = () => {
   // Calculate overall SEO metrics with proper type checking
   const totalKeywords = tracking.length;
   const avgPosition = tracking.length > 0 
-    ? tracking.reduce((sum: number, t: any) => sum + (t.position || 0), 0) / tracking.length 
+    ? tracking.reduce((sum, t) => sum + (t.position || 0), 0) / tracking.length 
     : 0;
-  const improvingKeywords = tracking.filter((t: any) => 
+  const improvingKeywords = tracking.filter((t) => 
     t.previous_position && t.position && t.position < t.previous_position
   ).length;
   const overallHealth = audits.length > 0 
-    ? audits.reduce((sum: number, a: any) => sum + (a.overall_score || 0), 0) / audits.length 
+    ? audits.reduce((sum, a) => sum + (a.overall_score || 0), 0) / audits.length 
     : 0;
 
   // AUTOMATE methodology progress for SEO
