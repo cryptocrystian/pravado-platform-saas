@@ -19,7 +19,8 @@ import {
   Lightbulb,
   Eye,
   Settings,
-  Users
+  Users,
+  Zap
 } from 'lucide-react';
 import { SEOProjectManagement } from '@/components/seo/SEOProjectManagement';
 import { KeywordResearchDashboard } from '@/components/seo/KeywordResearchDashboard';
@@ -60,6 +61,13 @@ const SEOIntelligencePro = () => {
       status: audits.length > 0 ? 'completed' : 'pending'
     },
     { 
+      code: 'U', 
+      name: 'Understand Audience', 
+      progress: 65,
+      activities: ['User Intent Analysis', 'Search Behavior Study', 'Audience Segmentation'],
+      status: 'in_progress'
+    },
+    { 
       code: 'T', 
       name: 'Target & Strategy', 
       progress: totalKeywords > 0 ? 75 : 0,
@@ -81,10 +89,24 @@ const SEOIntelligencePro = () => {
       status: tracking.length > 0 ? 'completed' : 'pending'
     },
     { 
+      code: 'A', 
+      name: 'Accelerate Growth', 
+      progress: 55,
+      activities: ['Content Scaling', 'Link Building', 'Authority Building'],
+      status: 'in_progress'
+    },
+    { 
       code: 'T', 
       name: 'Transform & Evolve', 
       progress: 45,
       activities: ['Content Optimization', 'Algorithm Adaptation', 'Strategy Refinement'],
+      status: 'in_progress'
+    },
+    { 
+      code: 'E', 
+      name: 'Execute Excellence', 
+      progress: 40,
+      activities: ['Process Automation', 'Quality Assurance', 'Performance Excellence'],
       status: 'in_progress'
     }
   ];
@@ -144,9 +166,9 @@ const SEOIntelligencePro = () => {
                 </div>
               </div>
               <Progress value={overallSEOProgress} className="h-2 mb-4" />
-              <div className="grid grid-cols-1 md:grid-cols-5 gap-3">
+              <div className="grid grid-cols-1 md:grid-cols-4 lg:grid-cols-8 gap-3">
                 {seoAutomateSteps.map((step) => (
-                  <div key={step.code} className="bg-white rounded-lg p-3 border">
+                  <div key={`${step.code}-${step.name}`} className="bg-white rounded-lg p-3 border">
                     <div className="flex items-center justify-between mb-2">
                       <span className="font-medium text-sm">{step.code}</span>
                       {getStatusIcon(step.status)}
@@ -184,7 +206,7 @@ const SEOIntelligencePro = () => {
               <CardContent className="p-6">
                 <div className="flex items-center justify-between mb-2">
                   <TrendingUp className="h-8 w-8 text-pravado-orange" />
-                  <div className="text-2xl font-bold text-pravado-orange">{Math.round(avgPosition)}</div>
+                  <div className="text-2xl font-bold text-pravado-orange">{Math.round(avgPosition) || '-'}</div>
                 </div>
                 <h3 className="text-lg font-semibold text-professional-gray mb-1">Avg. Position</h3>
                 <div className="text-xs text-gray-600 bg-soft-gray rounded px-2 py-1">
@@ -210,7 +232,7 @@ const SEOIntelligencePro = () => {
               <CardContent className="p-6">
                 <div className="flex items-center justify-between mb-2">
                   <Globe className="h-8 w-8 text-green-600" />
-                  <div className="text-2xl font-bold text-green-600">{Math.round(overallHealth)}%</div>
+                  <div className="text-2xl font-bold text-green-600">{Math.round(overallHealth) || '-'}%</div>
                 </div>
                 <h3 className="text-lg font-semibold text-professional-gray mb-1">Site Health</h3>
                 <div className="text-xs text-gray-600 bg-soft-gray rounded px-2 py-1">
@@ -292,6 +314,60 @@ const SEOIntelligencePro = () => {
                       </CardContent>
                     </Card>
                   </div>
+
+                  {/* Cross-Pillar Integration */}
+                  <div className="mt-8">
+                    <h3 className="text-xl font-semibold text-professional-gray mb-4">Three-Pillar Integration Impact</h3>
+                    <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+                      <Card className="border-enterprise-blue border-2">
+                        <CardHeader className="pb-3">
+                          <CardTitle className="text-enterprise-blue flex items-center space-x-2">
+                            <Search className="w-5 h-5" />
+                            <span>SEO → Content</span>
+                          </CardTitle>
+                        </CardHeader>
+                        <CardContent>
+                          <div className="space-y-2 text-sm">
+                            <div>• 23 content pieces optimized for SEO</div>
+                            <div>• 15% increase in organic reach</div>
+                            <div>• 8 high-value keywords integrated</div>
+                          </div>
+                        </CardContent>
+                      </Card>
+
+                      <Card className="border-pravado-orange border-2">
+                        <CardHeader className="pb-3">
+                          <CardTitle className="text-pravado-orange flex items-center space-x-2">
+                            <Users className="w-5 h-5" />
+                            <span>SEO → PR</span>
+                          </CardTitle>
+                        </CardHeader>
+                        <CardContent>
+                          <div className="space-y-2 text-sm">
+                            <div>• 5 PR campaigns with SEO targeting</div>
+                            <div>• 32% boost in brand visibility</div>
+                            <div>• 12 high-authority backlinks earned</div>
+                          </div>
+                        </CardContent>
+                      </Card>
+
+                      <Card className="border-pravado-purple border-2">
+                        <CardHeader className="pb-3">
+                          <CardTitle className="text-pravado-purple flex items-center space-x-2">
+                            <Zap className="w-5 h-5" />
+                            <span>Cross-Pillar Synergy</span>
+                          </CardTitle>
+                        </CardHeader>
+                        <CardContent>
+                          <div className="space-y-2 text-sm">
+                            <div>• 87% AUTOMATE methodology completion</div>
+                            <div>• 45% overall marketing efficiency gain</div>
+                            <div>• 28% improvement in lead quality</div>
+                          </div>
+                        </CardContent>
+                      </Card>
+                    </div>
+                  </div>
                 </TabsContent>
 
                 <TabsContent value="projects" className="mt-6">
@@ -326,7 +402,7 @@ const SEOIntelligencePro = () => {
                 <TabsContent value="optimization" className="mt-6">
                   <SEOContentOptimizer 
                     projectId={selectedProject}
-                    automateProgress={seoAutomateSteps.find(s => s.code === 'T')?.progress || 0}
+                    automateProgress={seoAutomateSteps.find(s => s.code === 'T' && s.name === 'Transform & Evolve')?.progress || 0}
                   />
                 </TabsContent>
               </Tabs>

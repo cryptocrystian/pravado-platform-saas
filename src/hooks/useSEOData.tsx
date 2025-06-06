@@ -62,13 +62,13 @@ export function useSEOProjects() {
       if (!userTenant?.id) return [];
       
       const { data, error } = await supabase
-        .from('seo_projects' as any)
+        .from('seo_projects')
         .select('*')
         .eq('tenant_id', userTenant.id)
         .order('created_at', { ascending: false });
       
       if (error) throw error;
-      return (data || []) as SEOProject[];
+      return data || [];
     },
     enabled: !!userTenant?.id,
   });
@@ -88,7 +88,7 @@ export function useCreateSEOProject() {
       if (!userTenant?.id) throw new Error('No tenant ID');
 
       const { data, error } = await supabase
-        .from('seo_projects' as any)
+        .from('seo_projects')
         .insert({
           tenant_id: userTenant.id,
           name: projectData.name,
@@ -99,7 +99,7 @@ export function useCreateSEOProject() {
         .single();
 
       if (error) throw error;
-      return data as SEOProject;
+      return data;
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['seo-projects'] });
@@ -128,7 +128,7 @@ export function useSEOAudits(projectId?: string) {
       if (!userTenant?.id) return [];
       
       let query = supabase
-        .from('seo_audits' as any)
+        .from('seo_audits')
         .select('*')
         .eq('tenant_id', userTenant.id);
       
@@ -139,7 +139,7 @@ export function useSEOAudits(projectId?: string) {
       const { data, error } = await query.order('created_at', { ascending: false });
       
       if (error) throw error;
-      return (data || []) as SEOAudit[];
+      return data || [];
     },
     enabled: !!userTenant?.id,
   });
@@ -154,7 +154,7 @@ export function useKeywordTracking(projectId?: string) {
       if (!userTenant?.id) return [];
       
       let query = supabase
-        .from('keyword_tracking' as any)
+        .from('keyword_tracking')
         .select('*')
         .eq('tenant_id', userTenant.id);
       
@@ -165,7 +165,7 @@ export function useKeywordTracking(projectId?: string) {
       const { data, error } = await query.order('tracked_at', { ascending: false });
       
       if (error) throw error;
-      return (data || []) as KeywordTracking[];
+      return data || [];
     },
     enabled: !!userTenant?.id,
   });
@@ -180,7 +180,7 @@ export function useSEOCompetitors(projectId?: string) {
       if (!userTenant?.id) return [];
       
       let query = supabase
-        .from('seo_competitors' as any)
+        .from('seo_competitors')
         .select('*')
         .eq('tenant_id', userTenant.id);
       
@@ -191,7 +191,7 @@ export function useSEOCompetitors(projectId?: string) {
       const { data, error } = await query.order('visibility_score', { ascending: false });
       
       if (error) throw error;
-      return (data || []) as SEOCompetitor[];
+      return data || [];
     },
     enabled: !!userTenant?.id,
   });
@@ -232,7 +232,7 @@ export function useContentOptimization(contentId?: string) {
       if (!userTenant?.id) return [];
       
       let query = supabase
-        .from('seo_content_optimization' as any)
+        .from('seo_content_optimization')
         .select('*')
         .eq('tenant_id', userTenant.id);
       
@@ -243,7 +243,7 @@ export function useContentOptimization(contentId?: string) {
       const { data, error } = await query.order('seo_score', { ascending: false });
       
       if (error) throw error;
-      return (data || []) as ContentOptimization[];
+      return data || [];
     },
     enabled: !!userTenant?.id,
   });
