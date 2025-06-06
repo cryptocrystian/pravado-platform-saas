@@ -28,8 +28,8 @@ export function PerformanceMonitor() {
       const memory = (performance as any).memory;
       
       setMetrics({
-        loadTime: Math.round(navigation.loadEventEnd - navigation.navigationStart),
-        renderTime: Math.round(navigation.domContentLoadedEventEnd - navigation.navigationStart),
+        loadTime: Math.round(navigation.loadEventEnd - navigation.startTime),
+        renderTime: Math.round(navigation.domContentLoadedEventEnd - navigation.startTime),
         memoryUsage: memory ? Math.round(memory.usedJSHeapSize / 1024 / 1024) : 0,
         networkLatency: Math.round(navigation.responseStart - navigation.requestStart)
       });
