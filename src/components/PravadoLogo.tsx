@@ -2,7 +2,7 @@
 import React from 'react';
 
 interface PravadoLogoProps {
-  variant?: 'navbar' | 'sidebar' | 'hero' | 'icon-only';
+  variant?: 'navbar' | 'sidebar' | 'landing' | 'icon-only';
   className?: string;
 }
 
@@ -28,32 +28,29 @@ export function PravadoLogo({ variant = 'navbar', className = '' }: PravadoLogoP
         <img 
           src={logoSrc}
           alt="PRAVADO"
-          className="h-10 w-10 object-contain flex-shrink-0"
+          className="h-8 w-8 object-contain flex-shrink-0"
           loading="lazy"
         />
-        <span className="text-xl font-bold text-white leading-tight">PRAVADO</span>
+        <span className="text-lg font-bold text-white leading-tight">PRAVADO</span>
       </div>
     );
   }
 
-  if (variant === 'hero') {
+  if (variant === 'landing') {
     return (
-      <div className={`flex items-center space-x-6 ${className}`}>
+      <div className={`flex items-center space-x-4 ${className}`}>
         <img 
           src={logoSrc}
-          alt="PRAVADO - Marketing Operating System"
-          className="h-24 lg:h-32 w-24 lg:w-32 object-contain flex-shrink-0"
+          alt="PRAVADO"
+          className="h-12 w-12 object-contain flex-shrink-0"
           loading="eager"
         />
-        <div className="flex flex-col">
-          <span className="text-4xl lg:text-6xl font-bold text-white leading-tight">PRAVADO</span>
-          <span className="text-lg lg:text-xl text-white/90 leading-tight mt-2">Marketing Operating System</span>
-        </div>
+        <span className="text-3xl font-bold text-white leading-tight">PRAVADO</span>
       </div>
     );
   }
 
-  // Navbar variant - clean icon + text for top navigation
+  // Navbar variant - clean horizontal layout
   return (
     <div className={`flex items-center space-x-3 ${className}`}>
       <img 

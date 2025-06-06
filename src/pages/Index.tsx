@@ -66,9 +66,13 @@ const Index = () => {
       <div className="bg-gradient-to-br from-enterprise-blue via-pravado-navy to-pravado-purple text-white">
         <div className="max-w-7xl mx-auto px-4 py-20 lg:py-28">
           <div className="text-center">
-            <div className="flex items-center justify-center mb-12">
-              <PravadoLogo variant="hero" />
+            <div className="flex items-center justify-center mb-8">
+              <PravadoLogo variant="landing" />
             </div>
+            
+            <p className="text-lg text-blue-200 mb-8 font-medium">
+              Marketing Operating System
+            </p>
             
             <Badge className="bg-white/10 backdrop-blur-sm text-white border border-white/20 px-6 py-3 mb-8 text-lg font-semibold">
               Systematic Marketing Excellence

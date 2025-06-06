@@ -20,10 +20,10 @@ export function DashboardHeader({ title = "Dashboard", breadcrumb }: DashboardHe
         <div className="flex items-center space-x-4">
           <SidebarTrigger className="lg:hidden" />
           
-          {/* Show clean logo on mobile when sidebar is collapsed */}
+          {/* Show clean icon-only logo on mobile when sidebar is collapsed */}
           {isMobile && (
             <div className="sm:hidden">
-              <PravadoLogo variant="navbar" />
+              <PravadoLogo variant="icon-only" />
             </div>
           )}
           
