@@ -67,7 +67,7 @@ const Index = () => {
         <div className="max-w-7xl mx-auto px-4 py-20 lg:py-28">
           <div className="text-center">
             <div className="flex items-center justify-center mb-12">
-              <PravadoLogo variant="hero" className="justify-center" />
+              <PravadoLogo variant="hero" />
             </div>
             
             <Badge className="bg-white/10 backdrop-blur-sm text-white border border-white/20 px-6 py-3 mb-8 text-lg font-semibold">

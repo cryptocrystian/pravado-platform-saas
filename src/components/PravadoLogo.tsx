@@ -2,11 +2,11 @@
 import React from 'react';
 
 interface PravadoLogoProps {
-  variant?: 'full' | 'compact' | 'icon-only' | 'hero';
+  variant?: 'navbar' | 'sidebar' | 'hero' | 'icon-only';
   className?: string;
 }
 
-export function PravadoLogo({ variant = 'full', className = '' }: PravadoLogoProps) {
+export function PravadoLogo({ variant = 'navbar', className = '' }: PravadoLogoProps) {
   const logoSrc = '/lovable-uploads/b6e060fa-91ad-4bda-9b7e-330354ecd57b.png';
 
   if (variant === 'icon-only') {
@@ -22,16 +22,16 @@ export function PravadoLogo({ variant = 'full', className = '' }: PravadoLogoPro
     );
   }
 
-  if (variant === 'compact') {
+  if (variant === 'sidebar') {
     return (
       <div className={`flex items-center space-x-3 ${className}`}>
         <img 
           src={logoSrc}
           alt="PRAVADO"
-          className="h-8 w-8 object-contain flex-shrink-0"
+          className="h-10 w-10 object-contain flex-shrink-0"
           loading="lazy"
         />
-        <span className="text-lg font-bold text-white leading-tight">PRAVADO</span>
+        <span className="text-xl font-bold text-white leading-tight">PRAVADO</span>
       </div>
     );
   }
@@ -42,27 +42,27 @@ export function PravadoLogo({ variant = 'full', className = '' }: PravadoLogoPro
         <img 
           src={logoSrc}
           alt="PRAVADO - Marketing Operating System"
-          className="h-32 lg:h-40 w-32 lg:w-40 object-contain flex-shrink-0"
+          className="h-24 lg:h-32 w-24 lg:w-32 object-contain flex-shrink-0"
           loading="eager"
         />
         <div className="flex flex-col">
-          <span className="text-5xl lg:text-7xl font-bold text-white leading-tight">PRAVADO</span>
-          <span className="text-xl lg:text-2xl text-white/90 leading-tight mt-2">Marketing Operating System</span>
+          <span className="text-4xl lg:text-6xl font-bold text-white leading-tight">PRAVADO</span>
+          <span className="text-lg lg:text-xl text-white/90 leading-tight mt-2">Marketing Operating System</span>
         </div>
       </div>
     );
   }
 
-  // Full horizontal variant - clean icon + text for navbar
+  // Navbar variant - clean icon + text for top navigation
   return (
-    <div className={`flex items-center space-x-4 ${className}`}>
+    <div className={`flex items-center space-x-3 ${className}`}>
       <img 
         src={logoSrc}
         alt="PRAVADO"
-        className="h-12 w-12 object-contain flex-shrink-0"
+        className="h-8 w-8 object-contain flex-shrink-0"
         loading="lazy"
       />
-      <span className="text-2xl font-bold text-white leading-tight">PRAVADO</span>
+      <span className="text-lg font-bold text-white leading-tight">PRAVADO</span>
     </div>
   );
 }

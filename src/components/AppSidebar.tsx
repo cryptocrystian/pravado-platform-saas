@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import { useLocation, Link } from 'react-router-dom';
 import { LayoutDashboard, MessageSquare, Users, Search, Activity, Settings, User, LogOut, Brain, Zap } from 'lucide-react';
@@ -82,20 +81,14 @@ export function AppSidebar() {
     signOut();
   };
 
-  // Determine logo variant based on screen size
-  const getLogoVariant = () => {
-    if (isMobile) return 'icon-only';
-    return 'full';
-  };
-
   return (
     <Sidebar className="border-r border-border-gray shadow-lg">
-      <SidebarHeader className="bg-accent text-white p-4 shadow-md">
+      <SidebarHeader className="bg-accent text-white p-6 shadow-md">
         <Link 
           to="/dashboard" 
           className="flex items-center justify-center hover:opacity-90 transition-opacity"
         >
-          <PravadoLogo variant={getLogoVariant()} className="h-12" />
+          <PravadoLogo variant="sidebar" />
         </Link>
       </SidebarHeader>
       

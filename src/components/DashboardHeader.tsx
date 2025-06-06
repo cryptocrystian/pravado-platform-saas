@@ -15,15 +15,15 @@ export function DashboardHeader({ title = "Dashboard", breadcrumb }: DashboardHe
   const isMobile = useIsMobile();
 
   return (
-    <header className="bg-white border-b border-border-gray px-6 py-6">
+    <header className="bg-white border-b border-border-gray px-6 py-4">
       <div className="flex items-center justify-between">
         <div className="flex items-center space-x-4">
           <SidebarTrigger className="lg:hidden" />
           
-          {/* Show logo on mobile when sidebar is collapsed */}
+          {/* Show clean logo on mobile when sidebar is collapsed */}
           {isMobile && (
             <div className="sm:hidden">
-              <PravadoLogo variant="compact" className="h-10" />
+              <PravadoLogo variant="navbar" />
             </div>
           )}
           
