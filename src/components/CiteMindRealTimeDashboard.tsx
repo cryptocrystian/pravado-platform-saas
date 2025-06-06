@@ -73,9 +73,9 @@ export default function CiteMindRealTimeDashboard() {
     <div className="space-y-6">
       {/* Real-Time Metrics */}
       <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
-        <Card className="border-l-4 border-l-enterprise-blue">
+        <Card className="border-l-4 border-l-blue-600">
           <CardHeader className="pb-3">
-            <CardTitle className="text-2xl font-bold text-enterprise-blue flex items-center gap-2">
+            <CardTitle className="text-2xl font-bold text-blue-600 flex items-center gap-2">
               <Brain className="w-6 h-6" />
               {totalCitations}
             </CardTitle>
@@ -83,9 +83,9 @@ export default function CiteMindRealTimeDashboard() {
           </CardHeader>
         </Card>
 
-        <Card className="border-l-4 border-l-pravado-orange">
+        <Card className="border-l-4 border-l-orange-500">
           <CardHeader className="pb-3">
-            <CardTitle className="text-2xl font-bold text-pravado-orange flex items-center gap-2">
+            <CardTitle className="text-2xl font-bold text-orange-500 flex items-center gap-2">
               <TrendingUp className="w-6 h-6" />
               {(avgSentiment * 100).toFixed(1)}%
             </CardTitle>
@@ -93,9 +93,9 @@ export default function CiteMindRealTimeDashboard() {
           </CardHeader>
         </Card>
 
-        <Card className="border-l-4 border-l-pravado-purple">
+        <Card className="border-l-4 border-l-purple-600">
           <CardHeader className="pb-3">
-            <CardTitle className="text-2xl font-bold text-pravado-purple flex items-center gap-2">
+            <CardTitle className="text-2xl font-bold text-purple-600 flex items-center gap-2">
               <Radio className="w-6 h-6" />
               {publishedEpisodes}/{totalEpisodes}
             </CardTitle>
@@ -149,7 +149,7 @@ export default function CiteMindRealTimeDashboard() {
                 />
                 <Button 
                   onClick={handleCreateQuery} 
-                  className="w-full"
+                  className="w-full bg-blue-600 hover:bg-blue-700"
                   disabled={isCreatingQuery || !newQuery.query_text || !newQuery.target_keywords}
                 >
                   {isCreatingQuery ? <LoadingSpinner size="sm" /> : 'Create Monitoring Query'}
@@ -192,7 +192,7 @@ export default function CiteMindRealTimeDashboard() {
                   <Button 
                     variant="outline" 
                     className="w-full"
-                    onClick={() => runCitationMonitoring.mutateAsync()}
+                    onClick={() => runCitationMonitoring.mutateAsync(undefined)}
                     disabled={isRunningMonitoring}
                   >
                     {isRunningMonitoring ? <LoadingSpinner size="sm" /> : 'Run All Monitoring Queries'}
@@ -239,7 +239,7 @@ export default function CiteMindRealTimeDashboard() {
                     <div className="space-y-2">
                       <div className="flex gap-2">
                         {result.citations_found?.map((citation, idx) => (
-                          <Badge key={idx} className="bg-pravado-purple text-white text-xs">
+                          <Badge key={idx} className="bg-purple-600 text-white text-xs">
                             {citation}
                           </Badge>
                         ))}
@@ -447,13 +447,13 @@ export default function CiteMindRealTimeDashboard() {
                 <div className="space-y-4">
                   <div className="flex justify-between items-center p-3 bg-blue-50 rounded-lg">
                     <span className="text-sm font-medium">Estimated AI Visibility Value</span>
-                    <span className="text-lg font-bold text-enterprise-blue">
+                    <span className="text-lg font-bold text-blue-600">
                       ${(totalCitations * 125).toLocaleString()}
                     </span>
                   </div>
                   <div className="flex justify-between items-center p-3 bg-purple-50 rounded-lg">
                     <span className="text-sm font-medium">Podcast Reach Multiplier</span>
-                    <span className="text-lg font-bold text-pravado-purple">
+                    <span className="text-lg font-bold text-purple-600">
                       {(publishedEpisodes * 1250).toLocaleString()} listeners
                     </span>
                   </div>
