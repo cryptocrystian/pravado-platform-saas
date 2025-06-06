@@ -256,7 +256,7 @@ export function DashboardContent() {
                           {campaign.status}
                         </div>
                         {overallMethodologyProgress < 60 && (
-                          <Brain className="w-3 h-3 text-yellow-500" title="Low methodology adherence" />
+                          <Brain className="w-3 h-3 text-yellow-500" />
                         )}
                       </div>
                     </div>
@@ -292,7 +292,7 @@ export function DashboardContent() {
                 {overallMethodologyProgress < 100 && (
                   <div className="mt-4 p-3 bg-pravado-purple/10 rounded-lg">
                     <div className="flex items-center space-x-2">
-                      <Brain className="w-4 h-4 text-pravado-purple" />
+                      <Brain className="w-4 w-4 text-pravado-purple" />
                       <span className="text-sm font-medium text-pravado-purple">
                         Continue AUTOMATE methodology
                       </span>

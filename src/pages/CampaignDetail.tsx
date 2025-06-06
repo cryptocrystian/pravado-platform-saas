@@ -1,3 +1,4 @@
+
 import React, { useState } from 'react';
 import { useParams, Link } from 'react-router-dom';
 import { BaseLayout } from '@/components/BaseLayout';
@@ -7,6 +8,8 @@ import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { Progress } from '@/components/ui/progress';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
+import { CampaignMethodologyProgress } from '@/components/CampaignMethodologyProgress';
+import { CampaignPerformanceCorrelation } from '@/components/CampaignPerformanceCorrelation';
 import { 
   ArrowLeft, 
   Edit, 

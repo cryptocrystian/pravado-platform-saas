@@ -129,15 +129,23 @@ export function useCreateCampaignWithMethodology() {
   const { toast } = useToast();
 
   return useMutation({
-    mutationFn: async (campaignData: Partial<Campaign>) => {
+    mutationFn: async (campaignData: Partial<Campaign> & { name: string; campaign_type: string }) => {
       if (!userTenant?.id) throw new Error('No tenant ID');
 
-      // Create campaign
+      // Create campaign with required fields
       const { data: campaign, error: campaignError } = await supabase
         .from('campaigns')
         .insert({
-          ...campaignData,
+          name: campaignData.name,
+          campaign_type: campaignData.campaign_type,
           tenant_id: userTenant.id,
+          status: campaignData.status || 'draft',
+          description: campaignData.description || null,
+          budget: campaignData.budget || null,
+          start_date: campaignData.start_date || null,
+          end_date: campaignData.end_date || null,
+          goals: campaignData.goals || {},
+          target_audience: campaignData.target_audience || {},
         })
         .select()
         .single();
