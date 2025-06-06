@@ -14,7 +14,7 @@ import { useCampaigns } from '@/hooks/useCampaigns';
 import { LoadingSpinner } from '@/components/LoadingSpinner';
 
 const ContentMarketing = () => {
-  const [viewMode, setViewMode] = useState('grid');
+  const [viewMode, setViewMode] = useState<'grid' | 'list'>('grid');
   const [searchTerm, setSearchTerm] = useState('');
   const [statusFilter, setStatusFilter] = useState<string>('all');
   const [campaignFilter, setCampaignFilter] = useState<string>('all');

@@ -3,6 +3,7 @@ import React from 'react';
 import { SidebarProvider } from '@/components/ui/sidebar';
 import { AppSidebar } from '@/components/AppSidebar';
 import { DashboardHeader } from '@/components/DashboardHeader';
+import { PerformanceMonitor } from '@/components/PerformanceMonitor';
 
 interface BaseLayoutProps {
   children: React.ReactNode;
@@ -21,6 +22,7 @@ export function BaseLayout({ children, title, breadcrumb }: BaseLayoutProps) {
             {children}
           </div>
         </main>
+        <PerformanceMonitor />
       </div>
     </SidebarProvider>
   );

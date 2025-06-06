@@ -1,4 +1,3 @@
-
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { supabase } from '@/integrations/supabase/client';
 import { useUserTenant } from './useUserData';
@@ -35,7 +34,10 @@ export function useContent() {
     queryFn: async () => {
       if (!userTenant?.id) return [];
       
-      // Simplified query without INNER JOIN - just get content pieces
+      console.log('🔍 Starting content query for tenant:', userTenant.id);
+      const startTime = performance.now();
+      
+      // Optimized query without INNER JOIN - just get content pieces
       const { data, error } = await supabase
         .from('content_pieces')
         .select('*')
@@ -43,7 +45,14 @@ export function useContent() {
         .order('created_at', { ascending: false })
         .limit(50); // Add limit for better performance
 
-      if (error) throw error;
+      const endTime = performance.now();
+      console.log(`📊 Content query completed in ${endTime - startTime}ms, fetched ${data?.length || 0} items`);
+
+      if (error) {
+        console.error('❌ Content query error:', error);
+        throw error;
+      }
+      
       return data || [];
     },
     enabled: !!userTenant?.id,
