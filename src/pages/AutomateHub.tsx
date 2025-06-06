@@ -100,7 +100,7 @@ const recentAchievements = [
 export default function AutomateHub() {
   const navigate = useNavigate();
   const { toast } = useToast();
-  const { data: progressData, isLoading, error: progressError } = useAutomateMethodologyProgress();
+  const { data: progressData, isLoading, error: progressError, refetch } = useAutomateMethodologyProgress();
   const createMethodology = useCreateAutomateMethodology();
   const [initializationAttempted, setInitializationAttempted] = useState(false);
 
@@ -114,10 +114,16 @@ export default function AutomateHub() {
   }, [isLoading, progressData, createMethodology, initializationAttempted]);
 
   // Handle retry initialization
-  const handleRetryInitialization = () => {
+  const handleRetryInitialization = async () => {
     console.log('Retrying AUTOMATE methodology initialization...');
     setInitializationAttempted(false);
-    createMethodology.mutate({});
+    try {
+      await createMethodology.mutateAsync({});
+      // Refetch progress data after successful creation
+      await refetch();
+    } catch (error) {
+      console.error('Retry failed:', error);
+    }
   };
 
   // Map progress data to steps
@@ -179,6 +185,9 @@ export default function AutomateHub() {
   }
 
   if (progressError || createMethodology.error) {
+    const errorMessage = createMethodology.error?.message || progressError?.message || 'Unknown error occurred';
+    const isRetryable = !errorMessage.includes('User tenant not found');
+    
     return (
       <BaseLayout title="AUTOMATE Hub" breadcrumb="Marketing Operating System">
         <div className="p-6 space-y-6">
@@ -188,24 +197,46 @@ export default function AutomateHub() {
               <h3 className="text-lg font-semibold text-red-800 mb-2">
                 AUTOMATE Setup Issue
               </h3>
-              <p className="text-red-700 mb-4">
-                {createMethodology.error?.message || progressError?.message || 'Failed to load AUTOMATE methodology'}
+              <p className="text-red-700 mb-2 font-medium">
+                {errorMessage.includes('JSON object requested') 
+                  ? 'Database synchronization issue detected'
+                  : errorMessage.includes('User tenant not found')
+                  ? 'Authentication required'
+                  : 'Setup initialization failed'
+                }
+              </p>
+              <p className="text-red-600 mb-4 text-sm">
+                {errorMessage.includes('JSON object requested') 
+                  ? 'We\'re resolving a data consistency issue. Please try again.'
+                  : errorMessage.includes('User tenant not found')
+                  ? 'Please sign in to access your AUTOMATE methodology.'
+                  : `Error: ${errorMessage}`
+                }
               </p>
               <div className="space-x-3">
-                <Button 
-                  onClick={handleRetryInitialization}
-                  className="bg-pravado-purple hover:bg-pravado-purple/90 text-white"
-                  disabled={createMethodology.isPending}
-                >
-                  {createMethodology.isPending ? (
-                    <>
-                      <Loader2 className="w-4 h-4 mr-2 animate-spin" />
-                      Retrying...
-                    </>
-                  ) : (
-                    'Retry Setup'
-                  )}
-                </Button>
+                {isRetryable ? (
+                  <Button 
+                    onClick={handleRetryInitialization}
+                    className="bg-pravado-purple hover:bg-pravado-purple/90 text-white"
+                    disabled={createMethodology.isPending}
+                  >
+                    {createMethodology.isPending ? (
+                      <>
+                        <Loader2 className="w-4 h-4 mr-2 animate-spin" />
+                        Retrying...
+                      </>
+                    ) : (
+                      'Retry Setup'
+                    )}
+                  </Button>
+                ) : (
+                  <Button 
+                    onClick={() => navigate('/auth')}
+                    className="bg-pravado-purple hover:bg-pravado-purple/90 text-white"
+                  >
+                    Sign In
+                  </Button>
+                )}
                 <Button 
                   variant="outline"
                   onClick={() => {
