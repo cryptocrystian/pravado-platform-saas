@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import { useParams, Link } from 'react-router-dom';
 import { BaseLayout } from '@/components/BaseLayout';
@@ -19,15 +18,16 @@ import {
   Calendar,
   TrendingUp,
   FileText,
-  BarChart3
+  BarChart3,
+  Brain
 } from 'lucide-react';
-import { useCampaign } from '@/hooks/useCampaigns';
+import { useCampaignWithMethodology } from '@/hooks/useCampaigns';
 import { useContent } from '@/hooks/useContent';
 import { format } from 'date-fns';
 
 export default function CampaignDetail() {
   const { id } = useParams<{ id: string }>();
-  const { data: campaign, isLoading: campaignLoading } = useCampaign(id!);
+  const { data: campaignData, isLoading: campaignLoading } = useCampaignWithMethodology(id!);
   const { data: content } = useContent();
 
   const campaignContent = content?.filter(c => (c as any).campaign_id === id) || [];
@@ -42,7 +42,7 @@ export default function CampaignDetail() {
     );
   }
 
-  if (!campaign) {
+  if (!campaignData?.campaign) {
     return (
       <BaseLayout title="Campaign Not Found">
         <div className="text-center py-12">
@@ -59,11 +59,13 @@ export default function CampaignDetail() {
     );
   }
 
+  const { campaign, methodology, stepProgress } = campaignData;
   const budgetAllocation = (campaign as any).budget_allocation || { content: 40, pr: 30, seo: 30 };
   const actualSpend = (campaign as any).actual_spend || 0;
   const totalBudget = campaign.budget || 0;
   const spendPercentage = totalBudget > 0 ? (actualSpend / totalBudget) * 100 : 0;
   const milestones = (campaign as any).milestones || [];
+  const methodologyProgress = methodology?.overall_progress || 0;
 
   const getStatusColor = (status: string) => {
     switch (status) {
@@ -121,6 +123,18 @@ export default function CampaignDetail() {
           </div>
         </div>
 
+        {/* AUTOMATE Methodology Section */}
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-8">
+          <CampaignMethodologyProgress 
+            methodology={methodology} 
+            campaignId={campaign.id}
+          />
+          <CampaignPerformanceCorrelation 
+            campaignId={campaign.id}
+            methodologyProgress={methodologyProgress}
+          />
+        </div>
+
         {/* Overview Cards */}
         <div className="grid grid-cols-1 md:grid-cols-4 gap-6 mb-8">
           <Card className="p-6">
@@ -138,15 +152,15 @@ export default function CampaignDetail() {
           <Card className="p-6">
             <div className="flex items-center justify-between">
               <div>
-                <p className="text-sm text-gray-600">Actual Spend</p>
+                <p className="text-sm text-gray-600">AUTOMATE Progress</p>
                 <p className="text-2xl font-bold text-professional-gray">
-                  ${actualSpend.toLocaleString()}
+                  {methodologyProgress}%
                 </p>
                 <p className="text-xs text-gray-500">
-                  {spendPercentage.toFixed(1)}% of budget
+                  Methodology completion
                 </p>
               </div>
-              <TrendingUp className="h-8 w-8 text-enterprise-blue" />
+              <Brain className="h-8 w-8 text-pravado-purple" />
             </div>
           </Card>
           
@@ -177,13 +191,27 @@ export default function CampaignDetail() {
 
         {/* Main Content */}
         <Tabs defaultValue="overview" className="w-full">
-          <TabsList className="grid w-full grid-cols-5">
+          <TabsList className="grid w-full grid-cols-6">
             <TabsTrigger value="overview">Overview</TabsTrigger>
+            <TabsTrigger value="methodology">AUTOMATE</TabsTrigger>
             <TabsTrigger value="budget">Budget</TabsTrigger>
             <TabsTrigger value="content">Content</TabsTrigger>
             <TabsTrigger value="milestones">Milestones</TabsTrigger>
             <TabsTrigger value="analytics">Analytics</TabsTrigger>
           </TabsList>
+          
+          <TabsContent value="methodology" className="mt-6">
+            <div className="space-y-6">
+              <CampaignMethodologyProgress 
+                methodology={methodology} 
+                campaignId={campaign.id}
+              />
+              <CampaignPerformanceCorrelation 
+                campaignId={campaign.id}
+                methodologyProgress={methodologyProgress}
+              />
+            </div>
+          </TabsContent>
           
           <TabsContent value="overview" className="mt-6">
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">

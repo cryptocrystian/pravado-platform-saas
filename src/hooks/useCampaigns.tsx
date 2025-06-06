@@ -82,6 +82,131 @@ export function useCampaignMetrics() {
   });
 }
 
+export function useCampaignWithMethodology(id: string) {
+  const { data: userTenant } = useUserTenant();
+  
+  return useQuery({
+    queryKey: ['campaign-methodology', id, userTenant?.id],
+    queryFn: async () => {
+      if (!userTenant?.id || !id) return null;
+      
+      // Get campaign data
+      const { data: campaign, error: campaignError } = await supabase
+        .from('campaigns')
+        .select('*')
+        .eq('id', id)
+        .eq('tenant_id', userTenant.id)
+        .single();
+
+      if (campaignError) throw campaignError;
+
+      // Get methodology progress for this campaign
+      const { data: methodology, error: methodologyError } = await supabase
+        .from('automate_methodology_campaigns')
+        .select(`
+          *,
+          automate_step_progress(*)
+        `)
+        .eq('campaign_id', id)
+        .eq('tenant_id', userTenant.id)
+        .maybeSingle();
+
+      if (methodologyError) throw methodologyError;
+
+      return {
+        campaign,
+        methodology: methodology || null,
+        stepProgress: methodology?.automate_step_progress || []
+      };
+    },
+    enabled: !!userTenant?.id && !!id,
+  });
+}
+
+export function useCreateCampaignWithMethodology() {
+  const queryClient = useQueryClient();
+  const { data: userTenant } = useUserTenant();
+  const { toast } = useToast();
+
+  return useMutation({
+    mutationFn: async (campaignData: Partial<Campaign>) => {
+      if (!userTenant?.id) throw new Error('No tenant ID');
+
+      // Create campaign
+      const { data: campaign, error: campaignError } = await supabase
+        .from('campaigns')
+        .insert({
+          ...campaignData,
+          tenant_id: userTenant.id,
+        })
+        .select()
+        .single();
+
+      if (campaignError) throw campaignError;
+
+      // Create AUTOMATE methodology tracking for this campaign
+      const { data: methodology, error: methodologyError } = await supabase
+        .from('automate_methodology_campaigns')
+        .insert({
+          tenant_id: userTenant.id,
+          campaign_id: campaign.id,
+          status: 'not_started',
+        })
+        .select()
+        .single();
+
+      if (methodologyError) throw methodologyError;
+
+      // Create all 8 AUTOMATE step progress records
+      const steps = [
+        { code: 'A', name: 'Assess & Audit', index: 0 },
+        { code: 'U', name: 'Understand Audience', index: 1 },
+        { code: 'T', name: 'Target & Strategy', index: 2 },
+        { code: 'O', name: 'Optimize Systems', index: 3 },
+        { code: 'M', name: 'Measure & Monitor', index: 4 },
+        { code: 'A', name: 'Accelerate Growth', index: 5 },
+        { code: 'T', name: 'Transform & Evolve', index: 6 },
+        { code: 'E', name: 'Execute Excellence', index: 7 }
+      ];
+
+      const stepProgressInserts = steps.map(step => ({
+        methodology_campaign_id: methodology.id,
+        tenant_id: userTenant.id,
+        step_code: step.code,
+        step_name: step.name,
+        step_index: step.index,
+        completion_percentage: 0,
+        status: 'pending' as const
+      }));
+
+      const { error: stepsError } = await supabase
+        .from('automate_step_progress')
+        .insert(stepProgressInserts);
+
+      if (stepsError) throw stepsError;
+
+      return { campaign, methodology };
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['campaigns'] });
+      queryClient.invalidateQueries({ queryKey: ['campaign-metrics'] });
+      queryClient.invalidateQueries({ queryKey: ['automate-methodology-progress'] });
+      toast({
+        title: "Campaign Created",
+        description: "Campaign created with AUTOMATE methodology tracking",
+      });
+    },
+    onError: (error) => {
+      console.error('Error creating campaign with methodology:', error);
+      toast({
+        title: "Error",
+        description: "Failed to create campaign",
+        variant: "destructive",
+      });
+    },
+  });
+}
+
 export function useDeleteCampaign() {
   const queryClient = useQueryClient();
   const { data: userTenant } = useUserTenant();
