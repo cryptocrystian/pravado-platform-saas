@@ -33,7 +33,7 @@ export function useSEOProjects() {
           console.error('Error fetching SEO projects:', error);
           return [];
         }
-        return (data as SEOProject[]) || [];
+        return (data as unknown as SEOProject[]) || [];
       } catch (error) {
         console.error('Error in useSEOProjects:', error);
         return [];
@@ -69,7 +69,7 @@ export function useCreateSEOProject() {
           .single();
 
         if (error) throw error;
-        return data as SEOProject;
+        return data as unknown as SEOProject;
       } catch (error) {
         console.error('Error creating SEO project:', error);
         throw error;

@@ -13,5 +13,6 @@ export type { SEOCompetitor, ContentOptimization } from './useSEOCompetitors';
 
 // For backward compatibility with the enhanced keywords hook
 export function useEnhancedSEOKeywords(projectId?: string) {
+  const { useSEOKeywords } = require('./useSEOKeywords');
   return useSEOKeywords(projectId);
 }

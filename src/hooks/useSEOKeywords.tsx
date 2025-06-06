@@ -47,7 +47,7 @@ export function useSEOKeywords(projectId?: string) {
           console.error('Error fetching SEO keywords:', error);
           return [];
         }
-        return (data as SEOKeyword[]) || [];
+        return (data as unknown as SEOKeyword[]) || [];
       } catch (error) {
         console.error('Error in useSEOKeywords:', error);
         return [];
@@ -81,7 +81,7 @@ export function useKeywordTracking(projectId?: string) {
           console.error('Error fetching keyword tracking:', error);
           return [];
         }
-        return (data as KeywordTracking[]) || [];
+        return (data as unknown as KeywordTracking[]) || [];
       } catch (error) {
         console.error('Error in useKeywordTracking:', error);
         return [];

@@ -37,7 +37,7 @@ export function useSEOAudits(projectId?: string) {
           console.error('Error fetching SEO audits:', error);
           return [];
         }
-        return (data as SEOAudit[]) || [];
+        return (data as unknown as SEOAudit[]) || [];
       } catch (error) {
         console.error('Error in useSEOAudits:', error);
         return [];

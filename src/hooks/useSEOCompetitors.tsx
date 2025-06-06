@@ -45,7 +45,7 @@ export function useSEOCompetitors(projectId?: string) {
           console.error('Error fetching SEO competitors:', error);
           return [];
         }
-        return (data as SEOCompetitor[]) || [];
+        return (data as unknown as SEOCompetitor[]) || [];
       } catch (error) {
         console.error('Error in useSEOCompetitors:', error);
         return [];
@@ -79,7 +79,7 @@ export function useContentOptimization(contentId?: string) {
           console.error('Error fetching content optimization:', error);
           return [];
         }
-        return (data as ContentOptimization[]) || [];
+        return (data as unknown as ContentOptimization[]) || [];
       } catch (error) {
         console.error('Error in useContentOptimization:', error);
         return [];
