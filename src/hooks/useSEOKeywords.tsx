@@ -36,17 +36,22 @@ export function useSEOKeywords(projectId?: string) {
     queryFn: async (): Promise<SEOKeyword[]> => {
       if (!userTenant?.id) return [];
       
-      const { data, error } = await supabase
-        .from('seo_keywords')
-        .select('*')
-        .eq('tenant_id', userTenant.id)
-        .order('created_at', { ascending: false });
-      
-      if (error) {
-        console.error('Error fetching SEO keywords:', error);
+      try {
+        const { data, error } = await supabase
+          .from('seo_keywords')
+          .select('*')
+          .eq('tenant_id', userTenant.id)
+          .order('created_at', { ascending: false });
+        
+        if (error) {
+          console.error('Error fetching SEO keywords:', error);
+          return [];
+        }
+        return (data as SEOKeyword[]) || [];
+      } catch (error) {
+        console.error('Error in useSEOKeywords:', error);
         return [];
       }
-      return (data as SEOKeyword[]) || [];
     },
     enabled: !!userTenant?.id,
   });
@@ -60,22 +65,27 @@ export function useKeywordTracking(projectId?: string) {
     queryFn: async (): Promise<KeywordTracking[]> => {
       if (!userTenant?.id) return [];
       
-      let query = supabase
-        .from('keyword_tracking' as any)
-        .select('*')
-        .eq('tenant_id', userTenant.id);
-      
-      if (projectId) {
-        query = query.eq('project_id', projectId);
-      }
-      
-      const { data, error } = await query.order('tracked_at', { ascending: false });
-      
-      if (error) {
-        console.error('Error fetching keyword tracking:', error);
+      try {
+        let query = supabase
+          .from('keyword_tracking' as any)
+          .select('*')
+          .eq('tenant_id', userTenant.id);
+        
+        if (projectId) {
+          query = query.eq('project_id', projectId);
+        }
+        
+        const { data, error } = await query.order('tracked_at', { ascending: false });
+        
+        if (error) {
+          console.error('Error fetching keyword tracking:', error);
+          return [];
+        }
+        return (data as KeywordTracking[]) || [];
+      } catch (error) {
+        console.error('Error in useKeywordTracking:', error);
         return [];
       }
-      return (data as KeywordTracking[]) || [];
     },
     enabled: !!userTenant?.id,
   });

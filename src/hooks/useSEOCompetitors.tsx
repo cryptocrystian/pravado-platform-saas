@@ -29,22 +29,27 @@ export function useSEOCompetitors(projectId?: string) {
     queryFn: async (): Promise<SEOCompetitor[]> => {
       if (!userTenant?.id) return [];
       
-      let query = supabase
-        .from('seo_competitors' as any)
-        .select('*')
-        .eq('tenant_id', userTenant.id);
-      
-      if (projectId) {
-        query = query.eq('project_id', projectId);
-      }
-      
-      const { data, error } = await query.order('visibility_score', { ascending: false });
-      
-      if (error) {
-        console.error('Error fetching SEO competitors:', error);
+      try {
+        let query = supabase
+          .from('seo_competitors' as any)
+          .select('*')
+          .eq('tenant_id', userTenant.id);
+        
+        if (projectId) {
+          query = query.eq('project_id', projectId);
+        }
+        
+        const { data, error } = await query.order('visibility_score', { ascending: false });
+        
+        if (error) {
+          console.error('Error fetching SEO competitors:', error);
+          return [];
+        }
+        return (data as SEOCompetitor[]) || [];
+      } catch (error) {
+        console.error('Error in useSEOCompetitors:', error);
         return [];
       }
-      return (data as SEOCompetitor[]) || [];
     },
     enabled: !!userTenant?.id,
   });
@@ -58,22 +63,27 @@ export function useContentOptimization(contentId?: string) {
     queryFn: async (): Promise<ContentOptimization[]> => {
       if (!userTenant?.id) return [];
       
-      let query = supabase
-        .from('seo_content_optimization' as any)
-        .select('*')
-        .eq('tenant_id', userTenant.id);
-      
-      if (contentId) {
-        query = query.eq('content_id', contentId);
-      }
-      
-      const { data, error } = await query.order('seo_score', { ascending: false });
-      
-      if (error) {
-        console.error('Error fetching content optimization:', error);
+      try {
+        let query = supabase
+          .from('seo_content_optimization' as any)
+          .select('*')
+          .eq('tenant_id', userTenant.id);
+        
+        if (contentId) {
+          query = query.eq('content_id', contentId);
+        }
+        
+        const { data, error } = await query.order('seo_score', { ascending: false });
+        
+        if (error) {
+          console.error('Error fetching content optimization:', error);
+          return [];
+        }
+        return (data as ContentOptimization[]) || [];
+      } catch (error) {
+        console.error('Error in useContentOptimization:', error);
         return [];
       }
-      return (data as ContentOptimization[]) || [];
     },
     enabled: !!userTenant?.id,
   });

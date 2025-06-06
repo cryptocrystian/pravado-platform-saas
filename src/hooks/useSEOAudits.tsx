@@ -21,22 +21,27 @@ export function useSEOAudits(projectId?: string) {
     queryFn: async (): Promise<SEOAudit[]> => {
       if (!userTenant?.id) return [];
       
-      let query = supabase
-        .from('seo_audits' as any)
-        .select('*')
-        .eq('tenant_id', userTenant.id);
-      
-      if (projectId) {
-        query = query.eq('project_id', projectId);
-      }
-      
-      const { data, error } = await query.order('created_at', { ascending: false });
-      
-      if (error) {
-        console.error('Error fetching SEO audits:', error);
+      try {
+        let query = supabase
+          .from('seo_audits' as any)
+          .select('*')
+          .eq('tenant_id', userTenant.id);
+        
+        if (projectId) {
+          query = query.eq('project_id', projectId);
+        }
+        
+        const { data, error } = await query.order('created_at', { ascending: false });
+        
+        if (error) {
+          console.error('Error fetching SEO audits:', error);
+          return [];
+        }
+        return (data as SEOAudit[]) || [];
+      } catch (error) {
+        console.error('Error in useSEOAudits:', error);
         return [];
       }
-      return (data as SEOAudit[]) || [];
     },
     enabled: !!userTenant?.id,
   });

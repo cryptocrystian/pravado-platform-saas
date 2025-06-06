@@ -22,17 +22,22 @@ export function useSEOProjects() {
     queryFn: async (): Promise<SEOProject[]> => {
       if (!userTenant?.id) return [];
       
-      const { data, error } = await supabase
-        .from('seo_projects' as any)
-        .select('*')
-        .eq('tenant_id', userTenant.id)
-        .order('created_at', { ascending: false });
-      
-      if (error) {
-        console.error('Error fetching SEO projects:', error);
+      try {
+        const { data, error } = await supabase
+          .from('seo_projects' as any)
+          .select('*')
+          .eq('tenant_id', userTenant.id)
+          .order('created_at', { ascending: false });
+        
+        if (error) {
+          console.error('Error fetching SEO projects:', error);
+          return [];
+        }
+        return (data as SEOProject[]) || [];
+      } catch (error) {
+        console.error('Error in useSEOProjects:', error);
         return [];
       }
-      return (data as SEOProject[]) || [];
     },
     enabled: !!userTenant?.id,
   });
@@ -51,19 +56,24 @@ export function useCreateSEOProject() {
     }): Promise<SEOProject> => {
       if (!userTenant?.id) throw new Error('No tenant ID');
 
-      const { data, error } = await supabase
-        .from('seo_projects' as any)
-        .insert({
-          tenant_id: userTenant.id,
-          name: projectData.name,
-          domain: projectData.domain,
-          status: projectData.status || 'active'
-        })
-        .select()
-        .single();
+      try {
+        const { data, error } = await supabase
+          .from('seo_projects' as any)
+          .insert({
+            tenant_id: userTenant.id,
+            name: projectData.name,
+            domain: projectData.domain,
+            status: projectData.status || 'active'
+          })
+          .select()
+          .single();
 
-      if (error) throw error;
-      return data as SEOProject;
+        if (error) throw error;
+        return data as SEOProject;
+      } catch (error) {
+        console.error('Error creating SEO project:', error);
+        throw error;
+      }
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['seo-projects'] });
