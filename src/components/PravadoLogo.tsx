@@ -24,26 +24,33 @@ export function PravadoLogo({ variant = 'full', className = '' }: PravadoLogoPro
 
   if (variant === 'compact') {
     return (
-      <div className={`flex items-center space-x-2 ${className}`}>
+      <div className={`flex items-center space-x-3 ${className}`}>
         <img 
           src={logoSrc}
           alt="PRAVADO - Marketing Operating System"
-          className="h-8 w-auto object-contain"
+          className="h-8 w-8 object-contain flex-shrink-0"
           loading="lazy"
         />
+        <div className="flex flex-col">
+          <span className="text-lg font-bold text-white leading-tight">PRAVADO</span>
+        </div>
       </div>
     );
   }
 
-  // Full variant - show complete logo with tagline space
+  // Full horizontal variant - icon on left, text on right
   return (
-    <div className={`flex items-center ${className}`}>
+    <div className={`flex items-center space-x-4 ${className}`}>
       <img 
         src={logoSrc}
         alt="PRAVADO - Marketing Operating System"
-        className="h-12 w-auto object-contain"
+        className="h-12 w-12 object-contain flex-shrink-0"
         loading="lazy"
       />
+      <div className="flex flex-col">
+        <span className="text-2xl font-bold text-white leading-tight">PRAVADO</span>
+        <span className="text-xs text-white/80 leading-tight">Marketing Operating System</span>
+      </div>
     </div>
   );
 }
