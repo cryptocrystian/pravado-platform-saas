@@ -53,6 +53,7 @@ export default {
 					DEFAULT: 'hsl(var(--card))',
 					foreground: 'hsl(var(--card-foreground))'
 				},
+				'pravado-navy': '#1e3d59',
 				'pravado-crimson': '#c3073f',
 				'pravado-orange': '#ff6b35',
 				'pravado-purple': '#6f2dbd',
