@@ -1,7 +1,7 @@
 
 import React, { useState } from 'react';
 import { useLocation, Link } from 'react-router-dom';
-import { LayoutDashboard, MessageSquare, Users, Search, Activity, Settings, User, LogOut, Brain } from 'lucide-react';
+import { LayoutDashboard, MessageSquare, Users, Search, Activity, Settings, User, LogOut, Brain, Zap } from 'lucide-react';
 import {
   Sidebar,
   SidebarContent,
@@ -23,6 +23,12 @@ const menuItems = [
     title: "Dashboard",
     url: "/dashboard",
     icon: LayoutDashboard,
+  },
+  {
+    title: "AUTOMATE",
+    url: "/automate",
+    icon: Zap,
+    featured: true,
   },
   {
     title: "Content Marketing",
@@ -97,26 +103,33 @@ export function AppSidebar() {
                   <SidebarMenuButton asChild>
                     <Link 
                       to={item.url}
-                      className={`flex items-center space-x-2 px-3 py-2 rounded-lg transition-all duration-200 ease-in-out group ${
-                        location.pathname === item.url
+                      className={`flex items-center space-x-2 px-3 py-2 rounded-lg transition-all duration-200 ease-in-out group relative ${
+                        location.pathname === item.url || (item.url === '/automate' && location.pathname.startsWith('/automate'))
                           ? item.title === 'CiteMind™' 
                             ? 'bg-pravado-purple text-white shadow-sm' 
+                            : item.title === 'AUTOMATE'
+                            ? 'bg-pravado-purple text-white shadow-sm'
                             : 'bg-enterprise-blue text-white shadow-sm'
                           : 'hover:bg-slate-100 text-slate-600'
                       }`}
                     >
                       <item.icon className={`h-4 w-4 transition-colors duration-200 ${
-                        location.pathname === item.url 
+                        location.pathname === item.url || (item.url === '/automate' && location.pathname.startsWith('/automate'))
                           ? 'text-white' 
                           : item.title === 'CiteMind™'
+                            ? 'text-pravado-purple group-hover:text-pravado-purple'
+                            : item.title === 'AUTOMATE'
                             ? 'text-pravado-purple group-hover:text-pravado-purple'
                             : 'text-slate-500 group-hover:text-enterprise-blue'
                       }`} />
                       <span className={`font-medium text-sm ${
-                        item.title === 'CiteMind™' ? 'font-semibold' : ''
+                        item.title === 'CiteMind™' || item.title === 'AUTOMATE' ? 'font-semibold' : ''
                       }`}>
                         {item.title}
                       </span>
+                      {item.featured && (
+                        <div className="absolute -top-1 -right-1 w-2 h-2 bg-pravado-crimson rounded-full animate-pulse"></div>
+                      )}
                     </Link>
                   </SidebarMenuButton>
                 </SidebarMenuItem>

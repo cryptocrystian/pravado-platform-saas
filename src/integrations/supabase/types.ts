@@ -59,6 +59,59 @@ export type Database = {
           },
         ]
       }
+      automate_audit_scores: {
+        Row: {
+          action_required: boolean | null
+          category: string
+          created_at: string
+          id: string
+          notes: string | null
+          priority_level: string | null
+          question: string
+          score: number | null
+          step_progress_id: string | null
+          subcategory: string
+          tenant_id: string
+          updated_at: string
+        }
+        Insert: {
+          action_required?: boolean | null
+          category: string
+          created_at?: string
+          id?: string
+          notes?: string | null
+          priority_level?: string | null
+          question: string
+          score?: number | null
+          step_progress_id?: string | null
+          subcategory: string
+          tenant_id: string
+          updated_at?: string
+        }
+        Update: {
+          action_required?: boolean | null
+          category?: string
+          created_at?: string
+          id?: string
+          notes?: string | null
+          priority_level?: string | null
+          question?: string
+          score?: number | null
+          step_progress_id?: string | null
+          subcategory?: string
+          tenant_id?: string
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "automate_audit_scores_step_progress_id_fkey"
+            columns: ["step_progress_id"]
+            isOneToOne: false
+            referencedRelation: "automate_step_progress"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       automate_frameworks: {
         Row: {
           created_at: string | null
@@ -96,6 +149,53 @@ export type Database = {
             columns: ["tenant_id"]
             isOneToOne: false
             referencedRelation: "tenants"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      automate_methodology_campaigns: {
+        Row: {
+          campaign_id: string | null
+          completed_at: string | null
+          created_at: string
+          id: string
+          methodology_name: string
+          overall_progress: number | null
+          started_at: string | null
+          status: string | null
+          tenant_id: string
+          updated_at: string
+        }
+        Insert: {
+          campaign_id?: string | null
+          completed_at?: string | null
+          created_at?: string
+          id?: string
+          methodology_name?: string
+          overall_progress?: number | null
+          started_at?: string | null
+          status?: string | null
+          tenant_id: string
+          updated_at?: string
+        }
+        Update: {
+          campaign_id?: string | null
+          completed_at?: string | null
+          created_at?: string
+          id?: string
+          methodology_name?: string
+          overall_progress?: number | null
+          started_at?: string | null
+          status?: string | null
+          tenant_id?: string
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "automate_methodology_campaigns_campaign_id_fkey"
+            columns: ["campaign_id"]
+            isOneToOne: false
+            referencedRelation: "campaigns"
             referencedColumns: ["id"]
           },
         ]
@@ -156,6 +256,68 @@ export type Database = {
             columns: ["tenant_id"]
             isOneToOne: false
             referencedRelation: "tenants"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      automate_step_progress: {
+        Row: {
+          action_items: Json | null
+          audit_scores: Json | null
+          completed_at: string | null
+          completion_percentage: number | null
+          created_at: string
+          id: string
+          methodology_campaign_id: string | null
+          notes: string | null
+          started_at: string | null
+          status: string | null
+          step_code: string
+          step_index: number
+          step_name: string
+          tenant_id: string
+          updated_at: string
+        }
+        Insert: {
+          action_items?: Json | null
+          audit_scores?: Json | null
+          completed_at?: string | null
+          completion_percentage?: number | null
+          created_at?: string
+          id?: string
+          methodology_campaign_id?: string | null
+          notes?: string | null
+          started_at?: string | null
+          status?: string | null
+          step_code: string
+          step_index: number
+          step_name: string
+          tenant_id: string
+          updated_at?: string
+        }
+        Update: {
+          action_items?: Json | null
+          audit_scores?: Json | null
+          completed_at?: string | null
+          completion_percentage?: number | null
+          created_at?: string
+          id?: string
+          methodology_campaign_id?: string | null
+          notes?: string | null
+          started_at?: string | null
+          status?: string | null
+          step_code?: string
+          step_index?: number
+          step_name?: string
+          tenant_id?: string
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "automate_step_progress_methodology_campaign_id_fkey"
+            columns: ["methodology_campaign_id"]
+            isOneToOne: false
+            referencedRelation: "automate_methodology_campaigns"
             referencedColumns: ["id"]
           },
         ]
