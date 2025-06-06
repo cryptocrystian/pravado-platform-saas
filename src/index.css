@@ -34,6 +34,18 @@
     --ring: 219 70% 41%;
 
     --radius: 0.5rem;
+
+    /* PRAVADO Brand Colors */
+    --pravado-navy: 210 50% 24%;
+    --pravado-crimson: 350 76% 48%;
+    --pravado-orange: 16 100% 61%;
+    --pravado-purple: 261 71% 42%;
+    
+    /* Enterprise Colors */
+    --enterprise-blue: 219 70% 41%;
+    --professional-gray: 218 11% 30%;
+    --soft-gray: 210 40% 96.1%;
+    --border-gray: 214.3 31.8% 91.4%;
   }
 }
 
@@ -115,6 +127,22 @@
     background: linear-gradient(135deg, #1e40af, #6f2dbd, #c3073f);
     background-size: 200% 200%;
     animation: gradientShift 3s ease infinite;
+  }
+
+  /* Text contrast utilities */
+  .text-high-contrast {
+    color: #1a202c;
+    font-weight: 500;
+  }
+
+  .text-medium-contrast {
+    color: #2d3748;
+    font-weight: 500;
+  }
+
+  .text-readable {
+    color: #374151;
+    font-weight: 500;
   }
 }
 

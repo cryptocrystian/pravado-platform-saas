@@ -10,7 +10,12 @@ export function useAutomateMethodologyProgress() {
   return useQuery({
     queryKey: ['automate-methodology-progress', userTenant?.id],
     queryFn: async () => {
-      if (!userTenant?.id) return null;
+      if (!userTenant?.id) {
+        console.log('No userTenant found for AUTOMATE progress query');
+        return null;
+      }
+      
+      console.log('Fetching AUTOMATE progress for tenant:', userTenant.id);
       
       const { data, error } = await supabase
         .from('automate_step_progress')
@@ -18,10 +23,17 @@ export function useAutomateMethodologyProgress() {
         .eq('tenant_id', userTenant.id)
         .order('step_index');
       
-      if (error) throw error;
+      if (error) {
+        console.error('Error fetching AUTOMATE progress:', error);
+        throw error;
+      }
+      
+      console.log('AUTOMATE progress data:', data);
       return data;
     },
     enabled: !!userTenant?.id,
+    retry: 3,
+    retryDelay: (attemptIndex) => Math.min(1000 * 2 ** attemptIndex, 30000),
   });
 }
 
@@ -32,67 +44,109 @@ export function useCreateAutomateMethodology() {
 
   return useMutation({
     mutationFn: async ({ campaignId }: { campaignId?: string }) => {
-      if (!userTenant?.id) throw new Error('No tenant ID');
+      if (!userTenant?.id) {
+        console.error('No tenant ID available for AUTOMATE methodology creation');
+        throw new Error('User tenant not found. Please ensure you are logged in and try again.');
+      }
       
-      // Create methodology campaign
-      const { data: methodology, error: methodologyError } = await supabase
-        .from('automate_methodology_campaigns')
-        .insert({
+      console.log('Creating AUTOMATE methodology for tenant:', userTenant.id);
+      
+      try {
+        // First check if methodology already exists
+        const { data: existingMethodology, error: checkError } = await supabase
+          .from('automate_methodology_campaigns')
+          .select('id')
+          .eq('tenant_id', userTenant.id)
+          .maybeSingle();
+
+        if (checkError) {
+          console.error('Error checking existing methodology:', checkError);
+          throw new Error(`Database check failed: ${checkError.message}`);
+        }
+
+        if (existingMethodology) {
+          console.log('AUTOMATE methodology already exists for tenant:', userTenant.id);
+          return existingMethodology;
+        }
+
+        // Create methodology campaign
+        console.log('Creating new methodology campaign...');
+        const { data: methodology, error: methodologyError } = await supabase
+          .from('automate_methodology_campaigns')
+          .insert({
+            tenant_id: userTenant.id,
+            campaign_id: campaignId || null,
+            status: 'in_progress',
+            started_at: new Date().toISOString()
+          })
+          .select()
+          .single();
+
+        if (methodologyError) {
+          console.error('Error creating methodology campaign:', methodologyError);
+          throw new Error(`Failed to create methodology: ${methodologyError.message}`);
+        }
+
+        console.log('Created methodology campaign:', methodology);
+
+        // Create all 8 step progress records
+        const steps = [
+          { code: 'A', name: 'Assess & Audit', index: 0, completion: 85 },
+          { code: 'U', name: 'Understand Audience', index: 1, completion: 92 },
+          { code: 'T', name: 'Target & Strategy', index: 2, completion: 65 },
+          { code: 'O', name: 'Optimize Systems', index: 3, completion: 40 },
+          { code: 'M', name: 'Measure & Monitor', index: 4, completion: 30 },
+          { code: 'A', name: 'Accelerate Growth', index: 5, completion: 15 },
+          { code: 'T', name: 'Transform & Evolve', index: 6, completion: 5 },
+          { code: 'E', name: 'Execute Excellence', index: 7, completion: 0 }
+        ];
+
+        const stepProgressInserts = steps.map(step => ({
+          methodology_campaign_id: methodology.id,
           tenant_id: userTenant.id,
-          campaign_id: campaignId || null,
-          status: 'in_progress',
-          started_at: new Date().toISOString()
-        })
-        .select()
-        .single();
+          step_code: step.code,
+          step_name: step.name,
+          step_index: step.index,
+          completion_percentage: step.completion,
+          status: step.completion > 50 ? 'completed' : step.completion > 0 ? 'in_progress' : 'pending'
+        }));
 
-      if (methodologyError) throw methodologyError;
+        console.log('Creating step progress records:', stepProgressInserts);
+        const { error: stepsError } = await supabase
+          .from('automate_step_progress')
+          .insert(stepProgressInserts);
 
-      // Create all 8 step progress records
-      const steps = [
-        { code: 'A', name: 'Assess & Audit', index: 0, completion: 85 },
-        { code: 'U', name: 'Understand Audience', index: 1, completion: 92 },
-        { code: 'T', name: 'Target & Strategy', index: 2, completion: 65 },
-        { code: 'O', name: 'Optimize Systems', index: 3, completion: 40 },
-        { code: 'M', name: 'Measure & Monitor', index: 4, completion: 30 },
-        { code: 'A', name: 'Accelerate Growth', index: 5, completion: 15 },
-        { code: 'T', name: 'Transform & Evolve', index: 6, completion: 5 },
-        { code: 'E', name: 'Execute Excellence', index: 7, completion: 0 }
-      ];
+        if (stepsError) {
+          console.error('Error creating step progress:', stepsError);
+          throw new Error(`Failed to create step progress: ${stepsError.message}`);
+        }
 
-      const stepProgressInserts = steps.map(step => ({
-        methodology_campaign_id: methodology.id,
-        tenant_id: userTenant.id,
-        step_code: step.code,
-        step_name: step.name,
-        step_index: step.index,
-        completion_percentage: step.completion,
-        status: step.completion > 50 ? 'completed' : step.completion > 0 ? 'in_progress' : 'pending'
-      }));
-
-      const { error: stepsError } = await supabase
-        .from('automate_step_progress')
-        .insert(stepProgressInserts);
-
-      if (stepsError) throw stepsError;
-
-      return methodology;
+        console.log('Successfully created AUTOMATE methodology setup');
+        return methodology;
+      } catch (error) {
+        console.error('Complete error in AUTOMATE methodology creation:', error);
+        throw error;
+      }
     },
     onSuccess: () => {
+      console.log('AUTOMATE methodology created successfully');
       queryClient.invalidateQueries({ queryKey: ['automate-methodology-progress'] });
       toast({
         title: "AUTOMATE Methodology Initialized",
-        description: "Your systematic methodology framework is ready",
+        description: "Your systematic methodology framework is ready to use",
       });
     },
-    onError: (error) => {
+    onError: (error: any) => {
       console.error('Error creating AUTOMATE methodology:', error);
+      const errorMessage = error.message || 'An unexpected error occurred';
       toast({
-        title: "Setup Failed",
-        description: "Failed to initialize AUTOMATE methodology",
+        title: "AUTOMATE Setup Failed",
+        description: `${errorMessage}. Please try again or contact support if the issue persists.`,
         variant: "destructive",
       });
     },
+    retry: 2,
+    retryDelay: (attemptIndex) => Math.min(1000 * 2 ** attemptIndex, 5000),
   });
 }
 
@@ -107,6 +161,8 @@ export function useUpdateStepProgress() {
       scores?: any;
       actionItems?: any[];
     }) => {
+      console.log('Updating step progress:', { stepId, completion });
+      
       const { data, error } = await supabase
         .from('automate_step_progress')
         .update({
@@ -121,7 +177,12 @@ export function useUpdateStepProgress() {
         .select()
         .single();
 
-      if (error) throw error;
+      if (error) {
+        console.error('Error updating step progress:', error);
+        throw error;
+      }
+      
+      console.log('Updated step progress:', data);
       return data;
     },
     onSuccess: () => {
@@ -135,7 +196,7 @@ export function useUpdateStepProgress() {
       console.error('Error updating step progress:', error);
       toast({
         title: "Update Failed",
-        description: "Failed to save step progress",
+        description: "Failed to save step progress. Please try again.",
         variant: "destructive",
       });
     },

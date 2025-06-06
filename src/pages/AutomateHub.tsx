@@ -1,13 +1,13 @@
-
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { BaseLayout } from '@/components/BaseLayout';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Progress } from '@/components/ui/progress';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
-import { CheckCircle, Clock, AlertCircle, TrendingUp, Users, Target, Settings, BarChart, Zap, RefreshCw, Star, Play, ArrowRight } from 'lucide-react';
+import { CheckCircle, Clock, AlertCircle, TrendingUp, Users, Target, Settings, BarChart, Zap, RefreshCw, Star, Play, ArrowRight, Loader2 } from 'lucide-react';
 import { useAutomateMethodologyProgress, useCreateAutomateMethodology } from '@/hooks/useAutomateData';
 import { useNavigate } from 'react-router-dom';
+import { useToast } from '@/hooks/use-toast';
 
 const automateSteps = [
   {
@@ -99,15 +99,26 @@ const recentAchievements = [
 
 export default function AutomateHub() {
   const navigate = useNavigate();
-  const { data: progressData, isLoading } = useAutomateMethodologyProgress();
+  const { toast } = useToast();
+  const { data: progressData, isLoading, error: progressError } = useAutomateMethodologyProgress();
   const createMethodology = useCreateAutomateMethodology();
+  const [initializationAttempted, setInitializationAttempted] = useState(false);
 
   // Initialize methodology if no progress data exists
   useEffect(() => {
-    if (!isLoading && !progressData?.length && !createMethodology.isPending) {
+    if (!isLoading && !progressData?.length && !createMethodology.isPending && !initializationAttempted) {
+      console.log('No progress data found, initializing AUTOMATE methodology...');
+      setInitializationAttempted(true);
       createMethodology.mutate({});
     }
-  }, [isLoading, progressData, createMethodology]);
+  }, [isLoading, progressData, createMethodology, initializationAttempted]);
+
+  // Handle retry initialization
+  const handleRetryInitialization = () => {
+    console.log('Retrying AUTOMATE methodology initialization...');
+    setInitializationAttempted(false);
+    createMethodology.mutate({});
+  };
 
   // Map progress data to steps
   const stepsWithProgress = automateSteps.map(step => {
@@ -146,14 +157,69 @@ export default function AutomateHub() {
     }
   };
 
-  if (isLoading) {
+  if (isLoading || createMethodology.isPending) {
     return (
       <BaseLayout title="AUTOMATE Hub" breadcrumb="Marketing Operating System">
         <div className="p-6 space-y-6">
           <div className="text-center py-12">
-            <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-pravado-purple mx-auto"></div>
-            <p className="text-professional-gray mt-4">Loading AUTOMATE methodology...</p>
+            <Loader2 className="animate-spin h-8 w-8 text-pravado-purple mx-auto mb-4" />
+            <h3 className="text-lg font-semibold text-professional-gray mb-2">
+              {createMethodology.isPending ? 'Initializing AUTOMATE Methodology...' : 'Loading AUTOMATE methodology...'}
+            </h3>
+            <p className="text-gray-600">
+              {createMethodology.isPending 
+                ? 'Setting up your systematic marketing framework'
+                : 'Please wait while we load your progress'
+              }
+            </p>
           </div>
+        </div>
+      </BaseLayout>
+    );
+  }
+
+  if (progressError || createMethodology.error) {
+    return (
+      <BaseLayout title="AUTOMATE Hub" breadcrumb="Marketing Operating System">
+        <div className="p-6 space-y-6">
+          <Card className="border-red-200 bg-red-50">
+            <CardContent className="p-6 text-center">
+              <AlertCircle className="w-12 h-12 text-red-500 mx-auto mb-4" />
+              <h3 className="text-lg font-semibold text-red-800 mb-2">
+                AUTOMATE Setup Issue
+              </h3>
+              <p className="text-red-700 mb-4">
+                {createMethodology.error?.message || progressError?.message || 'Failed to load AUTOMATE methodology'}
+              </p>
+              <div className="space-x-3">
+                <Button 
+                  onClick={handleRetryInitialization}
+                  className="bg-pravado-purple hover:bg-pravado-purple/90 text-white"
+                  disabled={createMethodology.isPending}
+                >
+                  {createMethodology.isPending ? (
+                    <>
+                      <Loader2 className="w-4 h-4 mr-2 animate-spin" />
+                      Retrying...
+                    </>
+                  ) : (
+                    'Retry Setup'
+                  )}
+                </Button>
+                <Button 
+                  variant="outline"
+                  onClick={() => {
+                    toast({
+                      title: "Support Contact",
+                      description: "Please contact support if this issue persists. Error details have been logged.",
+                    });
+                  }}
+                >
+                  Contact Support
+                </Button>
+              </div>
+            </CardContent>
+          </Card>
         </div>
       </BaseLayout>
     );

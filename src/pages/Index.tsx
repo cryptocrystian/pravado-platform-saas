@@ -34,7 +34,7 @@ const Index = () => {
       <div className="min-h-screen bg-soft-gray flex items-center justify-center">
         <div className="text-center">
           <LoadingSpinner size="lg" />
-          <p className="mt-4 text-professional-gray">Loading PRAVADO...</p>
+          <p className="mt-4 text-professional-gray font-medium">Loading PRAVADO...</p>
         </div>
       </div>
     );
@@ -67,21 +67,21 @@ const Index = () => {
                 <span className="text-white font-bold text-2xl">P</span>
               </div>
               <div>
-                <h1 className="text-4xl lg:text-5xl font-bold">PRAVADO</h1>
-                <p className="text-blue-100">Marketing Operating System</p>
+                <h1 className="text-4xl lg:text-5xl font-bold text-white">PRAVADO</h1>
+                <p className="text-blue-100 font-semibold text-lg">Marketing Operating System</p>
               </div>
             </div>
             
-            <Badge className="bg-pravado-orange text-white px-4 py-2 mb-6 text-lg">
+            <Badge className="bg-pravado-orange text-white px-4 py-2 mb-6 text-lg font-semibold">
               Growth from $5M to $50M+
             </Badge>
             
-            <h2 className="text-3xl lg:text-5xl font-bold mb-6 leading-tight">
+            <h2 className="text-3xl lg:text-5xl font-bold mb-6 leading-tight text-white">
               Stop Marketing Chaos.<br />
               <span className="text-pravado-orange">Start Systematic Growth.</span>
             </h2>
             
-            <p className="text-xl text-blue-100 mb-8 max-w-3xl mx-auto leading-relaxed">
+            <p className="text-xl text-blue-50 mb-8 max-w-3xl mx-auto leading-relaxed font-medium">
               The only marketing operating system that integrates content, PR, and SEO into one 
               powerful platform. Scale systematically with the AUTOMATE methodology trusted by 
               500+ mid-market leaders.
@@ -122,8 +122,8 @@ const Index = () => {
               {successMetrics.map((metric, index) => (
                 <div key={index} className="text-center bg-white/10 rounded-lg p-4 backdrop-blur-sm">
                   <metric.icon className="w-6 h-6 text-pravado-orange mx-auto mb-2" />
-                  <div className="text-2xl font-bold">{metric.value}</div>
-                  <div className="text-sm text-blue-100">{metric.label}</div>
+                  <div className="text-2xl font-bold text-white">{metric.value}</div>
+                  <div className="text-sm text-blue-100 font-medium">{metric.label}</div>
                 </div>
               ))}
             </div>
@@ -137,7 +137,7 @@ const Index = () => {
           <h3 className="text-3xl font-bold text-professional-gray mb-4">
             Why Mid-Market Leaders Choose PRAVADO
           </h3>
-          <p className="text-gray-500 text-lg max-w-3xl mx-auto">
+          <p className="text-gray-700 text-lg max-w-3xl mx-auto font-medium">
             Stop juggling 12+ marketing tools and start scaling systematically. 
             PRAVADO integrates everything into one powerful operating system.
           </p>
@@ -152,18 +152,18 @@ const Index = () => {
               {competitiveAdvantages.map((advantage, index) => (
                 <div key={index} className="flex items-start space-x-3">
                   <CheckCircle className="w-5 h-5 text-green-500 mt-1 flex-shrink-0" />
-                  <span className="text-gray-600">{advantage}</span>
+                  <span className="text-gray-700 font-medium">{advantage}</span>
                 </div>
               ))}
             </div>
           </div>
           
           <Card className="p-8 bg-gradient-to-br from-pravado-purple/5 to-pravado-orange/5">
-            <h5 className="text-xl font-semibold mb-4 text-center">Before vs After PRAVADO</h5>
+            <h5 className="text-xl font-semibold mb-4 text-center text-professional-gray">Before vs After PRAVADO</h5>
             <div className="grid grid-cols-2 gap-6">
               <div>
-                <h6 className="font-medium text-red-600 mb-3">❌ Before</h6>
-                <ul className="text-sm space-y-2 text-gray-600">
+                <h6 className="font-semibold text-red-600 mb-3">❌ Before</h6>
+                <ul className="text-sm space-y-2 text-gray-700">
                   <li>• 12+ disconnected tools</li>
                   <li>• Data in silos</li>
                   <li>• Manual reporting</li>
@@ -172,8 +172,8 @@ const Index = () => {
                 </ul>
               </div>
               <div>
-                <h6 className="font-medium text-green-600 mb-3">✅ After</h6>
-                <ul className="text-sm space-y-2 text-gray-600">
+                <h6 className="font-semibold text-green-600 mb-3">✅ After</h6>
+                <ul className="text-sm space-y-2 text-gray-700">
                   <li>• One integrated platform</li>
                   <li>• Unified data insights</li>
                   <li>• Automated reporting</li>
@@ -190,7 +190,7 @@ const Index = () => {
           <h3 className="text-3xl font-bold text-professional-gray mb-4">
             Three-Pillar Integration That Actually Works
           </h3>
-          <p className="text-gray-500 text-lg max-w-2xl mx-auto">
+          <p className="text-gray-700 text-lg max-w-2xl mx-auto font-medium">
             Unlike scattered point solutions, PRAVADO unifies content, PR, and SEO 
             with shared data and coordinated campaigns.
           </p>
@@ -202,7 +202,7 @@ const Index = () => {
               <Target className="text-white w-8 h-8" />
             </div>
             <h4 className="font-semibold text-professional-gray mb-3">Content Marketing</h4>
-            <p className="text-gray-500 text-sm mb-4">
+            <p className="text-gray-700 text-sm mb-4 font-medium">
               AI-powered content creation, optimization, and performance tracking
             </p>
             <ul className="text-xs space-y-1 text-gray-600">
@@ -217,7 +217,7 @@ const Index = () => {
               <Users className="text-white w-8 h-8" />
             </div>
             <h4 className="font-semibold text-professional-gray mb-3">Public Relations</h4>
-            <p className="text-gray-500 text-sm mb-4">
+            <p className="text-gray-700 text-sm mb-4 font-medium">
               Journalist outreach, HARO automation, and media relationship management
             </p>
             <ul className="text-xs space-y-1 text-gray-600">
@@ -232,7 +232,7 @@ const Index = () => {
               <BarChart3 className="text-white w-8 h-8" />
             </div>
             <h4 className="font-semibold text-professional-gray mb-3">SEO Intelligence</h4>
-            <p className="text-gray-500 text-sm mb-4">
+            <p className="text-gray-700 text-sm mb-4 font-medium">
               Technical audits, keyword optimization, and competitive intelligence
             </p>
             <ul className="text-xs space-y-1 text-gray-600">
@@ -253,7 +253,7 @@ const Index = () => {
             </h3>
             <div className="flex justify-center space-x-8 opacity-60 mb-8">
               {['TechCorp', 'GrowthCo', 'ScaleTech', 'MarketLeader', 'InnovateInc'].map((company) => (
-                <div key={company} className="text-gray-400 font-semibold text-lg">
+                <div key={company} className="text-gray-500 font-semibold text-lg">
                   {company}
                 </div>
               ))}
@@ -268,13 +268,13 @@ const Index = () => {
                   <Star key={i} className="w-4 h-4 text-yellow-400 fill-current" />
                 ))}
               </div>
-              <p className="text-gray-600 mb-4">
+              <p className="text-gray-700 mb-4 font-medium">
                 "PRAVADO helped us scale from $8M to $25M by eliminating our tool chaos. 
                 The AUTOMATE methodology is brilliant."
               </p>
               <div className="text-sm">
-                <div className="font-semibold">Sarah Chen</div>
-                <div className="text-gray-500">VP Marketing, TechCorp</div>
+                <div className="font-semibold text-professional-gray">Sarah Chen</div>
+                <div className="text-gray-600">VP Marketing, TechCorp</div>
               </div>
             </Card>
 
@@ -284,12 +284,12 @@ const Index = () => {
                   <Star key={i} className="w-4 h-4 text-yellow-400 fill-current" />
                 ))}
               </div>
-              <p className="text-gray-600 mb-4">
+              <p className="text-gray-700 mb-4 font-medium">
                 "ROI was clear within 60 days. We saved $180K annually vs our previous tool stack."
               </p>
               <div className="text-sm">
-                <div className="font-semibold">Marcus Rodriguez</div>
-                <div className="text-gray-500">CMO, GrowthCo</div>
+                <div className="font-semibold text-professional-gray">Marcus Rodriguez</div>
+                <div className="text-gray-600">CMO, GrowthCo</div>
               </div>
             </Card>
 
@@ -299,12 +299,12 @@ const Index = () => {
                   <Star key={i} className="w-4 h-4 text-yellow-400 fill-current" />
                 ))}
               </div>
-              <p className="text-gray-600 mb-4">
+              <p className="text-gray-700 mb-4 font-medium">
                 "The three-pillar integration is game-changing. Our team productivity increased 45%."
               </p>
               <div className="text-sm">
-                <div className="font-semibold">Jennifer Park</div>
-                <div className="text-gray-500">Director Marketing, ScaleTech</div>
+                <div className="font-semibold text-professional-gray">Jennifer Park</div>
+                <div className="text-gray-600">Director Marketing, ScaleTech</div>
               </div>
             </Card>
           </div>
@@ -317,7 +317,7 @@ const Index = () => {
           <h3 className="text-3xl font-bold mb-4">
             Ready to Scale from $5M to $50M+ Systematically?
           </h3>
-          <p className="text-xl text-blue-100 mb-8 max-w-2xl mx-auto">
+          <p className="text-xl text-blue-100 mb-8 max-w-2xl mx-auto font-medium">
             Join 500+ mid-market companies that chose systematic marketing over chaos.
             Start your 30-day quick start today.
           </p>
@@ -339,7 +339,7 @@ const Index = () => {
             </Button>
           </div>
           
-          <div className="mt-8 flex justify-center space-x-8 text-sm text-blue-100">
+          <div className="mt-8 flex justify-center space-x-8 text-sm text-blue-100 font-medium">
             <span>✓ 30-Day Money-Back Guarantee</span>
             <span>✓ No Setup Fees</span>
             <span>✓ Cancel Anytime</span>
