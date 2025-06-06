@@ -2,7 +2,7 @@
 import React from 'react';
 
 interface PravadoLogoProps {
-  variant?: 'navbar' | 'sidebar' | 'landing' | 'icon-only';
+  variant?: 'navbar' | 'sidebar' | 'icon-only';
   className?: string;
 }
 
@@ -32,20 +32,6 @@ export function PravadoLogo({ variant = 'navbar', className = '' }: PravadoLogoP
           loading="lazy"
         />
         <span className="text-lg font-bold text-white leading-tight">PRAVADO</span>
-      </div>
-    );
-  }
-
-  if (variant === 'landing') {
-    return (
-      <div className={`flex items-center space-x-6 ${className}`}>
-        <img 
-          src={logoSrc}
-          alt="PRAVADO"
-          className="h-16 w-16 object-contain flex-shrink-0"
-          loading="eager"
-        />
-        <span className="text-5xl lg:text-6xl font-bold text-white leading-tight">PRAVADO</span>
       </div>
     );
   }

@@ -1,3 +1,4 @@
+
 import React, { useEffect } from 'react';
 import { useAuth } from '@/contexts/AuthContext';
 import { useNavigate } from 'react-router-dom';
@@ -18,7 +19,6 @@ import {
   Megaphone,
   Search,
   Shield,
-  Globe,
   Brain
 } from 'lucide-react';
 import { PravadoLogo } from '@/components/PravadoLogo';
@@ -62,21 +62,40 @@ const Index = () => {
 
   return (
     <div className="min-h-screen bg-white">
-      {/* Hero Section - Enterprise Focused */}
+      {/* Single Header/Hero Section - No Duplicate Headers */}
       <div className="bg-gradient-to-br from-enterprise-blue via-pravado-navy to-pravado-purple text-white">
-        <div className="max-w-7xl mx-auto px-4 py-20 lg:py-28">
-          <div className="text-center">
-            <div className="flex items-center justify-center mb-12">
-              <PravadoLogo variant="landing" />
+        {/* Simple Navigation Bar */}
+        <nav className="max-w-7xl mx-auto px-4 py-6">
+          <div className="flex items-center justify-between">
+            <PravadoLogo variant="navbar" />
+            <div className="flex items-center space-x-4">
+              <Button 
+                variant="ghost" 
+                className="text-white hover:text-blue-200 hover:bg-white/10"
+                onClick={() => navigate('/auth?mode=signin')}
+              >
+                Sign In
+              </Button>
+              <Button 
+                className="bg-white text-enterprise-blue hover:bg-blue-50 font-semibold"
+                onClick={() => navigate('/auth?mode=signup')}
+              >
+                Start Trial
+              </Button>
             </div>
-            
+          </div>
+        </nav>
+
+        {/* Hero Content */}
+        <div className="max-w-7xl mx-auto px-4 py-16 lg:py-20">
+          <div className="text-center">
             <Badge className="bg-white/10 backdrop-blur-sm text-white border border-white/20 px-6 py-3 mb-8 text-lg font-semibold">
               Marketing Operating System
             </Badge>
             
-            <h2 className="text-4xl lg:text-6xl font-bold mb-8 leading-tight">
+            <h1 className="text-4xl lg:text-6xl font-bold mb-8 leading-tight">
               Enterprise Marketing Operations Platform
-            </h2>
+            </h1>
             
             <p className="text-xl lg:text-2xl text-blue-100 mb-12 max-w-4xl mx-auto leading-relaxed font-medium">
               The comprehensive operating system for marketing leaders to systematize, 
