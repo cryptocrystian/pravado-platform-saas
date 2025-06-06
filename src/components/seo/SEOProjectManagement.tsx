@@ -7,16 +7,8 @@ import { Label } from '@/components/ui/label';
 import { Badge } from '@/components/ui/badge';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
-import { Plus, Globe, TrendingUp, CheckCircle, Clock, AlertTriangle } from 'lucide-react';
-import { useCreateSEOProject } from '@/hooks/useSEOData';
-
-interface SEOProject {
-  id: string;
-  name: string;
-  domain: string;
-  status: string;
-  created_at: string;
-}
+import { Plus, Globe, CheckCircle, Clock, AlertTriangle } from 'lucide-react';
+import { useCreateSEOProject, type SEOProject } from '@/hooks/useSEOData';
 
 interface SEOProjectManagementProps {
   projects: SEOProject[];
@@ -64,13 +56,13 @@ export function SEOProjectManagement({ projects, selectedProject, onSelectProjec
       {/* Header */}
       <div className="flex items-center justify-between">
         <div>
-          <h2 className="text-2xl font-bold text-professional-gray">SEO Project Management</h2>
+          <h2 className="text-2xl font-bold text-gray-900">SEO Project Management</h2>
           <p className="text-gray-600">Manage your SEO projects and domain tracking</p>
         </div>
         
         <Dialog open={isCreateOpen} onOpenChange={setIsCreateOpen}>
           <DialogTrigger asChild>
-            <Button>
+            <Button className="bg-blue-600 hover:bg-blue-700">
               <Plus className="h-4 w-4 mr-2" />
               New SEO Project
             </Button>
@@ -113,7 +105,7 @@ export function SEOProjectManagement({ projects, selectedProject, onSelectProjec
               </div>
               <Button 
                 onClick={handleCreateProject} 
-                className="w-full"
+                className="w-full bg-blue-600 hover:bg-blue-700"
                 disabled={createProject.isPending}
               >
                 {createProject.isPending ? 'Creating...' : 'Create Project'}
@@ -129,13 +121,13 @@ export function SEOProjectManagement({ projects, selectedProject, onSelectProjec
           <Card 
             key={project.id} 
             className={`cursor-pointer transition-all hover:shadow-lg ${
-              selectedProject === project.id ? 'border-enterprise-blue bg-blue-50' : 'border-border-gray'
+              selectedProject === project.id ? 'border-blue-500 bg-blue-50' : 'border-gray-200'
             }`}
             onClick={() => onSelectProject(project.id)}
           >
             <CardHeader className="pb-4">
               <div className="flex items-center justify-between">
-                <CardTitle className="text-lg font-semibold text-professional-gray">
+                <CardTitle className="text-lg font-semibold text-gray-900">
                   {project.name}
                 </CardTitle>
                 <div className="flex items-center space-x-1">
@@ -160,11 +152,11 @@ export function SEOProjectManagement({ projects, selectedProject, onSelectProjec
               {/* Quick Stats */}
               <div className="mt-4 grid grid-cols-2 gap-4">
                 <div className="text-center">
-                  <div className="text-lg font-bold text-enterprise-blue">-</div>
+                  <div className="text-lg font-bold text-blue-600">-</div>
                   <div className="text-xs text-gray-600">Keywords</div>
                 </div>
                 <div className="text-center">
-                  <div className="text-lg font-bold text-pravado-orange">-</div>
+                  <div className="text-lg font-bold text-orange-600">-</div>
                   <div className="text-xs text-gray-600">Avg. Position</div>
                 </div>
               </div>
@@ -180,7 +172,7 @@ export function SEOProjectManagement({ projects, selectedProject, onSelectProjec
               <p className="text-sm text-gray-500 text-center mb-4">
                 Create your first SEO project to start tracking your website's performance
               </p>
-              <Button onClick={() => setIsCreateOpen(true)}>
+              <Button onClick={() => setIsCreateOpen(true)} className="bg-blue-600 hover:bg-blue-700">
                 <Plus className="h-4 w-4 mr-2" />
                 Create Your First Project
               </Button>

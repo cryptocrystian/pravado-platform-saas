@@ -116,7 +116,7 @@ const SEOIntelligencePro = () => {
   const getStatusIcon = (status: string) => {
     switch (status) {
       case 'completed': return <CheckCircle className="w-4 h-4 text-green-600" />;
-      case 'in_progress': return <Brain className="w-4 h-4 text-pravado-purple" />;
+      case 'in_progress': return <Brain className="w-4 h-4 text-purple-600" />;
       default: return <AlertTriangle className="w-4 h-4 text-yellow-600" />;
     }
   };
@@ -128,11 +128,11 @@ const SEOIntelligencePro = () => {
           {/* Header with AUTOMATE Integration */}
           <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between mb-8">
             <div>
-              <h1 className="text-3xl font-bold text-professional-gray mb-2">SEO Intelligence Pro</h1>
+              <h1 className="text-3xl font-bold text-gray-900 mb-2">SEO Intelligence Pro</h1>
               <p className="text-gray-600">Comprehensive SEO management with AUTOMATE methodology integration</p>
               <div className="flex items-center space-x-2 mt-2">
-                <Brain className="w-4 h-4 text-pravado-purple" />
-                <span className="text-sm text-pravado-purple font-medium">
+                <Brain className="w-4 h-4 text-purple-600" />
+                <span className="text-sm text-purple-600 font-medium">
                   SEO AUTOMATE Progress: {Math.round(overallSEOProgress)}% Complete
                 </span>
               </div>
@@ -142,7 +142,7 @@ const SEOIntelligencePro = () => {
                 <Settings className="h-4 w-4 mr-2" />
                 SEO Settings
               </Button>
-              <Button>
+              <Button className="bg-blue-600 hover:bg-blue-700">
                 <Plus className="h-4 w-4 mr-2" />
                 New Project
               </Button>
@@ -150,25 +150,25 @@ const SEOIntelligencePro = () => {
           </div>
 
           {/* SEO AUTOMATE Progress Dashboard */}
-          <Card className="mb-8 bg-gradient-to-r from-pravado-purple/10 to-enterprise-blue/10 border-l-4 border-l-pravado-purple">
+          <Card className="mb-8 bg-gradient-to-r from-purple-50 to-blue-50 border-l-4 border-l-purple-600">
             <CardContent className="p-6">
               <div className="flex items-center justify-between mb-4">
                 <div className="flex items-center space-x-3">
-                  <Brain className="w-6 h-6 text-pravado-purple" />
+                  <Brain className="w-6 h-6 text-purple-600" />
                   <div>
-                    <h3 className="text-lg font-semibold text-professional-gray">SEO AUTOMATE Methodology</h3>
+                    <h3 className="text-lg font-semibold text-gray-900">SEO AUTOMATE Methodology</h3>
                     <p className="text-sm text-gray-600">Systematic SEO optimization framework</p>
                   </div>
                 </div>
                 <div className="text-right">
-                  <div className="text-2xl font-bold text-pravado-purple">{Math.round(overallSEOProgress)}%</div>
+                  <div className="text-2xl font-bold text-purple-600">{Math.round(overallSEOProgress)}%</div>
                   <div className="text-sm text-gray-600">Overall Progress</div>
                 </div>
               </div>
               <Progress value={overallSEOProgress} className="h-2 mb-4" />
               <div className="grid grid-cols-1 md:grid-cols-4 lg:grid-cols-8 gap-3">
-                {seoAutomateSteps.map((step) => (
-                  <div key={`${step.code}-${step.name}`} className="bg-white rounded-lg p-3 border">
+                {seoAutomateSteps.map((step, index) => (
+                  <div key={`${step.code}-${step.name}-${index}`} className="bg-white rounded-lg p-3 border">
                     <div className="flex items-center justify-between mb-2">
                       <span className="font-medium text-sm">{step.code}</span>
                       {getStatusIcon(step.status)}
@@ -189,53 +189,53 @@ const SEOIntelligencePro = () => {
 
           {/* Key SEO Metrics */}
           <div className="grid grid-cols-1 md:grid-cols-4 gap-6 mb-8">
-            <Card className="bg-white border border-border-gray hover:shadow-lg transition-shadow">
+            <Card className="bg-white border border-gray-200 hover:shadow-lg transition-shadow">
               <CardContent className="p-6">
                 <div className="flex items-center justify-between mb-2">
-                  <Target className="h-8 w-8 text-enterprise-blue" />
-                  <div className="text-2xl font-bold text-enterprise-blue">{totalKeywords}</div>
+                  <Target className="h-8 w-8 text-blue-600" />
+                  <div className="text-2xl font-bold text-blue-600">{totalKeywords}</div>
                 </div>
-                <h3 className="text-lg font-semibold text-professional-gray mb-1">Keywords Tracked</h3>
-                <div className="text-xs text-gray-600 bg-soft-gray rounded px-2 py-1">
+                <h3 className="text-lg font-semibold text-gray-900 mb-1">Keywords Tracked</h3>
+                <div className="text-xs text-gray-600 bg-gray-100 rounded px-2 py-1">
                   AUTOMATE: Target & Strategy
                 </div>
               </CardContent>
             </Card>
 
-            <Card className="bg-white border border-border-gray hover:shadow-lg transition-shadow">
+            <Card className="bg-white border border-gray-200 hover:shadow-lg transition-shadow">
               <CardContent className="p-6">
                 <div className="flex items-center justify-between mb-2">
-                  <TrendingUp className="h-8 w-8 text-pravado-orange" />
-                  <div className="text-2xl font-bold text-pravado-orange">{Math.round(avgPosition) || '-'}</div>
+                  <TrendingUp className="h-8 w-8 text-orange-600" />
+                  <div className="text-2xl font-bold text-orange-600">{Math.round(avgPosition) || '-'}</div>
                 </div>
-                <h3 className="text-lg font-semibold text-professional-gray mb-1">Avg. Position</h3>
-                <div className="text-xs text-gray-600 bg-soft-gray rounded px-2 py-1">
+                <h3 className="text-lg font-semibold text-gray-900 mb-1">Avg. Position</h3>
+                <div className="text-xs text-gray-600 bg-gray-100 rounded px-2 py-1">
                   AUTOMATE: Measure & Monitor
                 </div>
               </CardContent>
             </Card>
 
-            <Card className="bg-white border border-border-gray hover:shadow-lg transition-shadow">
+            <Card className="bg-white border border-gray-200 hover:shadow-lg transition-shadow">
               <CardContent className="p-6">
                 <div className="flex items-center justify-between mb-2">
-                  <BarChart3 className="h-8 w-8 text-pravado-purple" />
-                  <div className="text-2xl font-bold text-pravado-purple">{improvingKeywords}</div>
+                  <BarChart3 className="h-8 w-8 text-purple-600" />
+                  <div className="text-2xl font-bold text-purple-600">{improvingKeywords}</div>
                 </div>
-                <h3 className="text-lg font-semibold text-professional-gray mb-1">Improving Keywords</h3>
-                <div className="text-xs text-gray-600 bg-soft-gray rounded px-2 py-1">
+                <h3 className="text-lg font-semibold text-gray-900 mb-1">Improving Keywords</h3>
+                <div className="text-xs text-gray-600 bg-gray-100 rounded px-2 py-1">
                   AUTOMATE: Transform & Evolve
                 </div>
               </CardContent>
             </Card>
 
-            <Card className="bg-white border border-border-gray hover:shadow-lg transition-shadow">
+            <Card className="bg-white border border-gray-200 hover:shadow-lg transition-shadow">
               <CardContent className="p-6">
                 <div className="flex items-center justify-between mb-2">
                   <Globe className="h-8 w-8 text-green-600" />
                   <div className="text-2xl font-bold text-green-600">{Math.round(overallHealth) || '-'}%</div>
                 </div>
-                <h3 className="text-lg font-semibold text-professional-gray mb-1">Site Health</h3>
-                <div className="text-xs text-gray-600 bg-soft-gray rounded px-2 py-1">
+                <h3 className="text-lg font-semibold text-gray-900 mb-1">Site Health</h3>
+                <div className="text-xs text-gray-600 bg-gray-100 rounded px-2 py-1">
                   AUTOMATE: Assess & Audit
                 </div>
               </CardContent>
@@ -243,7 +243,7 @@ const SEOIntelligencePro = () => {
           </div>
 
           {/* Main SEO Intelligence Interface */}
-          <Card className="bg-white border border-border-gray">
+          <Card className="bg-white border border-gray-200">
             <CardContent className="p-6">
               <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
                 <TabsList className="grid w-full grid-cols-6">
