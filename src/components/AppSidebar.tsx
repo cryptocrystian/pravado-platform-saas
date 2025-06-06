@@ -85,17 +85,17 @@ export function AppSidebar() {
   // Determine logo variant based on screen size
   const getLogoVariant = () => {
     if (isMobile) return 'icon-only';
-    return 'compact';
+    return 'full';
   };
 
   return (
     <Sidebar className="border-r border-border-gray shadow-lg">
-      <SidebarHeader className="bg-accent text-white p-3 shadow-md">
+      <SidebarHeader className="bg-accent text-white p-4 shadow-md">
         <Link 
           to="/dashboard" 
           className="flex items-center justify-center hover:opacity-90 transition-opacity"
         >
-          <PravadoLogo variant={getLogoVariant()} />
+          <PravadoLogo variant={getLogoVariant()} className="h-12" />
         </Link>
       </SidebarHeader>
       

@@ -9,10 +9,10 @@ const Header = () => {
 
   return (
     <header className="bg-accent text-white relative z-50">
-      <div className="container mx-auto px-4 py-4">
+      <div className="container mx-auto px-4 py-6">
         <div className="flex items-center justify-between">
           <div className="flex items-center">
-            <PravadoLogo variant="compact" />
+            <PravadoLogo variant="full" className="h-12" />
           </div>
           
           <nav className="hidden md:flex items-center space-x-8">

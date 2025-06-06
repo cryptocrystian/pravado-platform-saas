@@ -69,7 +69,7 @@ const Index = () => {
               <img 
                 src="/lovable-uploads/b6e060fa-91ad-4bda-9b7e-330354ecd57b.png"
                 alt="PRAVADO - Marketing Operating System"
-                className="h-16 w-auto object-contain"
+                className="h-24 lg:h-32 w-auto object-contain"
                 loading="eager"
               />
             </div>
