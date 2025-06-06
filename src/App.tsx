@@ -25,6 +25,9 @@ import AssessAudit from "./pages/AssessAudit";
 import HelpCenter from "./pages/HelpCenter";
 import BetaProgram from "./pages/BetaProgram";
 import CustomerSuccess from "./pages/CustomerSuccess";
+import Demo from "./pages/Demo";
+import ROICalculatorPage from "./pages/ROICalculatorPage";
+import SuccessStories from "./pages/SuccessStories";
 
 const queryClient = new QueryClient();
 
@@ -38,6 +41,9 @@ const App = () => (
           <Routes>
             <Route path="/" element={<Index />} />
             <Route path="/auth" element={<Auth />} />
+            <Route path="/demo" element={<Demo />} />
+            <Route path="/roi-calculator" element={<ROICalculatorPage />} />
+            <Route path="/success-stories" element={<SuccessStories />} />
             <Route path="/ai-testing" element={<AITesting />} />
             <Route path="/dashboard" element={
               <ProtectedRoute>
