@@ -13,7 +13,7 @@ export function useSEOProjects() {
       if (!userTenant?.id) return [];
       
       const { data, error } = await supabase
-        .from('seo_projects')
+        .from('seo_projects' as any)
         .select('*')
         .eq('tenant_id', userTenant.id)
         .order('created_at', { ascending: false });
@@ -39,7 +39,7 @@ export function useCreateSEOProject() {
       if (!userTenant?.id) throw new Error('No tenant ID');
 
       const { data, error } = await supabase
-        .from('seo_projects')
+        .from('seo_projects' as any)
         .insert({
           tenant_id: userTenant.id,
           name: projectData.name,
@@ -79,7 +79,7 @@ export function useSEOAudits(projectId?: string) {
       if (!userTenant?.id) return [];
       
       let query = supabase
-        .from('seo_audits')
+        .from('seo_audits' as any)
         .select('*')
         .eq('tenant_id', userTenant.id);
       
@@ -105,7 +105,7 @@ export function useKeywordTracking(projectId?: string) {
       if (!userTenant?.id) return [];
       
       let query = supabase
-        .from('keyword_tracking')
+        .from('keyword_tracking' as any)
         .select(`
           *,
           seo_keywords (*)
@@ -134,7 +134,7 @@ export function useSEOCompetitors(projectId?: string) {
       if (!userTenant?.id) return [];
       
       let query = supabase
-        .from('seo_competitors')
+        .from('seo_competitors' as any)
         .select('*')
         .eq('tenant_id', userTenant.id);
       
@@ -168,7 +168,7 @@ export function useEnhancedSEOKeywords(projectId?: string) {
         query = query.eq('project_id', projectId);
       }
       
-      const { data, error } = await query.order('opportunity_score', { ascending: false });
+      const { data, error } = await query.order('created_at', { ascending: false });
       
       if (error) throw error;
       return data || [];
@@ -186,7 +186,7 @@ export function useContentOptimization(contentId?: string) {
       if (!userTenant?.id) return [];
       
       let query = supabase
-        .from('seo_content_optimization')
+        .from('seo_content_optimization' as any)
         .select('*')
         .eq('tenant_id', userTenant.id);
       
