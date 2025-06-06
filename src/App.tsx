@@ -22,6 +22,7 @@ import Campaigns from "./pages/Campaigns";
 import CampaignDetail from "./pages/CampaignDetail";
 import AutomateHub from "./pages/AutomateHub";
 import AssessAudit from "./pages/AssessAudit";
+import HelpCenter from "./pages/HelpCenter";
 
 const queryClient = new QueryClient();
 
@@ -84,6 +85,11 @@ const App = () => (
             <Route path="/automate/assess-audit" element={
               <ProtectedRoute>
                 <AssessAudit />
+              </ProtectedRoute>
+            } />
+            <Route path="/help" element={
+              <ProtectedRoute>
+                <HelpCenter />
               </ProtectedRoute>
             } />
             <Route path="/settings" element={
