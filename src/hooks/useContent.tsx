@@ -10,7 +10,7 @@ export type ContentPiece = Database['public']['Tables']['content_pieces']['Row']
   target_platforms?: string[];
   scheduled_date?: string;
   ai_optimized?: boolean;
-  campaigns?: any;
+  campaign_name?: string;
 };
 
 export type ContentPieceInsert = Database['public']['Tables']['content_pieces']['Insert'] & {
@@ -35,19 +35,20 @@ export function useContent() {
     queryFn: async () => {
       if (!userTenant?.id) return [];
       
+      // Simplified query without INNER JOIN - just get content pieces
       const { data, error } = await supabase
         .from('content_pieces')
-        .select(`
-          *,
-          campaigns!inner(id, name)
-        `)
+        .select('*')
         .eq('tenant_id', userTenant.id)
-        .order('created_at', { ascending: false });
+        .order('created_at', { ascending: false })
+        .limit(50); // Add limit for better performance
 
       if (error) throw error;
       return data || [];
     },
     enabled: !!userTenant?.id,
+    staleTime: 5 * 60 * 1000, // Cache for 5 minutes
+    gcTime: 10 * 60 * 1000, // Keep in cache for 10 minutes
   });
 }
 
@@ -61,10 +62,7 @@ export function useContentPiece(id: string) {
       
       const { data, error } = await supabase
         .from('content_pieces')
-        .select(`
-          *,
-          campaigns(id, name)
-        `)
+        .select('*')
         .eq('id', id)
         .eq('tenant_id', userTenant.id)
         .single();

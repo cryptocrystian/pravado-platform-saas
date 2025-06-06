@@ -66,7 +66,7 @@ export function PerformanceMonitor() {
       <Card className="bg-white/95 backdrop-blur-sm border border-gray-200 shadow-lg">
         <CardHeader className="pb-3">
           <CardTitle className="text-sm flex items-center space-x-2">
-            <Activity className="w-4 h-4 text-pravado-purple" />
+            <Activity className="w-4 h-4 text-purple-600" />
             <span>Performance Monitor</span>
           </CardTitle>
         </CardHeader>
@@ -105,7 +105,7 @@ export function PerformanceMonitor() {
 
           <div className="flex items-center justify-between">
             <div className="flex items-center space-x-2">
-              <TrendingUp className="w-3 h-3 text-pravado-orange" />
+              <TrendingUp className="w-3 h-3 text-orange-500" />
               <span className="text-xs">Memory</span>
             </div>
             <div className="flex items-center space-x-2">
@@ -121,7 +121,7 @@ export function PerformanceMonitor() {
 
           <div className="flex items-center justify-between">
             <div className="flex items-center space-x-2">
-              <Activity className="w-3 h-3 text-enterprise-blue" />
+              <Activity className="w-3 h-3 text-blue-600" />
               <span className="text-xs">Network</span>
             </div>
             <div className="flex items-center space-x-2">
