@@ -20,6 +20,7 @@ import AITesting from "./pages/AITesting";
 import NotFound from "./pages/NotFound";
 import Campaigns from "./pages/Campaigns";
 import CampaignDetail from "./pages/CampaignDetail";
+import AutomateHub from "./pages/AutomateHub";
 
 const queryClient = new QueryClient();
 
@@ -72,6 +73,11 @@ const App = () => (
             <Route path="/citemind" element={
               <ProtectedRoute>
                 <CiteMind />
+              </ProtectedRoute>
+            } />
+            <Route path="/automate" element={
+              <ProtectedRoute>
+                <AutomateHub />
               </ProtectedRoute>
             } />
             <Route path="/settings" element={
