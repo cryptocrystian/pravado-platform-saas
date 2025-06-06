@@ -1,4 +1,3 @@
-
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { supabase } from '@/integrations/supabase/client';
 import { useUserTenant } from './useUserData';
@@ -52,20 +51,32 @@ export function useCreateAutomateMethodology() {
       console.log('Creating AUTOMATE methodology for tenant:', userTenant.id);
       
       try {
-        // Try cleanup function (optional - may not exist in older database versions)
-        try {
-          const { error: cleanupError } = await supabase.rpc('cleanup_automate_duplicates', {
-            target_tenant_id: userTenant.id
-          });
+        // Manual cleanup: Check for and handle duplicate methodology campaigns
+        const { data: existingCampaigns, error: fetchError } = await supabase
+          .from('automate_methodology_campaigns')
+          .select('id, created_at')
+          .eq('tenant_id', userTenant.id)
+          .order('created_at', { ascending: false });
 
-          if (cleanupError && !cleanupError.message.includes('function cleanup_automate_duplicates')) {
-            console.warn('Cleanup function error (non-critical):', cleanupError);
-          }
-        } catch (cleanupErr) {
-          console.log('Cleanup function not available, proceeding with manual checks');
+        if (fetchError) {
+          console.error('Error fetching existing campaigns:', fetchError);
+          throw new Error(`Database check failed: ${fetchError.message}`);
         }
 
-        // Check if methodology already exists - using maybeSingle to avoid JSON errors
+        // If multiple campaigns exist, keep only the most recent one
+        if (existingCampaigns && existingCampaigns.length > 1) {
+          console.log(`Found ${existingCampaigns.length} existing campaigns, cleaning up duplicates...`);
+          const campaignsToDelete = existingCampaigns.slice(1); // Keep first (most recent), delete rest
+          
+          for (const campaign of campaignsToDelete) {
+            await supabase
+              .from('automate_methodology_campaigns')
+              .delete()
+              .eq('id', campaign.id);
+          }
+        }
+
+        // Check if methodology already exists after cleanup
         const { data: existingMethodology, error: checkError } = await supabase
           .from('automate_methodology_campaigns')
           .select('id')
