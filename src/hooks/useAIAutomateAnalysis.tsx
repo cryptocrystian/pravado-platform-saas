@@ -123,29 +123,19 @@ ${includePredictions ? '5. Predictive insights for next period' : ''}`;
         word_count: 1200
       });
 
-      // Store the generated report
-      const { data: report, error: reportError } = await supabase
-        .from('ai_generated_reports')
-        .insert({
-          tenant_id: userTenant.id,
-          report_type: 'executive_summary',
-          period,
-          content: reportContent.content,
-          generated_at: new Date().toISOString()
-        })
-        .select()
-        .single();
-
-      if (reportError) throw reportError;
-
+      // Return the generated report data without trying to store it
       return {
-        report,
+        report: {
+          id: `temp-${Date.now()}`,
+          content: reportContent.content,
+          period,
+          generated_at: new Date().toISOString()
+        },
         campaigns: campaignsResult.data,
         progress: progressResult.data
       };
     },
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['executive-reports'] });
       toast({
         title: "Executive Report Generated",
         description: "AI-powered executive summary created successfully",

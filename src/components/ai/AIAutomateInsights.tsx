@@ -49,8 +49,8 @@ export function AIAutomateInsights({ methodologyData }: AutomateInsightsProps) {
 
 Overall Progress: ${methodologyData.overallProgress}%
 Team Adherence Score: ${methodologyData.teamProductivity.adherenceScore}%
-Completed Actions: ${methodologyData.completedActions}
-Pending Actions: ${methodologyData.pendingActions}
+Completed Actions: ${methodologyData.teamProductivity.completedActions}
+Pending Actions: ${methodologyData.teamProductivity.pendingActions}
 
 Step Completions:
 ${methodologyData.stepCompletions.map(step => 
