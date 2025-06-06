@@ -52,16 +52,20 @@ export function useCreateAutomateMethodology() {
       console.log('Creating AUTOMATE methodology for tenant:', userTenant.id);
       
       try {
-        // First, run cleanup function to handle any existing duplicates
-        const { error: cleanupError } = await supabase.rpc('cleanup_automate_duplicates', {
-          target_tenant_id: userTenant.id
-        });
+        // Try cleanup function (optional - may not exist in older database versions)
+        try {
+          const { error: cleanupError } = await supabase.rpc('cleanup_automate_duplicates', {
+            target_tenant_id: userTenant.id
+          });
 
-        if (cleanupError) {
-          console.warn('Cleanup function not available, proceeding with manual checks:', cleanupError);
+          if (cleanupError && !cleanupError.message.includes('function cleanup_automate_duplicates')) {
+            console.warn('Cleanup function error (non-critical):', cleanupError);
+          }
+        } catch (cleanupErr) {
+          console.log('Cleanup function not available, proceeding with manual checks');
         }
 
-        // Check if methodology already exists - using single() to get exactly one or error
+        // Check if methodology already exists - using maybeSingle to avoid JSON errors
         const { data: existingMethodology, error: checkError } = await supabase
           .from('automate_methodology_campaigns')
           .select('id')
@@ -103,23 +107,25 @@ export function useCreateAutomateMethodology() {
             methodology_name: 'AUTOMATE'
           })
           .select()
-          .single();
+          .maybeSingle();
 
         if (methodologyError) {
           // If it's a unique constraint violation, try to fetch existing record
           if (methodologyError.code === '23505') {
-            console.log('Methodology already exists, fetching existing record...');
+            console.log('Methodology already exists due to constraint, fetching existing record...');
             const { data: existingAfterConflict, error: fetchError } = await supabase
               .from('automate_methodology_campaigns')
               .select('*')
               .eq('tenant_id', userTenant.id)
-              .single();
+              .maybeSingle();
             
             if (fetchError) {
               throw new Error(`Failed to retrieve existing methodology: ${fetchError.message}`);
             }
             
-            return existingAfterConflict;
+            if (existingAfterConflict) {
+              return existingAfterConflict;
+            }
           }
           
           console.error('Error creating methodology campaign:', methodologyError);
@@ -199,30 +205,28 @@ async function createStepProgress(tenantId: string, methodologyId: string) {
 
   console.log(`Creating ${stepsToCreate.length} new step progress records`);
 
-  // Create step progress records one by one to handle any conflicts gracefully
-  for (const step of stepsToCreate) {
-    try {
-      const { error: stepError } = await supabase
-        .from('automate_step_progress')
-        .insert({
-          methodology_campaign_id: methodologyId,
-          tenant_id: tenantId,
-          step_code: step.code,
-          step_name: step.name,
-          step_index: step.index,
-          completion_percentage: step.completion,
-          status: step.completion > 50 ? 'completed' : step.completion > 0 ? 'in_progress' : 'pending'
-        });
-
-      if (stepError && stepError.code !== '23505') {
-        // Ignore unique constraint violations, but throw other errors
-        console.error(`Error creating step ${step.code}-${step.index}:`, stepError);
-        throw new Error(`Failed to create step progress: ${stepError.message}`);
+  // Create step progress records using upsert to handle conflicts gracefully
+  const { error: upsertError } = await supabase
+    .from('automate_step_progress')
+    .upsert(
+      stepsToCreate.map(step => ({
+        methodology_campaign_id: methodologyId,
+        tenant_id: tenantId,
+        step_code: step.code,
+        step_name: step.name,
+        step_index: step.index,
+        completion_percentage: step.completion,
+        status: step.completion > 50 ? 'completed' : step.completion > 0 ? 'in_progress' : 'pending'
+      })),
+      { 
+        onConflict: 'tenant_id,step_code,step_index',
+        ignoreDuplicates: true 
       }
-    } catch (error) {
-      console.error(`Failed to create step ${step.code}-${step.index}:`, error);
-      // Continue with other steps even if one fails
-    }
+    );
+
+  if (upsertError) {
+    console.error('Error creating step progress records:', upsertError);
+    throw new Error(`Failed to create step progress: ${upsertError.message}`);
   }
 }
 
@@ -251,7 +255,7 @@ export function useUpdateStepProgress() {
         })
         .eq('id', stepId)
         .select()
-        .single();
+        .maybeSingle();
 
       if (error) {
         console.error('Error updating step progress:', error);
