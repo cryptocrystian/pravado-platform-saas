@@ -85,7 +85,7 @@ export function AppSidebar() {
   // Determine logo variant based on screen size
   const getLogoVariant = () => {
     if (isMobile) return 'icon-only';
-    return 'full';
+    return 'compact';
   };
 
   return (

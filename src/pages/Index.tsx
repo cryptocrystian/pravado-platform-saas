@@ -1,4 +1,3 @@
-
 import React, { useEffect } from 'react';
 import { useAuth } from '@/contexts/AuthContext';
 import { useNavigate } from 'react-router-dom';
@@ -67,13 +66,12 @@ const Index = () => {
         <div className="max-w-7xl mx-auto px-4 py-20 lg:py-28">
           <div className="text-center">
             <div className="flex items-center justify-center space-x-3 mb-8">
-              <div className="w-16 h-16 bg-white rounded-xl flex items-center justify-center shadow-lg">
-                <span className="text-pravado-purple font-bold text-3xl">P</span>
-              </div>
-              <div className="text-left">
-                <h1 className="text-5xl lg:text-6xl font-bold text-white">PRAVADO</h1>
-                <p className="text-blue-200 font-semibold text-xl">Marketing Operating System</p>
-              </div>
+              <img 
+                src="/lovable-uploads/b6e060fa-91ad-4bda-9b7e-330354ecd57b.png"
+                alt="PRAVADO - Marketing Operating System"
+                className="h-16 w-auto object-contain"
+                loading="eager"
+              />
             </div>
             
             <Badge className="bg-white/10 backdrop-blur-sm text-white border border-white/20 px-6 py-3 mb-8 text-lg font-semibold">
