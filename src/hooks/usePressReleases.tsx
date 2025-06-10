@@ -3,23 +3,10 @@ import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { supabase } from '@/integrations/supabase/client';
 import { useUserTenant } from './useUserData';
 import { useToast } from '@/hooks/use-toast';
+import { Database } from '@/integrations/supabase/types';
 
-export type MediaOutlet = {
-  id: string;
-  name: string;
-  website: string;
-  category: string;
-  industry_focus: string[];
-  geographic_focus: string[];
-  circulation?: number;
-  domain_authority?: number;
-  is_premium: boolean;
-  submission_email?: string;
-  submission_guidelines?: string;
-  turnaround_time?: string;
-  is_active: boolean;
-  created_at: string;
-};
+export type MediaOutlet = Database['public']['Tables']['media_outlets']['Row'];
+export type PressRelease = Database['public']['Tables']['press_releases']['Row'];
 
 export function usePressReleases() {
   const { data: userTenant } = useUserTenant();
@@ -43,69 +30,32 @@ export function usePressReleases() {
 }
 
 export function useMediaOutlets() {
+  const { data: userTenant } = useUserTenant();
+  
   return useQuery({
-    queryKey: ['media-outlets'],
+    queryKey: ['media-outlets', userTenant?.id],
     queryFn: async (): Promise<MediaOutlet[]> => {
-      // TODO: Replace with actual Supabase query when types are available
-      // const { data, error } = await supabase
-      //   .from('media_outlets')
-      //   .select('*')
-      //   .eq('is_active', true)
-      //   .order('domain_authority', { ascending: false });
-      // if (error) throw error;
-      // return data || [];
-
-      // Mock media outlets data
-      const mockOutlets: MediaOutlet[] = [
-        {
-          id: '1',
-          name: 'MarketWatch',
-          website: 'https://marketwatch.com',
-          category: 'Financial',
-          industry_focus: ['Finance', 'Business', 'Markets'],
-          geographic_focus: ['US', 'Global'],
-          circulation: 15000000,
-          domain_authority: 92,
-          is_premium: true,
-          submission_email: 'news@marketwatch.com',
-          turnaround_time: '2-4 hours',
-          is_active: true,
-          created_at: new Date().toISOString()
-        },
-        {
-          id: '2',
-          name: 'TechCrunch',
-          website: 'https://techcrunch.com',
-          category: 'Technology',
-          industry_focus: ['Technology', 'Startups', 'Innovation'],
-          geographic_focus: ['US', 'Global'],
-          circulation: 12000000,
-          domain_authority: 92,
-          is_premium: true,
-          submission_email: 'tips@techcrunch.com',
-          turnaround_time: '1-2 hours',
-          is_active: true,
-          created_at: new Date().toISOString()
-        },
-        {
-          id: '3',
-          name: 'Business Insider',
-          website: 'https://businessinsider.com',
-          category: 'Business',
-          industry_focus: ['Business', 'Technology', 'Finance'],
-          geographic_focus: ['US', 'Global'],
-          circulation: 375000000,
-          domain_authority: 91,
-          is_premium: true,
-          submission_email: 'news@businessinsider.com',
-          turnaround_time: '1-3 hours',
-          is_active: true,
-          created_at: new Date().toISOString()
-        }
-      ];
+      if (!userTenant?.id) return [];
       
-      return mockOutlets;
+      console.log('🔍 Fetching media outlets for tenant:', userTenant.id);
+      
+      const { data, error } = await supabase
+        .from('media_outlets')
+        .select('*')
+        .eq('tenant_id', userTenant.id)
+        .eq('is_active', true)
+        .order('domain_authority', { ascending: false });
+      
+      if (error) {
+        console.error('❌ Media outlets query error:', error);
+        throw error;
+      }
+      
+      console.log(`📊 Fetched ${data?.length || 0} media outlets`);
+      return data || [];
     },
+    enabled: !!userTenant?.id,
+    staleTime: 5 * 60 * 1000, // Cache for 5 minutes
   });
 }
 

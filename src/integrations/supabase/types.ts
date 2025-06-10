@@ -446,6 +446,449 @@ export type Database = {
           },
         ]
       }
+      email_outreach: {
+        Row: {
+          campaign_name: string
+          created_at: string | null
+          created_by: string | null
+          email_body: string
+          id: string
+          open_rate: number | null
+          response_rate: number | null
+          scheduled_date: string | null
+          sent_count: number | null
+          status: string | null
+          subject_line: string
+          target_audience: Json | null
+          tenant_id: string
+          updated_at: string | null
+        }
+        Insert: {
+          campaign_name: string
+          created_at?: string | null
+          created_by?: string | null
+          email_body: string
+          id?: string
+          open_rate?: number | null
+          response_rate?: number | null
+          scheduled_date?: string | null
+          sent_count?: number | null
+          status?: string | null
+          subject_line: string
+          target_audience?: Json | null
+          tenant_id: string
+          updated_at?: string | null
+        }
+        Update: {
+          campaign_name?: string
+          created_at?: string | null
+          created_by?: string | null
+          email_body?: string
+          id?: string
+          open_rate?: number | null
+          response_rate?: number | null
+          scheduled_date?: string | null
+          sent_count?: number | null
+          status?: string | null
+          subject_line?: string
+          target_audience?: Json | null
+          tenant_id?: string
+          updated_at?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "email_outreach_tenant_id_fkey"
+            columns: ["tenant_id"]
+            isOneToOne: false
+            referencedRelation: "tenants"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      journalist_contacts: {
+        Row: {
+          beat: string
+          bio: string | null
+          created_at: string | null
+          email: string
+          first_name: string
+          id: string
+          interaction_count: number | null
+          is_active: boolean | null
+          last_contacted: string | null
+          last_name: string
+          linkedin_url: string | null
+          location: string | null
+          notes: string | null
+          outlet: string
+          phone: string | null
+          preferences: Json | null
+          relationship_score: number | null
+          tenant_id: string
+          title: string | null
+          twitter_handle: string | null
+          updated_at: string | null
+        }
+        Insert: {
+          beat: string
+          bio?: string | null
+          created_at?: string | null
+          email: string
+          first_name: string
+          id?: string
+          interaction_count?: number | null
+          is_active?: boolean | null
+          last_contacted?: string | null
+          last_name: string
+          linkedin_url?: string | null
+          location?: string | null
+          notes?: string | null
+          outlet: string
+          phone?: string | null
+          preferences?: Json | null
+          relationship_score?: number | null
+          tenant_id: string
+          title?: string | null
+          twitter_handle?: string | null
+          updated_at?: string | null
+        }
+        Update: {
+          beat?: string
+          bio?: string | null
+          created_at?: string | null
+          email?: string
+          first_name?: string
+          id?: string
+          interaction_count?: number | null
+          is_active?: boolean | null
+          last_contacted?: string | null
+          last_name?: string
+          linkedin_url?: string | null
+          location?: string | null
+          notes?: string | null
+          outlet?: string
+          phone?: string | null
+          preferences?: Json | null
+          relationship_score?: number | null
+          tenant_id?: string
+          title?: string | null
+          twitter_handle?: string | null
+          updated_at?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "journalist_contacts_tenant_id_fkey"
+            columns: ["tenant_id"]
+            isOneToOne: false
+            referencedRelation: "tenants"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      journalist_outreach: {
+        Row: {
+          campaign_id: string | null
+          created_at: string | null
+          created_by: string | null
+          follow_up_scheduled: string | null
+          id: string
+          journalist_id: string | null
+          message: string
+          notes: string | null
+          opened_at: string | null
+          outreach_type: string
+          press_release_id: string | null
+          replied_at: string | null
+          reply_sentiment: string | null
+          sent_at: string | null
+          status: string | null
+          subject: string
+          tenant_id: string
+        }
+        Insert: {
+          campaign_id?: string | null
+          created_at?: string | null
+          created_by?: string | null
+          follow_up_scheduled?: string | null
+          id?: string
+          journalist_id?: string | null
+          message: string
+          notes?: string | null
+          opened_at?: string | null
+          outreach_type: string
+          press_release_id?: string | null
+          replied_at?: string | null
+          reply_sentiment?: string | null
+          sent_at?: string | null
+          status?: string | null
+          subject: string
+          tenant_id: string
+        }
+        Update: {
+          campaign_id?: string | null
+          created_at?: string | null
+          created_by?: string | null
+          follow_up_scheduled?: string | null
+          id?: string
+          journalist_id?: string | null
+          message?: string
+          notes?: string | null
+          opened_at?: string | null
+          outreach_type?: string
+          press_release_id?: string | null
+          replied_at?: string | null
+          reply_sentiment?: string | null
+          sent_at?: string | null
+          status?: string | null
+          subject?: string
+          tenant_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "journalist_outreach_campaign_id_fkey"
+            columns: ["campaign_id"]
+            isOneToOne: false
+            referencedRelation: "campaigns"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "journalist_outreach_journalist_id_fkey"
+            columns: ["journalist_id"]
+            isOneToOne: false
+            referencedRelation: "journalist_contacts"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "journalist_outreach_press_release_id_fkey"
+            columns: ["press_release_id"]
+            isOneToOne: false
+            referencedRelation: "press_releases"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "journalist_outreach_tenant_id_fkey"
+            columns: ["tenant_id"]
+            isOneToOne: false
+            referencedRelation: "tenants"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      media_coverage: {
+        Row: {
+          article_title: string
+          article_url: string | null
+          created_at: string | null
+          engagement_score: number | null
+          id: string
+          is_featured: boolean | null
+          journalist_id: string | null
+          media_value: number | null
+          mentions_count: number | null
+          outlet_id: string | null
+          press_release_id: string | null
+          publication_date: string | null
+          reach_estimate: number | null
+          sentiment_score: number | null
+          share_count: number | null
+          tenant_id: string
+          updated_at: string | null
+        }
+        Insert: {
+          article_title: string
+          article_url?: string | null
+          created_at?: string | null
+          engagement_score?: number | null
+          id?: string
+          is_featured?: boolean | null
+          journalist_id?: string | null
+          media_value?: number | null
+          mentions_count?: number | null
+          outlet_id?: string | null
+          press_release_id?: string | null
+          publication_date?: string | null
+          reach_estimate?: number | null
+          sentiment_score?: number | null
+          share_count?: number | null
+          tenant_id: string
+          updated_at?: string | null
+        }
+        Update: {
+          article_title?: string
+          article_url?: string | null
+          created_at?: string | null
+          engagement_score?: number | null
+          id?: string
+          is_featured?: boolean | null
+          journalist_id?: string | null
+          media_value?: number | null
+          mentions_count?: number | null
+          outlet_id?: string | null
+          press_release_id?: string | null
+          publication_date?: string | null
+          reach_estimate?: number | null
+          sentiment_score?: number | null
+          share_count?: number | null
+          tenant_id?: string
+          updated_at?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "media_coverage_journalist_id_fkey"
+            columns: ["journalist_id"]
+            isOneToOne: false
+            referencedRelation: "journalist_contacts"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "media_coverage_outlet_id_fkey"
+            columns: ["outlet_id"]
+            isOneToOne: false
+            referencedRelation: "media_outlets"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "media_coverage_press_release_id_fkey"
+            columns: ["press_release_id"]
+            isOneToOne: false
+            referencedRelation: "press_releases"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "media_coverage_tenant_id_fkey"
+            columns: ["tenant_id"]
+            isOneToOne: false
+            referencedRelation: "tenants"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      media_outlets: {
+        Row: {
+          category: string
+          circulation: number | null
+          created_at: string | null
+          domain_authority: number | null
+          geographic_focus: string[] | null
+          id: string
+          industry_focus: string[] | null
+          is_active: boolean | null
+          is_premium: boolean | null
+          name: string
+          submission_email: string | null
+          submission_guidelines: string | null
+          tenant_id: string
+          turnaround_time: string | null
+          updated_at: string | null
+          website: string | null
+        }
+        Insert: {
+          category: string
+          circulation?: number | null
+          created_at?: string | null
+          domain_authority?: number | null
+          geographic_focus?: string[] | null
+          id?: string
+          industry_focus?: string[] | null
+          is_active?: boolean | null
+          is_premium?: boolean | null
+          name: string
+          submission_email?: string | null
+          submission_guidelines?: string | null
+          tenant_id: string
+          turnaround_time?: string | null
+          updated_at?: string | null
+          website?: string | null
+        }
+        Update: {
+          category?: string
+          circulation?: number | null
+          created_at?: string | null
+          domain_authority?: number | null
+          geographic_focus?: string[] | null
+          id?: string
+          industry_focus?: string[] | null
+          is_active?: boolean | null
+          is_premium?: boolean | null
+          name?: string
+          submission_email?: string | null
+          submission_guidelines?: string | null
+          tenant_id?: string
+          turnaround_time?: string | null
+          updated_at?: string | null
+          website?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "media_outlets_tenant_id_fkey"
+            columns: ["tenant_id"]
+            isOneToOne: false
+            referencedRelation: "tenants"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      media_relationships: {
+        Row: {
+          created_at: string | null
+          id: string
+          journalist_id: string | null
+          last_interaction: string | null
+          notes: string | null
+          outlet_id: string | null
+          relationship_type: string
+          strength_score: number | null
+          tenant_id: string
+          updated_at: string | null
+        }
+        Insert: {
+          created_at?: string | null
+          id?: string
+          journalist_id?: string | null
+          last_interaction?: string | null
+          notes?: string | null
+          outlet_id?: string | null
+          relationship_type: string
+          strength_score?: number | null
+          tenant_id: string
+          updated_at?: string | null
+        }
+        Update: {
+          created_at?: string | null
+          id?: string
+          journalist_id?: string | null
+          last_interaction?: string | null
+          notes?: string | null
+          outlet_id?: string | null
+          relationship_type?: string
+          strength_score?: number | null
+          tenant_id?: string
+          updated_at?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "media_relationships_journalist_id_fkey"
+            columns: ["journalist_id"]
+            isOneToOne: false
+            referencedRelation: "journalist_contacts"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "media_relationships_outlet_id_fkey"
+            columns: ["outlet_id"]
+            isOneToOne: false
+            referencedRelation: "media_outlets"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "media_relationships_tenant_id_fkey"
+            columns: ["tenant_id"]
+            isOneToOne: false
+            referencedRelation: "tenants"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       podcast_syndications: {
         Row: {
           created_at: string
