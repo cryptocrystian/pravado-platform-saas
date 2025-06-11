@@ -26,7 +26,11 @@ export function AddContactModal({ isOpen, onClose }: AddContactModalProps) {
     twitter_handle: '',
     linkedin_url: '',
     notes: '',
-    relationship_score: 50
+    relationship_score: 50,
+    is_active: true,
+    interaction_count: 0,
+    last_contacted: null as string | null,
+    preferences: {}
   });
 
   const createContact = useCreateJournalistContact();
@@ -50,7 +54,11 @@ export function AddContactModal({ isOpen, onClose }: AddContactModalProps) {
         twitter_handle: '',
         linkedin_url: '',
         notes: '',
-        relationship_score: 50
+        relationship_score: 50,
+        is_active: true,
+        interaction_count: 0,
+        last_contacted: null,
+        preferences: {}
       });
     } catch (error) {
       console.error('Error creating contact:', error);
