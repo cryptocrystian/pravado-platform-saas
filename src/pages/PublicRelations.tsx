@@ -1,5 +1,6 @@
 
 import React, { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { BaseLayout } from '@/components/BaseLayout';
 import { Card } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
@@ -13,6 +14,7 @@ import { useHAROMatches, useHARORequests } from '@/hooks/useHARO';
 
 const PublicRelations = () => {
   const [activeTab, setActiveTab] = useState('haro');
+  const navigate = useNavigate();
   
   const { data: pressReleases } = usePressReleases();
   const { data: mediaOutlets } = useMediaOutlets();
@@ -62,9 +64,9 @@ const PublicRelations = () => {
               <p className="text-gray-600">AI-powered PR management with HARO intelligence and media distribution</p>
             </div>
             <div className="mt-4 lg:mt-0 flex items-center space-x-3">
-              <Button variant="outline">
+              <Button variant="outline" onClick={() => navigate('/media-database')}>
                 <Users className="h-4 w-4 mr-2" />
-                Add Contact
+                Manage Contacts
               </Button>
               <Button>
                 <Plus className="h-4 w-4 mr-2" />
@@ -191,9 +193,9 @@ const PublicRelations = () => {
                   <div className="p-6 border-b border-border-gray">
                     <div className="flex items-center justify-between">
                       <h2 className="text-xl font-semibold text-professional-gray">Journalist Database</h2>
-                      <Button size="sm">
+                      <Button size="sm" onClick={() => navigate('/media-database')}>
                         <Phone className="h-4 w-4 mr-2" />
-                        Add Contact
+                        Manage Contacts
                       </Button>
                     </div>
                   </div>
@@ -211,7 +213,12 @@ const PublicRelations = () => {
                             </div>
                           </div>
                         ))}
-                        <Button variant="outline" size="sm" className="w-full">
+                        <Button 
+                          variant="outline" 
+                          size="sm" 
+                          className="w-full"
+                          onClick={() => navigate('/media-database')}
+                        >
                           View All Contacts
                         </Button>
                       </div>
@@ -221,7 +228,7 @@ const PublicRelations = () => {
                         title="No media contacts"
                         description="Build your media network by adding journalists and influencers."
                         actionLabel="Add First Contact"
-                        onAction={() => console.log('Add contact')}
+                        onAction={() => navigate('/media-database')}
                       />
                     )}
                   </div>

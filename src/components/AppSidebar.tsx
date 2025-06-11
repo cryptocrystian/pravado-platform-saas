@@ -1,6 +1,7 @@
+
 import React, { useState } from 'react';
 import { useLocation, Link } from 'react-router-dom';
-import { LayoutDashboard, MessageSquare, Users, Search, Activity, Settings, User, LogOut, Brain, Zap } from 'lucide-react';
+import { LayoutDashboard, MessageSquare, Users, Search, Activity, Settings, User, LogOut, Brain, Zap, Database } from 'lucide-react';
 import {
   Sidebar,
   SidebarContent,
@@ -40,6 +41,11 @@ const menuItems = [
     title: "Public Relations",
     url: "/public-relations",
     icon: Users,
+  },
+  {
+    title: "Media Database",
+    url: "/media-database",
+    icon: Database,
   },
   {
     title: "SEO Intelligence",
