@@ -6,8 +6,20 @@ import { Button } from '@/components/ui/button';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Plus, Target, TrendingUp, Search, BarChart3, Globe } from 'lucide-react';
 import { EmptyState } from '@/components/EmptyState';
+import AutomateStepGuidance from '@/components/AutomateStepGuidance';
+import { useAutomateIntegration } from '@/hooks/useAutomateIntegration';
+import { useUserProfile } from '@/hooks/useUserData';
 
 const SEOIntelligence = () => {
+  const { data: userProfile } = useUserProfile();
+  
+  // AUTOMATE methodology integration
+  const automateIntegration = useAutomateIntegration({
+    currentPage: 'seo-intelligence',
+    enableAutoTracking: true,
+    trackPageEvents: true
+  });
+  
   const seoMetrics = [
     { title: "Keywords Tracked", value: "0", icon: Target, color: "enterprise-blue" },
     { title: "Avg. Position", value: "-", icon: TrendingUp, color: "pravado-orange" },
@@ -50,6 +62,25 @@ const SEOIntelligence = () => {
               </Card>
             ))}
           </div>
+
+          {/* AUTOMATE Methodology Guidance */}
+          {userProfile?.tenant_id && (
+            <div className="mb-8">
+              <AutomateStepGuidance
+                tenantId={userProfile.tenant_id}
+                currentPage="seo-intelligence"
+                compact={true}
+                onActionComplete={(actionId) => {
+                  // Track SEO optimization actions
+                  automateIntegration.trackPageInteraction('seo_optimization_completed', {
+                    actionId,
+                    seoType: 'keyword_research'
+                  });
+                }}
+                className="bg-gradient-to-r from-purple-50 to-indigo-50 border-purple-200"
+              />
+            </div>
+          )}
 
           {/* SEO Tools */}
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-6">
