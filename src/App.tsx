@@ -11,6 +11,7 @@ import Auth from "./pages/Auth";
 import Dashboard from "./pages/Dashboard";
 import ContentMarketing from "./pages/ContentMarketing";
 import PublicRelations from "./pages/PublicRelations";
+import MediaDatabase from "./pages/MediaDatabase";
 import SEOIntelligence from "./pages/SEOIntelligence";
 import AICitations from "./pages/AICitations";
 import Analytics from "./pages/Analytics";
@@ -63,6 +64,11 @@ const App = () => (
             <Route path="/public-relations" element={
               <ProtectedRoute>
                 <PublicRelations />
+              </ProtectedRoute>
+            } />
+            <Route path="/media-database" element={
+              <ProtectedRoute>
+                <MediaDatabase />
               </ProtectedRoute>
             } />
             <Route path="/seo-intelligence" element={
