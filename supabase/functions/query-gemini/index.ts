@@ -1,4 +1,3 @@
-
 import "https://deno.land/x/xhr@0.1.0/mod.ts";
 import { serve } from "https://deno.land/std@0.168.0/http/server.ts";
 
@@ -13,9 +12,18 @@ serve(async (req) => {
   }
 
   try {
-    const { query, model = 'gemini-pro', keywords } = await req.json();
+    const { query, keywords } = await req.json();
 
-    const response = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/${model}:generateContent?key=${Deno.env.get('GOOGLE_AI_API_KEY')}`, {
+    // Validate required parameters
+    if (!query) {
+      throw new Error('Query parameter is required');
+    }
+
+    if (!Deno.env.get('GEMINI_API_KEY')) {
+      throw new Error('Gemini API key not configured');
+    }
+
+    const response = await fetch(`https://generativelanguage.googleapis.com/v1/models/gemini-pro:generateContent?key=${Deno.env.get('GEMINI_API_KEY')}`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
@@ -27,27 +35,53 @@ serve(async (req) => {
           }]
         }],
         generationConfig: {
-          maxOutputTokens: 500,
-          temperature: 0.7
-        }
+          temperature: 0.7,
+          topK: 40,
+          topP: 0.95,
+          maxOutputTokens: 1024,
+        },
+        safetySettings: [
+          {
+            category: "HARM_CATEGORY_HARASSMENT",
+            threshold: "BLOCK_MEDIUM_AND_ABOVE"
+          },
+          {
+            category: "HARM_CATEGORY_HATE_SPEECH",
+            threshold: "BLOCK_MEDIUM_AND_ABOVE"
+          },
+          {
+            category: "HARM_CATEGORY_SEXUALLY_EXPLICIT",
+            threshold: "BLOCK_MEDIUM_AND_ABOVE"
+          },
+          {
+            category: "HARM_CATEGORY_DANGEROUS_CONTENT",
+            threshold: "BLOCK_MEDIUM_AND_ABOVE"
+          }
+        ]
       })
     });
 
     if (!response.ok) {
-      throw new Error(`Gemini API error: ${response.statusText}`);
+      const errorData = await response.json().catch(() => ({}));
+      throw new Error(`Gemini API error: ${response.statusText}. ${JSON.stringify(errorData)}`);
     }
 
     const data = await response.json();
+    
+    if (!data.candidates?.[0]?.content?.parts?.[0]?.text) {
+      throw new Error('Invalid response format from Gemini API');
+    }
+
     const content = data.candidates[0].content.parts[0].text;
     
     return new Response(JSON.stringify({
       platform: 'gemini',
-      model,
+      model: 'gemini-pro',
       query,
       response: content,
-      mentions: extractMentions(content, keywords),
-      sentiment: analyzeSentiment(content, keywords),
-      confidence: calculateConfidence(content, keywords),
+      mentions: extractMentions(content, keywords || []),
+      sentiment: analyzeSentiment(content),
+      confidence: calculateConfidence(content, keywords || []),
       timestamp: new Date().toISOString()
     }), {
       headers: { ...corsHeaders, 'Content-Type': 'application/json' },
@@ -55,7 +89,10 @@ serve(async (req) => {
   } catch (error) {
     console.error('Gemini query error:', error);
     return new Response(
-      JSON.stringify({ error: error.message }),
+      JSON.stringify({ 
+        error: error.message,
+        timestamp: new Date().toISOString()
+      }),
       {
         status: 500,
         headers: { ...corsHeaders, 'Content-Type': 'application/json' },
@@ -65,6 +102,8 @@ serve(async (req) => {
 });
 
 function extractMentions(content: string, keywords: string[]): string[] {
+  if (!keywords.length) return [];
+  
   const mentions: string[] = [];
   const lowerContent = content.toLowerCase();
   
@@ -80,34 +119,49 @@ function extractMentions(content: string, keywords: string[]): string[] {
     }
   });
   
-  return mentions;
+  return [...new Set(mentions)]; // Remove duplicates
 }
 
-function analyzeSentiment(content: string, keywords: string[]): 'positive' | 'neutral' | 'negative' {
-  const positiveWords = ['excellent', 'great', 'outstanding', 'best', 'amazing', 'perfect', 'love', 'recommend'];
-  const negativeWords = ['terrible', 'bad', 'worst', 'awful', 'hate', 'poor', 'disappointing', 'avoid'];
+function analyzeSentiment(content: string): number {
+  const positiveWords = ['excellent', 'great', 'outstanding', 'best', 'amazing', 'perfect', 'love', 'recommend', 'innovative', 'impressive'];
+  const negativeWords = ['terrible', 'bad', 'worst', 'awful', 'hate', 'poor', 'disappointing', 'avoid', 'failure', 'useless'];
   
   const lowerContent = content.toLowerCase();
-  let positiveScore = 0;
-  let negativeScore = 0;
+  let score = 0;
+  let totalWords = 0;
   
   positiveWords.forEach(word => {
-    if (lowerContent.includes(word)) positiveScore++;
+    const regex = new RegExp(`\\b${word}\\b`, 'gi');
+    const matches = lowerContent.match(regex);
+    if (matches) {
+      score += matches.length;
+      totalWords += matches.length;
+    }
   });
   
   negativeWords.forEach(word => {
-    if (lowerContent.includes(word)) negativeScore++;
+    const regex = new RegExp(`\\b${word}\\b`, 'gi');
+    const matches = lowerContent.match(regex);
+    if (matches) {
+      score -= matches.length;
+      totalWords += matches.length;
+    }
   });
   
-  if (positiveScore > negativeScore) return 'positive';
-  if (negativeScore > positiveScore) return 'negative';
-  return 'neutral';
+  // Normalize score between -1 and 1
+  return totalWords > 0 ? score / totalWords : 0;
 }
 
 function calculateConfidence(content: string, keywords: string[]): number {
+  if (!keywords.length) return 0.5; // Default confidence for no keywords
+  
   const mentionCount = extractMentions(content, keywords).length;
   const contentLength = content.length;
   const keywordDensity = mentionCount / Math.max(contentLength / 100, 1);
   
-  return Math.min(0.5 + (keywordDensity * 0.4), 0.95);
+  // Base confidence starts at 0.5 and is adjusted by keyword density
+  const confidence = 0.5 + (keywordDensity * 0.4);
+  
+  // Ensure confidence is between 0 and 1
+  return Math.min(Math.max(confidence, 0), 1);
 }

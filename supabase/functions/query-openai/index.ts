@@ -1,4 +1,3 @@
-
 import "https://deno.land/x/xhr@0.1.0/mod.ts";
 import { serve } from "https://deno.land/std@0.168.0/http/server.ts";
 
@@ -13,7 +12,16 @@ serve(async (req) => {
   }
 
   try {
-    const { query, model = 'gpt-4o-mini', keywords } = await req.json();
+    const { query, model = 'gpt-4-turbo-preview', keywords } = await req.json();
+
+    // Validate required parameters
+    if (!query) {
+      throw new Error('Query parameter is required');
+    }
+
+    if (!Deno.env.get('OPENAI_API_KEY')) {
+      throw new Error('OpenAI API key not configured');
+    }
 
     const response = await fetch('https://api.openai.com/v1/chat/completions', {
       method: 'POST',
@@ -25,20 +33,33 @@ serve(async (req) => {
         model,
         messages: [
           {
+            role: 'system',
+            content: 'You are a helpful AI assistant analyzing content for citations and mentions.'
+          },
+          {
             role: 'user',
             content: query
           }
         ],
         max_tokens: 500,
-        temperature: 0.7
+        temperature: 0.7,
+        top_p: 1,
+        frequency_penalty: 0,
+        presence_penalty: 0
       })
     });
 
     if (!response.ok) {
-      throw new Error(`OpenAI API error: ${response.statusText}`);
+      const errorData = await response.json().catch(() => ({}));
+      throw new Error(`OpenAI API error: ${response.statusText}. ${JSON.stringify(errorData)}`);
     }
 
     const data = await response.json();
+    
+    if (!data.choices?.[0]?.message?.content) {
+      throw new Error('Invalid response format from OpenAI API');
+    }
+
     const content = data.choices[0].message.content;
     
     return new Response(JSON.stringify({
@@ -46,9 +67,9 @@ serve(async (req) => {
       model,
       query,
       response: content,
-      mentions: extractMentions(content, keywords),
-      sentiment: analyzeSentiment(content, keywords),
-      confidence: calculateConfidence(content, keywords),
+      mentions: extractMentions(content, keywords || []),
+      sentiment: analyzeSentiment(content),
+      confidence: calculateConfidence(content, keywords || []),
       timestamp: new Date().toISOString()
     }), {
       headers: { ...corsHeaders, 'Content-Type': 'application/json' },
@@ -56,7 +77,10 @@ serve(async (req) => {
   } catch (error) {
     console.error('OpenAI query error:', error);
     return new Response(
-      JSON.stringify({ error: error.message }),
+      JSON.stringify({ 
+        error: error.message,
+        timestamp: new Date().toISOString()
+      }),
       {
         status: 500,
         headers: { ...corsHeaders, 'Content-Type': 'application/json' },
@@ -66,6 +90,8 @@ serve(async (req) => {
 });
 
 function extractMentions(content: string, keywords: string[]): string[] {
+  if (!keywords.length) return [];
+  
   const mentions: string[] = [];
   const lowerContent = content.toLowerCase();
   
@@ -81,34 +107,49 @@ function extractMentions(content: string, keywords: string[]): string[] {
     }
   });
   
-  return mentions;
+  return [...new Set(mentions)]; // Remove duplicates
 }
 
-function analyzeSentiment(content: string, keywords: string[]): 'positive' | 'neutral' | 'negative' {
-  const positiveWords = ['excellent', 'great', 'outstanding', 'best', 'amazing', 'perfect', 'love', 'recommend'];
-  const negativeWords = ['terrible', 'bad', 'worst', 'awful', 'hate', 'poor', 'disappointing', 'avoid'];
+function analyzeSentiment(content: string): number {
+  const positiveWords = ['excellent', 'great', 'outstanding', 'best', 'amazing', 'perfect', 'love', 'recommend', 'innovative', 'impressive'];
+  const negativeWords = ['terrible', 'bad', 'worst', 'awful', 'hate', 'poor', 'disappointing', 'avoid', 'failure', 'useless'];
   
   const lowerContent = content.toLowerCase();
-  let positiveScore = 0;
-  let negativeScore = 0;
+  let score = 0;
+  let totalWords = 0;
   
   positiveWords.forEach(word => {
-    if (lowerContent.includes(word)) positiveScore++;
+    const regex = new RegExp(`\\b${word}\\b`, 'gi');
+    const matches = lowerContent.match(regex);
+    if (matches) {
+      score += matches.length;
+      totalWords += matches.length;
+    }
   });
   
   negativeWords.forEach(word => {
-    if (lowerContent.includes(word)) negativeScore++;
+    const regex = new RegExp(`\\b${word}\\b`, 'gi');
+    const matches = lowerContent.match(regex);
+    if (matches) {
+      score -= matches.length;
+      totalWords += matches.length;
+    }
   });
   
-  if (positiveScore > negativeScore) return 'positive';
-  if (negativeScore > positiveScore) return 'negative';
-  return 'neutral';
+  // Normalize score between -1 and 1
+  return totalWords > 0 ? score / totalWords : 0;
 }
 
 function calculateConfidence(content: string, keywords: string[]): number {
+  if (!keywords.length) return 0.5; // Default confidence for no keywords
+  
   const mentionCount = extractMentions(content, keywords).length;
   const contentLength = content.length;
   const keywordDensity = mentionCount / Math.max(contentLength / 100, 1);
   
-  return Math.min(0.5 + (keywordDensity * 0.4), 0.95);
+  // Base confidence starts at 0.5 and is adjusted by keyword density
+  const confidence = 0.5 + (keywordDensity * 0.4);
+  
+  // Ensure confidence is between 0 and 1
+  return Math.min(Math.max(confidence, 0), 1);
 }
