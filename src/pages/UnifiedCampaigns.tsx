@@ -34,7 +34,7 @@ import {
   PieChart,
   LineChart,
   Settings,
-  Sync,
+  RefreshCw,
   Brain,
   Filter,
   Download
@@ -189,7 +189,7 @@ const UnifiedCampaigns = () => {
                     onClick={() => syncDataMutation.mutate(selectedCampaign)}
                     disabled={syncDataMutation.isPending}
                   >
-                    <Sync className="h-4 w-4 mr-2" />
+                    <RefreshCw className="h-4 w-4 mr-2" />
                     {syncDataMutation.isPending ? 'Syncing...' : 'Sync Data'}
                   </Button>
                   <Button

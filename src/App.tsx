@@ -22,6 +22,13 @@ import NotFound from "./pages/NotFound";
 import Campaigns from "./pages/Campaigns";
 import CampaignDetail from "./pages/CampaignDetail";
 import AutomateHub from "./pages/AutomateHub";
+import AutomateHubEnhanced from "./pages/AutomateHubEnhanced";
+import AutomateAIEnhanced from "./pages/AutomateAIEnhanced";
+import ContentMarketingEnhanced from "./pages/ContentMarketingEnhanced";
+import SEOIntelligenceEnhanced from "./pages/SEOIntelligenceEnhanced";
+import SEOIntelligencePro from "./pages/SEOIntelligencePro";
+import UnifiedCampaigns from "./pages/UnifiedCampaigns";
+import PodcastSyndication from "./pages/PodcastSyndication";
 import AssessAudit from "./pages/AssessAudit";
 import HelpCenter from "./pages/HelpCenter";
 import BetaProgram from "./pages/BetaProgram";
@@ -56,9 +63,24 @@ const App = () => (
                 <Campaigns />
               </ProtectedRoute>
             } />
+            <Route path="/campaigns/:id" element={
+              <ProtectedRoute>
+                <CampaignDetail />
+              </ProtectedRoute>
+            } />
+            <Route path="/unified-campaigns" element={
+              <ProtectedRoute>
+                <UnifiedCampaigns />
+              </ProtectedRoute>
+            } />
             <Route path="/content-marketing" element={
               <ProtectedRoute>
                 <ContentMarketing />
+              </ProtectedRoute>
+            } />
+            <Route path="/content-marketing-enhanced" element={
+              <ProtectedRoute>
+                <ContentMarketingEnhanced />
               </ProtectedRoute>
             } />
             <Route path="/public-relations" element={
@@ -74,6 +96,16 @@ const App = () => (
             <Route path="/seo-intelligence" element={
               <ProtectedRoute>
                 <SEOIntelligence />
+              </ProtectedRoute>
+            } />
+            <Route path="/seo-intelligence-enhanced" element={
+              <ProtectedRoute>
+                <SEOIntelligenceEnhanced />
+              </ProtectedRoute>
+            } />
+            <Route path="/seo-intelligence-pro" element={
+              <ProtectedRoute>
+                <SEOIntelligencePro />
               </ProtectedRoute>
             } />
             <Route path="/ai-citations" element={
@@ -96,9 +128,59 @@ const App = () => (
                 <AutomateHub />
               </ProtectedRoute>
             } />
+            <Route path="/automate-enhanced" element={
+              <ProtectedRoute>
+                <AutomateHubEnhanced />
+              </ProtectedRoute>
+            } />
+            <Route path="/automate-ai-enhanced" element={
+              <ProtectedRoute>
+                <AutomateAIEnhanced />
+              </ProtectedRoute>
+            } />
+            <Route path="/podcast-syndication" element={
+              <ProtectedRoute>
+                <PodcastSyndication />
+              </ProtectedRoute>
+            } />
             <Route path="/automate/assess-audit" element={
               <ProtectedRoute>
                 <AssessAudit />
+              </ProtectedRoute>
+            } />
+            <Route path="/automate/understand-audience" element={
+              <ProtectedRoute>
+                <AutomateHub />
+              </ProtectedRoute>
+            } />
+            <Route path="/automate/target-strategy" element={
+              <ProtectedRoute>
+                <AutomateHub />
+              </ProtectedRoute>
+            } />
+            <Route path="/automate/optimize-systems" element={
+              <ProtectedRoute>
+                <AutomateHub />
+              </ProtectedRoute>
+            } />
+            <Route path="/automate/measure-monitor" element={
+              <ProtectedRoute>
+                <AutomateHub />
+              </ProtectedRoute>
+            } />
+            <Route path="/automate/accelerate-growth" element={
+              <ProtectedRoute>
+                <AutomateHub />
+              </ProtectedRoute>
+            } />
+            <Route path="/automate/transform-evolve" element={
+              <ProtectedRoute>
+                <AutomateHub />
+              </ProtectedRoute>
+            } />
+            <Route path="/automate/execute-excellence" element={
+              <ProtectedRoute>
+                <AutomateHub />
               </ProtectedRoute>
             } />
             <Route path="/help" element={

@@ -367,3 +367,4 @@ export function DashboardContent() {
     </MobileOptimizer>
   );
 }
+alert('TEST - Can you see this?');

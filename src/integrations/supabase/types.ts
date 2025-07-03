@@ -1210,6 +1210,304 @@ export type Database = {
           },
         ]
       }
+      haro_requests: {
+        Row: {
+          id: string
+          tenant_id: string
+          subject: string
+          description: string
+          requirements: string | null
+          deadline: string | null
+          journalist_name: string | null
+          journalist_email: string | null
+          outlet: string | null
+          category: string | null
+          keywords: string[]
+          industry_tags: string[]
+          is_active: boolean
+          difficulty_score: number
+          opportunity_score: number
+          expires_at: string | null
+          source_url: string | null
+          external_id: string | null
+          created_at: string
+          updated_at: string
+        }
+        Insert: {
+          id?: string
+          tenant_id: string
+          subject: string
+          description: string
+          requirements?: string | null
+          deadline?: string | null
+          journalist_name?: string | null
+          journalist_email?: string | null
+          outlet?: string | null
+          category?: string | null
+          keywords?: string[]
+          industry_tags?: string[]
+          is_active?: boolean
+          difficulty_score?: number
+          opportunity_score?: number
+          expires_at?: string | null
+          source_url?: string | null
+          external_id?: string | null
+          created_at?: string
+          updated_at?: string
+        }
+        Update: {
+          id?: string
+          tenant_id?: string
+          subject?: string
+          description?: string
+          requirements?: string | null
+          deadline?: string | null
+          journalist_name?: string | null
+          journalist_email?: string | null
+          outlet?: string | null
+          category?: string | null
+          keywords?: string[]
+          industry_tags?: string[]
+          is_active?: boolean
+          difficulty_score?: number
+          opportunity_score?: number
+          expires_at?: string | null
+          source_url?: string | null
+          external_id?: string | null
+          created_at?: string
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "haro_requests_tenant_id_fkey"
+            columns: ["tenant_id"]
+            isOneToOne: false
+            referencedRelation: "tenants"
+            referencedColumns: ["id"]
+          }
+        ]
+      }
+      haro_matches: {
+        Row: {
+          id: string
+          tenant_id: string
+          haro_request_id: string
+          user_expertise_profile_id: string | null
+          user_id: string | null
+          match_confidence: number
+          match_reasons: string[]
+          ai_generated_response: string | null
+          user_edited_response: string | null
+          final_response: string | null
+          response_status: string
+          submitted: boolean
+          submitted_at: string | null
+          journalist_replied: boolean
+          journalist_reply_at: string | null
+          coverage_secured: boolean
+          coverage_url: string | null
+          coverage_value: number
+          coverage_date: string | null
+          created_at: string
+          updated_at: string
+        }
+        Insert: {
+          id?: string
+          tenant_id: string
+          haro_request_id: string
+          user_expertise_profile_id?: string | null
+          user_id?: string | null
+          match_confidence?: number
+          match_reasons?: string[]
+          ai_generated_response?: string | null
+          user_edited_response?: string | null
+          final_response?: string | null
+          response_status?: string
+          submitted?: boolean
+          submitted_at?: string | null
+          journalist_replied?: boolean
+          journalist_reply_at?: string | null
+          coverage_secured?: boolean
+          coverage_url?: string | null
+          coverage_value?: number
+          coverage_date?: string | null
+          created_at?: string
+          updated_at?: string
+        }
+        Update: {
+          id?: string
+          tenant_id?: string
+          haro_request_id?: string
+          user_expertise_profile_id?: string | null
+          user_id?: string | null
+          match_confidence?: number
+          match_reasons?: string[]
+          ai_generated_response?: string | null
+          user_edited_response?: string | null
+          final_response?: string | null
+          response_status?: string
+          submitted?: boolean
+          submitted_at?: string | null
+          journalist_replied?: boolean
+          journalist_reply_at?: string | null
+          coverage_secured?: boolean
+          coverage_url?: string | null
+          coverage_value?: number
+          coverage_date?: string | null
+          created_at?: string
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "haro_matches_tenant_id_fkey"
+            columns: ["tenant_id"]
+            isOneToOne: false
+            referencedRelation: "tenants"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "haro_matches_haro_request_id_fkey"
+            columns: ["haro_request_id"]
+            isOneToOne: false
+            referencedRelation: "haro_requests"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "haro_matches_user_expertise_profile_id_fkey"
+            columns: ["user_expertise_profile_id"]
+            isOneToOne: false
+            referencedRelation: "user_expertise_profiles"
+            referencedColumns: ["id"]
+          }
+        ]
+      }
+      user_expertise_profiles: {
+        Row: {
+          id: string
+          tenant_id: string
+          user_id: string | null
+          full_name: string
+          title: string | null
+          company: string | null
+          expertise_areas: string[]
+          keywords: string[]
+          bio: string | null
+          credentials: string | null
+          industries: string[]
+          contact_email: string | null
+          notification_preferences: Json
+          matching_threshold: number
+          is_active: boolean
+          created_at: string
+          updated_at: string
+        }
+        Insert: {
+          id?: string
+          tenant_id: string
+          user_id?: string | null
+          full_name: string
+          title?: string | null
+          company?: string | null
+          expertise_areas?: string[]
+          keywords?: string[]
+          bio?: string | null
+          credentials?: string | null
+          industries?: string[]
+          contact_email?: string | null
+          notification_preferences?: Json
+          matching_threshold?: number
+          is_active?: boolean
+          created_at?: string
+          updated_at?: string
+        }
+        Update: {
+          id?: string
+          tenant_id?: string
+          user_id?: string | null
+          full_name?: string
+          title?: string | null
+          company?: string | null
+          expertise_areas?: string[]
+          keywords?: string[]
+          bio?: string | null
+          credentials?: string | null
+          industries?: string[]
+          contact_email?: string | null
+          notification_preferences?: Json
+          matching_threshold?: number
+          is_active?: boolean
+          created_at?: string
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "user_expertise_profiles_tenant_id_fkey"
+            columns: ["tenant_id"]
+            isOneToOne: false
+            referencedRelation: "tenants"
+            referencedColumns: ["id"]
+          }
+        ]
+      }
+      haro_analytics: {
+        Row: {
+          id: string
+          tenant_id: string
+          user_id: string | null
+          date_period: string
+          requests_matched: number
+          responses_submitted: number
+          journalist_replies: number
+          coverage_secured: number
+          total_coverage_value: number
+          average_match_confidence: number
+          success_rate: number
+          roi_score: number
+          created_at: string
+          updated_at: string
+        }
+        Insert: {
+          id?: string
+          tenant_id: string
+          user_id?: string | null
+          date_period: string
+          requests_matched?: number
+          responses_submitted?: number
+          journalist_replies?: number
+          coverage_secured?: number
+          total_coverage_value?: number
+          average_match_confidence?: number
+          success_rate?: number
+          roi_score?: number
+          created_at?: string
+          updated_at?: string
+        }
+        Update: {
+          id?: string
+          tenant_id?: string
+          user_id?: string | null
+          date_period?: string
+          requests_matched?: number
+          responses_submitted?: number
+          journalist_replies?: number
+          coverage_secured?: number
+          total_coverage_value?: number
+          average_match_confidence?: number
+          success_rate?: number
+          roi_score?: number
+          created_at?: string
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "haro_analytics_tenant_id_fkey"
+            columns: ["tenant_id"]
+            isOneToOne: false
+            referencedRelation: "tenants"
+            referencedColumns: ["id"]
+          }
+        ]
+      }
     }
     Views: {
       [_ in never]: never
