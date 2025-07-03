@@ -24,32 +24,41 @@ interface RankTrackingDashboardProps {
 }
 
 export function RankTrackingDashboard({ projectId, automateProgress }: RankTrackingDashboardProps) {
-  const { data: trackingData = [] } = useKeywordTracking(projectId || undefined);
-  const { data: competitors = [] } = useSEOCompetitors(projectId || undefined);
+  const { data: trackingData = [], isLoading: trackingLoading } = useKeywordTracking(projectId || undefined);
+  const { data: competitors = [], isLoading: competitorsLoading } = useSEOCompetitors(projectId || undefined);
 
-  const mockRankingData = [
-    { date: '2024-01-01', position: 25, keyword: 'marketing automation' },
-    { date: '2024-01-15', position: 22, keyword: 'marketing automation' },
-    { date: '2024-02-01', position: 18, keyword: 'marketing automation' },
-    { date: '2024-02-15', position: 15, keyword: 'marketing automation' },
-    { date: '2024-03-01', position: 12, keyword: 'marketing automation' },
-    { date: '2024-03-15', position: 8, keyword: 'marketing automation' },
-  ];
+  // Transform tracking data for charts and performance display
+  const chartData = trackingData.map(item => ({
+    date: new Date(item.tracked_at).toISOString().split('T')[0],
+    position: item.position,
+    keyword: trackingData.find(t => t.keyword_id === item.keyword_id)?.keyword_id || 'Unknown'
+  }));
 
-  const mockKeywordPerformance = [
-    { keyword: 'marketing automation', currentPosition: 8, previousPosition: 12, change: 4, volume: 12000 },
-    { keyword: 'automated marketing', currentPosition: 15, previousPosition: 18, change: 3, volume: 8500 },
-    { keyword: 'marketing workflow', currentPosition: 23, previousPosition: 20, change: -3, volume: 5400 },
-    { keyword: 'campaign automation', currentPosition: 6, previousPosition: 9, change: 3, volume: 9200 },
-    { keyword: 'marketing intelligence', currentPosition: 11, previousPosition: 11, change: 0, volume: 6700 }
-  ];
+  // Calculate keyword performance with position changes
+  const keywordPerformance = trackingData.reduce((acc, current) => {
+    const keyword = current.keyword_id || 'Unknown';
+    const existing = acc.find(item => item.keyword === keyword);
+    
+    if (!existing) {
+      acc.push({
+        keyword,
+        currentPosition: current.position,
+        previousPosition: current.previous_position || current.position,
+        change: current.previous_position ? current.position - current.previous_position : 0,
+        volume: current.estimated_traffic || 0
+      });
+    }
+    
+    return acc;
+  }, [] as Array<{keyword: string, currentPosition: number, previousPosition: number, change: number, volume: number}>);
 
-  const mockCompetitorData = [
-    { domain: 'hubspot.com', visibility: 92, keywords: 1240, change: 2 },
-    { domain: 'marketo.com', visibility: 88, keywords: 1180, change: -1 },
-    { domain: 'pardot.com', visibility: 85, keywords: 1050, change: 1 },
-    { domain: 'mailchimp.com', visibility: 79, keywords: 890, change: -2 }
-  ];
+  // Transform competitors data for display
+  const competitorData = competitors.map(comp => ({
+    domain: comp.competitor_domain,
+    visibility: comp.visibility_score,
+    keywords: 0, // This would need additional data
+    change: 0 // This would need historical data
+  }));
 
   const getPositionChange = (change: number) => {
     if (change > 0) return { icon: <ArrowUp className="w-4 h-4 text-green-600" />, color: 'text-green-600' };
@@ -115,7 +124,9 @@ export function RankTrackingDashboard({ projectId, automateProgress }: RankTrack
           <CardContent className="p-6">
             <div className="flex items-center justify-between">
               <TrendingUp className="h-8 w-8 text-green-600" />
-              <div className="text-2xl font-bold text-green-600">18</div>
+              <div className="text-2xl font-bold text-green-600">
+                {keywordPerformance.filter(kw => kw.change > 0).length}
+              </div>
             </div>
             <h3 className="text-lg font-semibold text-professional-gray mt-2">Improving</h3>
           </CardContent>
@@ -125,7 +136,9 @@ export function RankTrackingDashboard({ projectId, automateProgress }: RankTrack
           <CardContent className="p-6">
             <div className="flex items-center justify-between">
               <TrendingDown className="h-8 w-8 text-red-600" />
-              <div className="text-2xl font-bold text-red-600">5</div>
+              <div className="text-2xl font-bold text-red-600">
+                {keywordPerformance.filter(kw => kw.change < 0).length}
+              </div>
             </div>
             <h3 className="text-lg font-semibold text-professional-gray mt-2">Declining</h3>
           </CardContent>
@@ -135,7 +148,12 @@ export function RankTrackingDashboard({ projectId, automateProgress }: RankTrack
           <CardContent className="p-6">
             <div className="flex items-center justify-between">
               <BarChart3 className="h-8 w-8 text-pravado-orange" />
-              <div className="text-2xl font-bold text-pravado-orange">12.5</div>
+              <div className="text-2xl font-bold text-pravado-orange">
+                {keywordPerformance.length > 0 
+                  ? (keywordPerformance.reduce((sum, kw) => sum + kw.currentPosition, 0) / keywordPerformance.length).toFixed(1)
+                  : '0'
+                }
+              </div>
             </div>
             <h3 className="text-lg font-semibold text-professional-gray mt-2">Avg. Position</h3>
           </CardContent>
@@ -156,7 +174,19 @@ export function RankTrackingDashboard({ projectId, automateProgress }: RankTrack
             </CardHeader>
             <CardContent>
               <div className="space-y-4">
-                {mockKeywordPerformance.map((keyword, index) => (
+                {trackingLoading ? (
+                  <div className="text-center py-8">
+                    <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-enterprise-blue mx-auto mb-4"></div>
+                    <p className="text-gray-500">Loading keyword performance...</p>
+                  </div>
+                ) : keywordPerformance.length === 0 ? (
+                  <div className="text-center py-8">
+                    <Target className="h-12 w-12 mx-auto text-gray-400 mb-4" />
+                    <h4 className="text-lg font-medium text-gray-900 mb-2">No keyword tracking data</h4>
+                    <p className="text-gray-500">Start tracking keywords to see performance metrics.</p>
+                  </div>
+                ) : (
+                  keywordPerformance.map((keyword, index) => (
                   <div key={index} className="flex items-center justify-between p-4 bg-soft-gray rounded-lg">
                     <div className="flex-1">
                       <div className="font-medium text-professional-gray">{keyword.keyword}</div>
@@ -183,7 +213,8 @@ export function RankTrackingDashboard({ projectId, automateProgress }: RankTrack
                       </div>
                     </div>
                   </div>
-                ))}
+                  ))
+                )}
               </div>
             </CardContent>
           </Card>
@@ -197,7 +228,7 @@ export function RankTrackingDashboard({ projectId, automateProgress }: RankTrack
             <CardContent>
               <div className="h-80">
                 <ResponsiveContainer width="100%" height="100%">
-                  <LineChart data={mockRankingData}>
+                  <LineChart data={chartData}>
                     <CartesianGrid strokeDasharray="3 3" />
                     <XAxis dataKey="date" />
                     <YAxis domain={[1, 30]} reversed />
@@ -267,7 +298,19 @@ export function RankTrackingDashboard({ projectId, automateProgress }: RankTrack
             </CardHeader>
             <CardContent>
               <div className="space-y-4">
-                {mockCompetitorData.map((competitor, index) => (
+                {competitorsLoading ? (
+                  <div className="text-center py-8">
+                    <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-pravado-purple mx-auto mb-4"></div>
+                    <p className="text-gray-500">Loading competitor data...</p>
+                  </div>
+                ) : competitorData.length === 0 ? (
+                  <div className="text-center py-8">
+                    <Eye className="h-12 w-12 mx-auto text-gray-400 mb-4" />
+                    <h4 className="text-lg font-medium text-gray-900 mb-2">No competitor data</h4>
+                    <p className="text-gray-500">Add competitors to track their visibility and performance.</p>
+                  </div>
+                ) : (
+                  competitorData.map((competitor, index) => (
                   <div key={index} className="flex items-center justify-between p-4 border rounded-lg">
                     <div className="flex items-center space-x-4">
                       <div className="w-10 h-10 bg-gradient-to-br from-enterprise-blue to-pravado-purple rounded-lg flex items-center justify-center text-white font-bold">
@@ -290,7 +333,8 @@ export function RankTrackingDashboard({ projectId, automateProgress }: RankTrack
                       </div>
                     </div>
                   </div>
-                ))}
+                  ))
+                )}
               </div>
               
               <div className="mt-6 p-4 bg-blue-50 border border-blue-200 rounded-lg">

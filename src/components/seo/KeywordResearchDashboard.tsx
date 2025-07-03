@@ -18,6 +18,7 @@ import {
   Brain
 } from 'lucide-react';
 import { useEnhancedSEOKeywords } from '@/hooks/useSEOData';
+import { useKeywordSuggestions } from '@/hooks/useSEOKeywords';
 
 interface KeywordResearchDashboardProps {
   projectId?: string | null;
@@ -27,14 +28,7 @@ interface KeywordResearchDashboardProps {
 export function KeywordResearchDashboard({ projectId, automateProgress }: KeywordResearchDashboardProps) {
   const [searchTerm, setSearchTerm] = useState('');
   const { data: keywords = [] } = useEnhancedSEOKeywords(projectId || undefined);
-
-  const mockKeywordOpportunities = [
-    { keyword: 'digital marketing automation', volume: 8900, difficulty: 45, opportunity: 85, cpc: 12.50 },
-    { keyword: 'marketing workflow tools', volume: 5400, difficulty: 38, opportunity: 92, cpc: 8.75 },
-    { keyword: 'automated campaign management', volume: 3200, difficulty: 52, opportunity: 78, cpc: 15.20 },
-    { keyword: 'marketing intelligence platform', volume: 2100, difficulty: 41, opportunity: 88, cpc: 18.90 },
-    { keyword: 'content marketing automation', volume: 6700, difficulty: 47, opportunity: 82, cpc: 11.40 }
-  ];
+  const { data: keywordOpportunities = [], isLoading: opportunitiesLoading } = useKeywordSuggestions(projectId || undefined);
 
   const getDifficultyColor = (difficulty: number) => {
     if (difficulty < 30) return 'text-green-600';
@@ -213,30 +207,43 @@ export function KeywordResearchDashboard({ projectId, automateProgress }: Keywor
                 </div>
                 
                 <div className="space-y-3">
-                  {mockKeywordOpportunities.map((kw, index) => (
-                    <div key={index} className="flex items-center justify-between p-4 border rounded-lg hover:bg-soft-gray transition-colors">
-                      <div className="flex-1">
-                        <div className="font-medium text-professional-gray">{kw.keyword}</div>
-                        <div className="text-sm text-gray-600">
-                          Monthly Volume: {kw.volume.toLocaleString()} | CPC: ${kw.cpc}
+                  {opportunitiesLoading ? (
+                    <div className="text-center py-8">
+                      <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-enterprise-blue mx-auto mb-4"></div>
+                      <p className="text-gray-500">Finding keyword opportunities...</p>
+                    </div>
+                  ) : keywordOpportunities.length === 0 ? (
+                    <div className="text-center py-8">
+                      <Search className="h-12 w-12 mx-auto text-gray-400 mb-4" />
+                      <h4 className="text-lg font-medium text-gray-900 mb-2">No keyword opportunities found</h4>
+                      <p className="text-gray-500">Start by adding seed keywords to generate opportunities.</p>
+                    </div>
+                  ) : (
+                    keywordOpportunities.map((kw, index) => (
+                      <div key={kw.id || index} className="flex items-center justify-between p-4 border rounded-lg hover:bg-soft-gray transition-colors">
+                        <div className="flex-1">
+                          <div className="font-medium text-professional-gray">{kw.keyword}</div>
+                          <div className="text-sm text-gray-600">
+                            Monthly Volume: {kw.search_volume?.toLocaleString() || 'N/A'} | CPC: ${kw.cpc?.toFixed(2) || 'N/A'}
+                          </div>
                         </div>
-                      </div>
-                      <div className="flex items-center space-x-4">
-                        <div className="text-center">
-                          <div className={`font-bold ${getDifficultyColor(kw.difficulty)}`}>{kw.difficulty}</div>
-                          <div className="text-xs text-gray-600">Difficulty</div>
-                        </div>
-                        <div className="text-center">
-                          <div className={`font-bold ${getOpportunityColor(kw.opportunity)}`}>{kw.opportunity}</div>
-                          <div className="text-xs text-gray-600">Opportunity</div>
+                        <div className="flex items-center space-x-4">
+                          <div className="text-center">
+                            <div className={`font-bold ${getDifficultyColor(kw.keyword_difficulty || 0)}`}>{kw.keyword_difficulty || 0}</div>
+                            <div className="text-xs text-gray-600">Difficulty</div>
+                          </div>
+                          <div className="text-center">
+                            <div className={`font-bold ${getOpportunityColor(kw.opportunity_score || 0)}`}>{kw.opportunity_score || 0}</div>
+                            <div className="text-xs text-gray-600">Opportunity</div>
                         </div>
                         <Button size="sm" variant="outline">
                           <Plus className="h-3 w-3 mr-1" />
                           Track
                         </Button>
+                        </div>
                       </div>
-                    </div>
-                  ))}
+                    ))
+                  )}
                 </div>
               </div>
             </CardContent>
@@ -269,19 +276,33 @@ export function KeywordResearchDashboard({ projectId, automateProgress }: Keywor
                 </div>
                 
                 <div className="space-y-3">
-                  {mockKeywordOpportunities.slice(0, 3).map((kw, index) => (
-                    <div key={index} className="p-4 border border-green-200 rounded-lg bg-green-50">
-                      <div className="flex items-center justify-between">
-                        <div>
-                          <div className="font-medium text-professional-gray">{kw.keyword}</div>
-                          <div className="text-sm text-gray-600">
-                            Opportunity Score: <span className="font-bold text-green-600">{kw.opportunity}</span>
+                  {opportunitiesLoading ? (
+                    <div className="text-center py-4">
+                      <div className="animate-spin rounded-full h-6 w-6 border-b-2 border-green-600 mx-auto mb-2"></div>
+                      <p className="text-sm text-gray-500">Loading quick wins...</p>
+                    </div>
+                  ) : keywordOpportunities.length === 0 ? (
+                    <div className="text-center py-4">
+                      <p className="text-sm text-gray-500">No quick wins available yet</p>
+                    </div>
+                  ) : (
+                    keywordOpportunities
+                      .filter(kw => (kw.opportunity_score || 0) >= 80)
+                      .slice(0, 3)
+                      .map((kw, index) => (
+                        <div key={kw.id || index} className="p-4 border border-green-200 rounded-lg bg-green-50">
+                          <div className="flex items-center justify-between">
+                            <div>
+                              <div className="font-medium text-professional-gray">{kw.keyword}</div>
+                              <div className="text-sm text-gray-600">
+                                Opportunity Score: <span className="font-bold text-green-600">{kw.opportunity_score || 0}</span>
+                              </div>
+                            </div>
+                            <Badge className="bg-green-100 text-green-800">Quick Win</Badge>
                           </div>
                         </div>
-                        <Badge className="bg-green-100 text-green-800">Quick Win</Badge>
-                      </div>
-                    </div>
-                  ))}
+                      ))
+                  )}
                 </div>
               </div>
             </CardContent>

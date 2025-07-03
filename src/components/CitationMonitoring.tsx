@@ -1,5 +1,5 @@
 
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { Card } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
@@ -19,6 +19,7 @@ import {
   Plus
 } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
+import { useCitationMonitoring } from '@/hooks/useCitationMonitoring';
 
 interface Citation {
   id: string;
@@ -41,15 +42,7 @@ interface MonitoringConfig {
 }
 
 export function CitationMonitoring() {
-  const [citations, setCitations] = useState<Citation[]>([]);
-  const [config, setConfig] = useState<MonitoringConfig>({
-    brandName: '',
-    keywords: [],
-    competitors: [],
-    alerts: true,
-    frequency: 'hourly'
-  });
-  const [loading, setLoading] = useState(false);
+  const { config, updateConfig, citations, analytics, isLoading, startMonitoring, isMonitoring } = useCitationMonitoring();
   const [newKeyword, setNewKeyword] = useState('');
   const { toast } = useToast();
 
@@ -75,52 +68,12 @@ export function CitationMonitoring() {
     negative: 'bg-red-100 text-red-800'
   };
 
-  // Mock data for demonstration
-  useEffect(() => {
-    const mockCitations: Citation[] = [
-      {
-        id: '1',
-        platform: 'openai',
-        model: 'GPT-4',
-        query: 'Best marketing automation tools',
-        mention: 'PRAVADO is a comprehensive marketing operating system that helps businesses automate their marketing workflows.',
-        sentiment: 'positive',
-        timestamp: new Date(Date.now() - 1000 * 60 * 30).toISOString(),
-        confidence: 0.92,
-        context: 'Marketing automation discussion'
-      },
-      {
-        id: '2',
-        platform: 'gemini',
-        model: 'Gemini Pro',
-        query: 'Marketing platform comparison',
-        mention: 'When comparing marketing platforms, PRAVADO offers unique AI-powered insights for enterprise teams.',
-        sentiment: 'positive',
-        timestamp: new Date(Date.now() - 1000 * 60 * 45).toISOString(),
-        confidence: 0.87,
-        context: 'Platform comparison analysis'
-      },
-      {
-        id: '3',
-        platform: 'huggingface',
-        model: 'Llama-2-70b',
-        query: 'Enterprise marketing solutions',
-        mention: 'PRAVADO is mentioned as one of the emerging players in the marketing technology space.',
-        sentiment: 'neutral',
-        timestamp: new Date(Date.now() - 1000 * 60 * 60).toISOString(),
-        confidence: 0.78,
-        context: 'Enterprise solution overview'
-      }
-    ];
-    setCitations(mockCitations);
-  }, []);
 
   const handleAddKeyword = () => {
     if (newKeyword.trim() && !config.keywords.includes(newKeyword.trim())) {
-      setConfig(prev => ({
-        ...prev,
-        keywords: [...prev.keywords, newKeyword.trim()]
-      }));
+      updateConfig({
+        keywords: [...config.keywords, newKeyword.trim()]
+      });
       setNewKeyword('');
       toast({
         title: "Keyword added",
@@ -130,51 +83,36 @@ export function CitationMonitoring() {
   };
 
   const removeKeyword = (keyword: string) => {
-    setConfig(prev => ({
-      ...prev,
-      keywords: prev.keywords.filter(k => k !== keyword)
-    }));
+    updateConfig({
+      keywords: config.keywords.filter(k => k !== keyword)
+    });
   };
 
-  const startMonitoring = async () => {
-    setLoading(true);
+  const handleStartMonitoring = async () => {
+    if (!config.brandName || config.keywords.length === 0) {
+      toast({
+        title: "Setup Required",
+        description: "Please set your brand name and add keywords before starting monitoring",
+        variant: "destructive",
+      });
+      return;
+    }
+
     try {
-      // Simulate API call to start monitoring
-      await new Promise(resolve => setTimeout(resolve, 2000));
+      await startMonitoring();
       toast({
         title: "Monitoring started",
-        description: "Now tracking citations across all AI platforms",
+        description: `Now monitoring ${config.keywords.length} keywords across all AI platforms`,
       });
     } catch (error) {
       toast({
         title: "Error",
-        description: "Failed to start monitoring. Please try again.",
+        description: "Failed to start monitoring",
         variant: "destructive",
       });
-    } finally {
-      setLoading(false);
     }
   };
 
-  const refreshCitations = async () => {
-    setLoading(true);
-    try {
-      // Simulate API call to refresh citations
-      await new Promise(resolve => setTimeout(resolve, 1500));
-      toast({
-        title: "Citations refreshed",
-        description: "Latest mentions retrieved from all platforms",
-      });
-    } catch (error) {
-      toast({
-        title: "Error",
-        description: "Failed to refresh citations",
-        variant: "destructive",
-      });
-    } finally {
-      setLoading(false);
-    }
-  };
 
   return (
     <div className="space-y-6">
@@ -185,11 +123,11 @@ export function CitationMonitoring() {
           <p className="text-gray-600">Track brand mentions across major AI platforms</p>
         </div>
         <div className="mt-4 lg:mt-0 flex space-x-3">
-          <Button variant="outline" onClick={refreshCitations} disabled={loading}>
-            <RefreshCw className={`h-4 w-4 mr-2 ${loading ? 'animate-spin' : ''}`} />
+          <Button variant="outline" onClick={() => window.location.reload()} disabled={isLoading}>
+            <RefreshCw className={`h-4 w-4 mr-2 ${isLoading ? 'animate-spin' : ''}`} />
             Refresh
           </Button>
-          <Button onClick={startMonitoring} disabled={loading} className="bg-enterprise-blue hover:bg-enterprise-blue/90">
+          <Button onClick={handleStartMonitoring} disabled={isLoading} className="bg-enterprise-blue hover:bg-enterprise-blue/90">
             <Bell className="h-4 w-4 mr-2" />
             Start Monitoring
           </Button>
@@ -225,7 +163,29 @@ export function CitationMonitoring() {
               </Badge>
             </div>
             <div className="space-y-4">
-              {citations.map((citation) => {
+              {isLoading ? (
+                <div className="text-center py-8">
+                  <RefreshCw className="h-8 w-8 mx-auto animate-spin text-enterprise-blue mb-4" />
+                  <p className="text-gray-500">Searching for citations across AI platforms...</p>
+                </div>
+              ) : citations.length === 0 ? (
+                <div className="text-center py-8">
+                  <MessageSquare className="h-12 w-12 mx-auto text-gray-400 mb-4" />
+                  <h4 className="text-lg font-medium text-gray-900 mb-2">No citations found</h4>
+                  <p className="text-gray-500 mb-4">
+                    {config.brandName ? 
+                      `No mentions of "${config.brandName}" found yet. Try starting monitoring or adding more keywords.` :
+                      'Set up your brand name and keywords to start monitoring AI citations.'
+                    }
+                  </p>
+                  {(!config.brandName || config.keywords.length === 0) && (
+                    <Button onClick={() => document.querySelector('[value="config"]')?.click()} variant="outline">
+                      Configure Monitoring
+                    </Button>
+                  )}
+                </div>
+              ) : (
+                citations.map((citation) => {
                 const PlatformIcon = platformIcons[citation.platform];
                 return (
                   <div key={citation.id} className="border border-border-gray rounded-lg p-4 hover:shadow-md transition-shadow">
@@ -256,17 +216,19 @@ export function CitationMonitoring() {
                       <p className="text-sm text-gray-600">
                         <strong>Query:</strong> {citation.query}
                       </p>
-                      <p className="text-sm text-professional-gray bg-soft-gray p-3 rounded">
-                        {citation.mention}
-                      </p>
+                      <div className="text-sm text-professional-gray bg-soft-gray p-3 rounded space-y-2">
+                        {citation.mentions?.map((mention, idx) => (
+                          <p key={idx}>{mention}</p>
+                        )) || <p>{citation.response}</p>}
+                      </div>
                       <div className="flex items-center justify-between text-xs text-gray-500">
                         <span>Confidence: {Math.round(citation.confidence * 100)}%</span>
-                        <span>Context: {citation.context}</span>
+                        <span>{new Date(citation.timestamp).toLocaleDateString()}</span>
                       </div>
                     </div>
                   </div>
                 );
-              })}
+              }))}
             </div>
           </Card>
         </TabsContent>
@@ -278,24 +240,34 @@ export function CitationMonitoring() {
                 <TrendingUp className="h-5 w-5 text-pravado-orange" />
                 <h3 className="font-semibold text-professional-gray">Mention Trend</h3>
               </div>
-              <p className="text-2xl font-bold text-pravado-orange">+24%</p>
-              <p className="text-xs text-gray-500">vs last week</p>
+              <p className="text-2xl font-bold text-pravado-orange">
+                {analytics?.mentionTrendPercentage ? `${analytics.mentionTrendPercentage > 0 ? '+' : ''}${analytics.mentionTrendPercentage}%` : '0%'}
+              </p>
+              <p className="text-xs text-gray-500">vs last period</p>
             </Card>
             <Card className="p-4">
               <div className="flex items-center space-x-2 mb-2">
                 <BarChart3 className="h-5 w-5 text-enterprise-blue" />
                 <h3 className="font-semibold text-professional-gray">Avg Sentiment</h3>
               </div>
-              <p className="text-2xl font-bold text-enterprise-blue">8.2/10</p>
-              <p className="text-xs text-gray-500">Positive sentiment</p>
+              <p className="text-2xl font-bold text-enterprise-blue">
+                {analytics?.avgSentimentScore ? `${analytics.avgSentimentScore.toFixed(1)}/10` : '0/10'}
+              </p>
+              <p className="text-xs text-gray-500">
+                {analytics?.avgSentimentScore >= 7 ? 'Positive' : analytics?.avgSentimentScore >= 4 ? 'Neutral' : 'Negative'} sentiment
+              </p>
             </Card>
             <Card className="p-4">
               <div className="flex items-center space-x-2 mb-2">
                 <AlertCircle className="h-5 w-5 text-pravado-purple" />
                 <h3 className="font-semibold text-professional-gray">Top Platform</h3>
               </div>
-              <p className="text-2xl font-bold text-pravado-purple">OpenAI</p>
-              <p className="text-xs text-gray-500">42% of mentions</p>
+              <p className="text-2xl font-bold text-pravado-purple">
+                {analytics?.topPlatform || 'N/A'}
+              </p>
+              <p className="text-xs text-gray-500">
+                {analytics?.totalMentions || 0} total mentions
+              </p>
             </Card>
           </div>
         </TabsContent>
@@ -309,7 +281,7 @@ export function CitationMonitoring() {
                 <Input
                   id="brandName"
                   value={config.brandName}
-                  onChange={(e) => setConfig(prev => ({ ...prev, brandName: e.target.value }))}
+                  onChange={(e) => updateConfig({ brandName: e.target.value })}
                   placeholder="Enter your brand name"
                 />
               </div>
