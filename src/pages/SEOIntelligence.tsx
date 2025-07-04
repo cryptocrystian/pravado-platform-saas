@@ -1,7 +1,7 @@
 
 import React from 'react';
 import { BaseLayout } from '@/components/BaseLayout';
-import { Card } from '@/components/ui/card';
+import { Card, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Plus, Target, TrendingUp, Search, BarChart3, Globe } from 'lucide-react';
@@ -37,6 +37,14 @@ const SEOIntelligence = () => {
               <p className="text-gray-600">Monitor and optimize your search engine performance</p>
             </div>
             <div className="mt-4 lg:mt-0 flex space-x-3">
+              <Button 
+                variant="outline"
+                onClick={() => window.location.href = '/seo-intelligence-pro'}
+                className="bg-gradient-to-r from-pravado-purple to-enterprise-blue text-white hover:opacity-90"
+              >
+                <TrendingUp className="h-4 w-4 mr-2" />
+                SEO Intelligence Pro
+              </Button>
               <Button variant="outline">
                 <Globe className="h-4 w-4 mr-2" />
                 Site Audit
@@ -62,6 +70,26 @@ const SEOIntelligence = () => {
               </Card>
             ))}
           </div>
+
+          {/* Pro Version Banner */}
+          <Card className="mb-8 bg-gradient-to-r from-pravado-purple/10 to-enterprise-blue/10 border-l-4 border-l-pravado-purple">
+            <CardContent className="p-6">
+              <div className="flex items-center justify-between">
+                <div>
+                  <h3 className="text-xl font-semibold text-professional-gray mb-2">Unlock Full SEO Intelligence</h3>
+                  <p className="text-gray-600">Access real-time keyword tracking, rank monitoring, content optimization, and competitive analysis with SEO Intelligence Pro.</p>
+                </div>
+                <Button 
+                  size="lg"
+                  onClick={() => window.location.href = '/seo-intelligence-pro'}
+                  className="bg-gradient-to-r from-pravado-purple to-enterprise-blue text-white hover:opacity-90"
+                >
+                  <TrendingUp className="h-5 w-5 mr-2" />
+                  Go to SEO Pro
+                </Button>
+              </div>
+            </CardContent>
+          </Card>
 
           {/* AUTOMATE Methodology Guidance */}
           {userProfile?.tenant_id && (
