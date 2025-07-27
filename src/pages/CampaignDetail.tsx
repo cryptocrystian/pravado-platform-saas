@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import { useParams, Link } from 'react-router-dom';
 import { BaseLayout } from '@/components/BaseLayout';
@@ -10,6 +9,7 @@ import { Progress } from '@/components/ui/progress';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { CampaignMethodologyProgress } from '@/components/CampaignMethodologyProgress';
 import { CampaignPerformanceCorrelation } from '@/components/CampaignPerformanceCorrelation';
+import { CampaignJournalistAnalytics } from '@/components/pr/CampaignJournalistAnalytics';
 import { 
   ArrowLeft, 
   Edit, 
@@ -22,16 +22,45 @@ import {
   TrendingUp,
   FileText,
   BarChart3,
-  Brain
+  Brain,
+  Sparkles,
+  Activity,
+  Globe,
+  Award,
+  CheckCircle2
 } from 'lucide-react';
 import { useCampaignWithMethodology } from '@/hooks/useCampaigns';
 import { useContent } from '@/hooks/useContent';
+import { supabase } from '@/integrations/supabase/client';
+import { useQuery } from '@tanstack/react-query';
 import { format } from 'date-fns';
 
 export default function CampaignDetail() {
   const { id } = useParams<{ id: string }>();
   const { data: campaignData, isLoading: campaignLoading } = useCampaignWithMethodology(id!);
   const { data: content } = useContent();
+
+  // Fetch campaign-journalist relationships
+  const { data: journalistRelationships } = useQuery({
+    queryKey: ['campaign-journalist-relationships', id],
+    queryFn: async () => {
+      if (!id) return [];
+      
+      const { data, error } = await supabase
+        .from('campaign_journalist_relationships')
+        .select('*')
+        .eq('campaign_id', id)
+        .order('created_at', { ascending: false });
+
+      if (error) {
+        console.error('Error fetching journalist relationships:', error);
+        return [];
+      }
+
+      return data || [];
+    },
+    enabled: !!id,
+  });
 
   const campaignContent = content?.filter(c => (c as any).campaign_id === id) || [];
 
@@ -69,6 +98,8 @@ export default function CampaignDetail() {
   const spendPercentage = totalBudget > 0 ? (actualSpend / totalBudget) * 100 : 0;
   const milestones = (campaign as any).milestones || [];
   const methodologyProgress = methodology?.overall_progress || 0;
+  const aiIntelligence = (campaign as any).ai_intelligence;
+  const hasAIFeatures = !!aiIntelligence?.journalist_targeting;
 
   const getStatusColor = (status: string) => {
     switch (status) {
@@ -79,6 +110,16 @@ export default function CampaignDetail() {
       default: return 'bg-gray-100 text-gray-800';
     }
   };
+
+  // Calculate journalist metrics
+  const journalistStats = journalistRelationships ? {
+    total: journalistRelationships.length,
+    contacted: journalistRelationships.filter(r => ['contacted', 'responded', 'successful', 'declined'].includes(r.status)).length,
+    successful: journalistRelationships.filter(r => r.status === 'successful').length,
+    avgPredictedSuccess: journalistRelationships.length > 0 
+      ? (journalistRelationships.reduce((sum, r) => sum + (r.predicted_success_rate || 0), 0) / journalistRelationships.length) * 100 
+      : 0,
+  } : { total: 0, contacted: 0, successful: 0, avgPredictedSuccess: 0 };
 
   return (
     <BaseLayout title="Campaign Details" breadcrumb={`Campaigns / ${campaign.name}`}>
@@ -93,7 +134,15 @@ export default function CampaignDetail() {
               </Button>
             </Link>
             <div>
-              <h1 className="text-3xl font-bold text-professional-gray">{campaign.name}</h1>
+              <div className="flex items-center gap-2 mb-2">
+                <h1 className="text-3xl font-bold text-professional-gray">{campaign.name}</h1>
+                {hasAIFeatures && (
+                  <Badge variant="secondary" className="bg-purple-100 text-purple-700">
+                    <Sparkles className="h-3 w-3 mr-1" />
+                    AI Enhanced
+                  </Badge>
+                )}
+              </div>
               <div className="flex items-center space-x-4 mt-2">
                 <Badge className={getStatusColor(campaign.status)}>
                   {campaign.status}
@@ -126,6 +175,41 @@ export default function CampaignDetail() {
           </div>
         </div>
 
+        {/* AI Intelligence Summary */}
+        {hasAIFeatures && (
+          <Card className="mb-8 bg-gradient-to-r from-purple-50 to-blue-50 border-purple-200">
+            <div className="p-6">
+              <div className="flex items-center gap-2 mb-4">
+                <Brain className="h-5 w-5 text-purple-600" />
+                <h3 className="text-lg font-semibold text-purple-900">AI Campaign Intelligence</h3>
+                <Badge variant="outline" className="bg-white">
+                  Phase B: Enhanced
+                </Badge>
+              </div>
+              <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
+                <div className="text-center">
+                  <div className="text-2xl font-bold text-purple-600">{journalistStats.total}</div>
+                  <div className="text-sm text-purple-700">Targeted Journalists</div>
+                </div>
+                <div className="text-center">
+                  <div className="text-2xl font-bold text-blue-600">{Math.round(journalistStats.avgPredictedSuccess)}%</div>
+                  <div className="text-sm text-blue-700">AI Success Prediction</div>
+                </div>
+                <div className="text-center">
+                  <div className="text-2xl font-bold text-green-600">{journalistStats.successful}</div>
+                  <div className="text-sm text-green-700">Successful Placements</div>
+                </div>
+                <div className="text-center">
+                  <div className="text-2xl font-bold text-orange-600">
+                    {journalistStats.contacted > 0 ? Math.round((journalistStats.successful / journalistStats.contacted) * 100) : 0}%
+                  </div>
+                  <div className="text-sm text-orange-700">Actual Success Rate</div>
+                </div>
+              </div>
+            </div>
+          </Card>
+        )}
+
         {/* AUTOMATE Methodology Section */}
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-8">
           <CampaignMethodologyProgress 
@@ -155,27 +239,42 @@ export default function CampaignDetail() {
           <Card className="p-6">
             <div className="flex items-center justify-between">
               <div>
-                <p className="text-sm text-gray-600">AUTOMATE Progress</p>
+                <p className="text-sm text-gray-600">
+                  {hasAIFeatures ? 'AI Success Rate' : 'AUTOMATE Progress'}
+                </p>
                 <p className="text-2xl font-bold text-professional-gray">
-                  {methodologyProgress}%
+                  {hasAIFeatures 
+                    ? `${journalistStats.contacted > 0 ? Math.round((journalistStats.successful / journalistStats.contacted) * 100) : 0}%`
+                    : `${methodologyProgress}%`
+                  }
                 </p>
                 <p className="text-xs text-gray-500">
-                  Methodology completion
+                  {hasAIFeatures ? 'Journalist engagement success' : 'Methodology completion'}
                 </p>
               </div>
-              <Brain className="h-8 w-8 text-pravado-purple" />
+              {hasAIFeatures ? (
+                <Brain className="h-8 w-8 text-purple-600" />
+              ) : (
+                <Brain className="h-8 w-8 text-pravado-purple" />
+              )}
             </div>
           </Card>
           
           <Card className="p-6">
             <div className="flex items-center justify-between">
               <div>
-                <p className="text-sm text-gray-600">Content Pieces</p>
+                <p className="text-sm text-gray-600">
+                  {hasAIFeatures ? 'Journalists Targeted' : 'Content Pieces'}
+                </p>
                 <p className="text-2xl font-bold text-professional-gray">
-                  {campaignContent.length}
+                  {hasAIFeatures ? journalistStats.total : campaignContent.length}
                 </p>
               </div>
-              <FileText className="h-8 w-8 text-pravado-purple" />
+              {hasAIFeatures ? (
+                <Users className="h-8 w-8 text-blue-600" />
+              ) : (
+                <FileText className="h-8 w-8 text-pravado-purple" />
+              )}
             </div>
           </Card>
           
@@ -193,8 +292,14 @@ export default function CampaignDetail() {
         </div>
 
         {/* Main Content */}
-        <Tabs defaultValue="overview" className="w-full">
-          <TabsList className="grid w-full grid-cols-6">
+        <Tabs defaultValue={hasAIFeatures ? "journalist-intelligence" : "overview"} className="w-full">
+          <TabsList className={`grid w-full ${hasAIFeatures ? 'grid-cols-7' : 'grid-cols-6'}`}>
+            {hasAIFeatures && (
+              <TabsTrigger value="journalist-intelligence" className="gap-1">
+                <Brain className="h-4 w-4" />
+                AI Intelligence
+              </TabsTrigger>
+            )}
             <TabsTrigger value="overview">Overview</TabsTrigger>
             <TabsTrigger value="methodology">AUTOMATE</TabsTrigger>
             <TabsTrigger value="budget">Budget</TabsTrigger>
@@ -202,6 +307,17 @@ export default function CampaignDetail() {
             <TabsTrigger value="milestones">Milestones</TabsTrigger>
             <TabsTrigger value="analytics">Analytics</TabsTrigger>
           </TabsList>
+
+          {hasAIFeatures && (
+            <TabsContent value="journalist-intelligence" className="mt-6">
+              <CampaignJournalistAnalytics
+                campaignId={campaign.id}
+                relationships={journalistRelationships || []}
+                campaignBudget={totalBudget}
+                campaignGoals={campaign.goals}
+              />
+            </TabsContent>
+          )}
           
           <TabsContent value="methodology" className="mt-6">
             <div className="space-y-6">
@@ -236,6 +352,23 @@ export default function CampaignDetail() {
                       {(campaign.target_audience as any)?.description || 'No target audience specified'}
                     </p>
                   </div>
+
+                  {hasAIFeatures && aiIntelligence.journalist_targeting && (
+                    <div>
+                      <h4 className="font-medium text-professional-gray flex items-center gap-2">
+                        <Sparkles className="h-4 w-4 text-purple-600" />
+                        AI Targeting Strategy
+                      </h4>
+                      <div className="text-sm text-gray-600 mt-1 space-y-1">
+                        <p>• Minimum Relationship Score: {aiIntelligence.journalist_targeting.min_relationship_score || 70}</p>
+                        <p>• Minimum Authority Score: {aiIntelligence.journalist_targeting.min_authority_score || 60}</p>
+                        <p>• Verification Required: {aiIntelligence.journalist_targeting.verification_required ? 'Yes' : 'No'}</p>
+                        {aiIntelligence.journalist_targeting.tier_preference?.length > 0 && (
+                          <p>• Preferred Tiers: {aiIntelligence.journalist_targeting.tier_preference.join(', ')}</p>
+                        )}
+                      </div>
+                    </div>
+                  )}
                 </div>
               </Card>
               
@@ -266,6 +399,27 @@ export default function CampaignDetail() {
                     <Progress value={budgetAllocation.seo} className="h-2" />
                   </div>
                 </div>
+
+                {hasAIFeatures && (
+                  <div className="mt-6 p-4 bg-purple-50 rounded-lg">
+                    <div className="flex items-center gap-2 mb-2">
+                      <Activity className="h-4 w-4 text-purple-600" />
+                      <span className="font-medium text-purple-900">AI Performance Metrics</span>
+                    </div>
+                    <div className="grid grid-cols-2 gap-2 text-sm">
+                      <div>
+                        <span className="text-purple-700">Predicted Success:</span>
+                        <span className="font-medium ml-1">{Math.round(journalistStats.avgPredictedSuccess)}%</span>
+                      </div>
+                      <div>
+                        <span className="text-purple-700">Actual Success:</span>
+                        <span className="font-medium ml-1">
+                          {journalistStats.contacted > 0 ? Math.round((journalistStats.successful / journalistStats.contacted) * 100) : 0}%
+                        </span>
+                      </div>
+                    </div>
+                  </div>
+                )}
               </Card>
             </div>
           </TabsContent>
@@ -400,12 +554,46 @@ export default function CampaignDetail() {
           
           <TabsContent value="analytics" className="mt-6">
             <Card className="p-6">
-              <h3 className="text-lg font-semibold mb-6">Campaign Analytics</h3>
-              <div className="text-center py-12">
-                <BarChart3 className="h-12 w-12 text-gray-400 mx-auto mb-4" />
-                <h4 className="text-lg font-medium text-professional-gray mb-2">Analytics Coming Soon</h4>
-                <p className="text-gray-600">Detailed campaign analytics will be available soon.</p>
+              <div className="flex items-center justify-between mb-6">
+                <h3 className="text-lg font-semibold">Campaign Analytics</h3>
+                {hasAIFeatures && (
+                  <Badge variant="secondary" className="bg-purple-100 text-purple-700">
+                    <Brain className="h-3 w-3 mr-1" />
+                    AI Powered
+                  </Badge>
+                )}
               </div>
+              
+              {hasAIFeatures ? (
+                <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+                  <div className="text-center p-4 bg-gradient-to-r from-purple-50 to-purple-100 rounded-lg">
+                    <div className="text-2xl font-bold text-purple-600">
+                      {Math.round(journalistStats.avgPredictedSuccess)}%
+                    </div>
+                    <div className="text-sm text-purple-700">AI Success Prediction</div>
+                  </div>
+                  
+                  <div className="text-center p-4 bg-gradient-to-r from-green-50 to-green-100 rounded-lg">
+                    <div className="text-2xl font-bold text-green-600">
+                      {journalistStats.contacted > 0 ? Math.round((journalistStats.successful / journalistStats.contacted) * 100) : 0}%
+                    </div>
+                    <div className="text-sm text-green-700">Actual Success Rate</div>
+                  </div>
+                  
+                  <div className="text-center p-4 bg-gradient-to-r from-blue-50 to-blue-100 rounded-lg">
+                    <div className="text-2xl font-bold text-blue-600">
+                      {journalistStats.successful}
+                    </div>
+                    <div className="text-sm text-blue-700">Successful Placements</div>
+                  </div>
+                </div>
+              ) : (
+                <div className="text-center py-12">
+                  <BarChart3 className="h-12 w-12 text-gray-400 mx-auto mb-4" />
+                  <h4 className="text-lg font-medium text-professional-gray mb-2">Analytics Coming Soon</h4>
+                  <p className="text-gray-600">Detailed campaign analytics will be available soon.</p>
+                </div>
+              )}
             </Card>
           </TabsContent>
         </Tabs>
