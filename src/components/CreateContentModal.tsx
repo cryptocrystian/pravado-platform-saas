@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
@@ -108,7 +107,7 @@ export function CreateContentModal({ onContentCreated, selectedDate, defaultCamp
         title: data.title,
         content_body: data.content_body || null,
         content_type: data.content_type,
-        campaign_id: data.campaign_id || null,
+        campaign_id: data.campaign_id === 'no-campaign' ? null : (data.campaign_id || null),
         scheduled_date: data.scheduled_date?.toISOString() || null,
         target_platforms: data.target_platforms,
         ai_optimized: data.ai_optimized,
@@ -209,7 +208,7 @@ export function CreateContentModal({ onContentCreated, selectedDate, defaultCamp
                           </SelectTrigger>
                         </FormControl>
                         <SelectContent>
-                          <SelectItem value="">No Campaign</SelectItem>
+                          <SelectItem value="no-campaign">No Campaign</SelectItem>
                           {campaigns?.map((campaign) => (
                             <SelectItem key={campaign.id} value={campaign.id}>
                               {campaign.name}

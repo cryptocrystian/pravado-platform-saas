@@ -1,3 +1,4 @@
+
 import { supabase } from '@/integrations/supabase/client';
 
 export interface KeywordResearchRequest {
@@ -106,13 +107,6 @@ export interface CompetitorAnalysisResult {
 }
 
 class SEOIntelligenceService {
-  private readonly apiKeys = {
-    semrush: process.env.SEMRUSH_API_KEY,
-    ahrefs: process.env.AHREFS_API_KEY,
-    brightdata: process.env.BRIGHTDATA_API_KEY,
-    pagespeed: process.env.GOOGLE_PAGESPEED_API_KEY,
-  };
-
   // AI-Powered Keyword Research
   async conductKeywordResearch(request: KeywordResearchRequest): Promise<KeywordSuggestion[]> {
     console.log('🔍 Starting AI-powered keyword research for:', request.seedKeywords);
@@ -143,51 +137,9 @@ class SEOIntelligenceService {
   }
 
   private async getSemrushKeywords(request: KeywordResearchRequest): Promise<KeywordSuggestion[]> {
-    if (!this.apiKeys.semrush) {
-      console.warn('SEMrush API key not configured, using fallback data');
-      return this.getFallbackKeywordData(request);
-    }
-
-    try {
-      const keywords: KeywordSuggestion[] = [];
-      
-      for (const seedKeyword of request.seedKeywords) {
-        const response = await fetch(
-          `https://api.semrush.com/?type=phrase_related&key=${this.apiKeys.semrush}&phrase=${encodeURIComponent(seedKeyword)}&database=us&export_columns=Ph,Nq,Cp,Kd&display_limit=50`
-        );
-
-        if (!response.ok) {
-          throw new Error(`SEMrush API error: ${response.statusText}`);
-        }
-
-        const data = await response.text();
-        const lines = data.split('\n').slice(1); // Skip header
-
-        for (const line of lines) {
-          if (!line.trim()) continue;
-          
-          const [keyword, volume, cpc, difficulty] = line.split(';');
-          
-          if (keyword && volume && !isNaN(Number(volume))) {
-            keywords.push({
-              keyword: keyword.trim(),
-              search_volume: parseInt(volume) || 0,
-              keyword_difficulty: parseInt(difficulty) || 50,
-              cpc: parseFloat(cpc) || 0,
-              competition_level: this.categorizeCompetition(parseInt(difficulty) || 50),
-              search_intent: await this.detectSearchIntent(keyword),
-              opportunity_score: this.calculateOpportunityScore(parseInt(volume) || 0, parseInt(difficulty) || 50),
-              related_keywords: []
-            });
-          }
-        }
-      }
-
-      return keywords;
-    } catch (error) {
-      console.error('SEMrush API error:', error);
-      return this.getFallbackKeywordData(request);
-    }
+    // For demo purposes, return fallback data since API keys aren't available in browser
+    console.warn('Using fallback keyword data for demo purposes');
+    return this.getFallbackKeywordData(request);
   }
 
   private async generateAIKeywords(request: KeywordResearchRequest): Promise<KeywordSuggestion[]> {
@@ -270,37 +222,9 @@ class SEOIntelligenceService {
   }
 
   private async getPageSpeedInsights(url: string) {
-    const apiKey = this.apiKeys.pagespeed;
-    if (!apiKey) {
-      return this.getFallbackPageSpeedData();
-    }
-
-    try {
-      const response = await fetch(
-        `https://www.googleapis.com/pagespeedonline/v5/runPagespeed?url=${encodeURIComponent(url)}&key=${apiKey}&category=performance&category=seo&category=accessibility&category=best-practices`
-      );
-
-      if (!response.ok) {
-        throw new Error(`PageSpeed API error: ${response.statusText}`);
-      }
-
-      const data = await response.json();
-      
-      return {
-        performance_score: Math.round((data.lighthouseResult?.categories?.performance?.score || 0) * 100),
-        seo_score: Math.round((data.lighthouseResult?.categories?.seo?.score || 0) * 100),
-        accessibility_score: Math.round((data.lighthouseResult?.categories?.accessibility?.score || 0) * 100),
-        best_practices_score: Math.round((data.lighthouseResult?.categories?.['best-practices']?.score || 0) * 100),
-        core_web_vitals: {
-          lcp: data.lighthouseResult?.audits?.['largest-contentful-paint']?.numericValue || 0,
-          fid: data.lighthouseResult?.audits?.['max-potential-fid']?.numericValue || 0,
-          cls: data.lighthouseResult?.audits?.['cumulative-layout-shift']?.numericValue || 0
-        }
-      };
-    } catch (error) {
-      console.error('PageSpeed Insights error:', error);
-      return this.getFallbackPageSpeedData();
-    }
+    // For demo purposes, return fallback data since API keys aren't available in browser
+    console.warn('Using fallback PageSpeed data for demo purposes');
+    return this.getFallbackPageSpeedData();
   }
 
   private async crawlWebsite(url: string) {
