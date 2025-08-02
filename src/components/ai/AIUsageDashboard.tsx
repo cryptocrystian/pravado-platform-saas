@@ -14,12 +14,12 @@ export function AIUsageDashboard() {
   if (!analytics) {
     return (
       <div className="space-y-4">
-        <h2 className="text-2xl font-bold">AI Usage Analytics</h2>
+        <h2 className="text-2xl font-bold text-[#1e293b]">AI Usage Analytics</h2>
         <Card>
           <CardContent className="flex items-center justify-center py-8">
             <div className="text-center">
-              <Brain className="h-12 w-12 text-gray-400 mx-auto mb-4" />
-              <p className="text-gray-600">Loading usage analytics...</p>
+              <Brain className="h-12 w-12 text-[#64748b] mx-auto mb-4" />
+              <p className="text-[#475569]">Loading usage analytics...</p>
             </div>
           </CardContent>
         </Card>
@@ -34,8 +34,8 @@ export function AIUsageDashboard() {
     <div className="space-y-6">
       <div className="flex items-center justify-between">
         <div>
-          <h2 className="text-2xl font-bold">AI Usage Analytics</h2>
-          <p className="text-gray-600">
+          <h2 className="text-2xl font-bold text-[#1e293b]">AI Usage Analytics</h2>
+          <p className="text-[#475569]">
             Monitor your AI usage, costs, and performance metrics
           </p>
         </div>
@@ -54,7 +54,7 @@ export function AIUsageDashboard() {
             <Brain className="h-4 w-4 text-muted-foreground" />
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-bold">{analytics.monthly_usage.toLocaleString()}</div>
+            <div className="text-2xl font-bold text-[#1e293b]">{analytics.monthly_usage.toLocaleString()}</div>
             <p className="text-xs text-muted-foreground">
               of {analytics.monthly_limit.toLocaleString()} requests
             </p>
@@ -68,7 +68,7 @@ export function AIUsageDashboard() {
             <DollarSign className="h-4 w-4 text-muted-foreground" />
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-bold">${analytics.cost_this_month}</div>
+            <div className="text-2xl font-bold text-[#1e293b]">${analytics.cost_this_month}</div>
             <p className="text-xs text-muted-foreground">
               +12% from last month
             </p>
@@ -81,7 +81,7 @@ export function AIUsageDashboard() {
             <Clock className="h-4 w-4 text-muted-foreground" />
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-bold">{(analytics.avg_generation_time / 1000).toFixed(1)}s</div>
+            <div className="text-2xl font-bold text-[#1e293b]">{(analytics.avg_generation_time / 1000).toFixed(1)}s</div>
             <p className="text-xs text-muted-foreground">
               -0.3s from last month
             </p>
@@ -94,7 +94,7 @@ export function AIUsageDashboard() {
             <TrendingUp className="h-4 w-4 text-muted-foreground" />
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-bold">{(analytics.content_success_rate * 100).toFixed(1)}%</div>
+            <div className="text-2xl font-bold text-[#1e293b]">{(analytics.content_success_rate * 100).toFixed(1)}%</div>
             <p className="text-xs text-muted-foreground">
               +2.1% from last month
             </p>
@@ -123,8 +123,8 @@ export function AIUsageDashboard() {
                     <Brain className="h-6 w-6 text-pravado-purple" />
                   </div>
                   <div>
-                    <div className="text-xl font-bold">{analytics.favorite_provider}</div>
-                    <p className="text-sm text-gray-600">
+                    <div className="text-xl font-bold text-[#1e293b]">{analytics.favorite_provider}</div>
+                    <p className="text-sm text-[#475569]">
                       Used in 65% of content generation
                     </p>
                   </div>
@@ -142,21 +142,21 @@ export function AIUsageDashboard() {
                   <span className="text-sm">Blog Posts</span>
                   <div className="flex items-center space-x-2">
                     <Progress value={45} className="w-20" />
-                    <span className="text-sm text-gray-600">45%</span>
+                    <span className="text-sm text-[#475569]">45%</span>
                   </div>
                 </div>
                 <div className="flex items-center justify-between">
                   <span className="text-sm">Social Media</span>
                   <div className="flex items-center space-x-2">
                     <Progress value={35} className="w-20" />
-                    <span className="text-sm text-gray-600">35%</span>
+                    <span className="text-sm text-[#475569]">35%</span>
                   </div>
                 </div>
                 <div className="flex items-center justify-between">
                   <span className="text-sm">Email Content</span>
                   <div className="flex items-center space-x-2">
                     <Progress value={20} className="w-20" />
-                    <span className="text-sm text-gray-600">20%</span>
+                    <span className="text-sm text-[#475569]">20%</span>
                   </div>
                 </div>
               </CardContent>
@@ -249,7 +249,7 @@ export function AIUsageDashboard() {
               </CardDescription>
             </CardHeader>
             <CardContent>
-              <div className="text-center py-8 text-gray-500">
+              <div className="text-center py-8 text-[#64748b]">
                 Performance analytics dashboard coming soon...
               </div>
             </CardContent>
@@ -265,7 +265,7 @@ export function AIUsageDashboard() {
               </CardDescription>
             </CardHeader>
             <CardContent>
-              <div className="text-center py-8 text-gray-500">
+              <div className="text-center py-8 text-[#64748b]">
                 Cost analysis dashboard coming soon...
               </div>
             </CardContent>

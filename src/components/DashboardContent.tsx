@@ -110,7 +110,7 @@ export function DashboardContent() {
 
   return (
     <MobileOptimizer>
-      <div className="flex-1 bg-soft-gray min-h-screen">
+      <div className="flex-1 bg-[#f1f5f9] min-h-screen">
         {/* Hero Section */}
         <div className="bg-gradient-to-r from-accent to-enterprise-blue text-white p-4 lg:p-8 shadow-lg">
           <div className="max-w-7xl mx-auto">
@@ -146,7 +146,7 @@ export function DashboardContent() {
           <div className="max-w-7xl mx-auto">
             {/* Performance Metrics */}
             <div className="mb-8">
-              <h2 className="text-xl lg:text-2xl font-bold text-professional-gray mb-4 lg:mb-6 animate-fade-in">
+              <h2 className="text-xl lg:text-2xl font-bold text-[#1e293b] mb-4 lg:mb-6 animate-fade-in">
                 Performance Overview
               </h2>
               <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 lg:gap-6">
@@ -209,8 +209,8 @@ export function DashboardContent() {
             {/* Three Column Layout - Mobile Responsive */}
             <div className="grid grid-cols-1 lg:grid-cols-3 gap-4 lg:gap-6">
               {/* Quick Actions */}
-              <Card className="p-4 lg:p-6 bg-white border border-border-gray hover:shadow-xl transition-all duration-300 hover:-translate-y-1 animate-fade-in">
-                <h3 className="text-lg font-semibold text-professional-gray mb-4">Quick Actions</h3>
+              <Card className="p-4 lg:p-6 bg-[#f8fafc] border border-[#e2e8f0] hover:shadow-xl transition-all duration-300 hover:-translate-y-1 animate-fade-in">
+                <h3 className="text-lg font-semibold text-[#1e293b] mb-4">Quick Actions</h3>
                 <div className="space-y-3">
                   <div className="w-full">
                     <CreateCampaignModal onCampaignCreated={refetchCampaigns} />
@@ -246,9 +246,9 @@ export function DashboardContent() {
               </Card>
 
               {/* Recent Campaigns with AUTOMATE Status */}
-              <Card className="p-4 lg:p-6 bg-white border border-border-gray hover:shadow-xl transition-all duration-300 hover:-translate-y-1 animate-fade-in" style={{ animationDelay: '100ms' }}>
+              <Card className="p-4 lg:p-6 bg-[#f8fafc] border border-[#e2e8f0] hover:shadow-xl transition-all duration-300 hover:-translate-y-1 animate-fade-in" style={{ animationDelay: '100ms' }}>
                 <div className="flex items-center justify-between mb-4">
-                  <h3 className="text-lg font-semibold text-professional-gray">Recent Campaigns</h3>
+                  <h3 className="text-lg font-semibold text-[#1e293b]">Recent Campaigns</h3>
                   <Link to="/campaigns">
                     <Button variant="ghost" size="sm" className="text-enterprise-blue hover:text-enterprise-blue/80">
                       <span className="hidden sm:inline">View All</span>
@@ -263,19 +263,19 @@ export function DashboardContent() {
                     recentCampaigns.map((campaign, index) => (
                       <div 
                         key={campaign.id}
-                        className="flex items-center justify-between p-3 rounded-lg bg-soft-gray hover:bg-gray-100 transition-colors"
+                        className="flex items-center justify-between p-3 rounded-lg bg-[#f1f5f9] hover:bg-[#e2e8f0] transition-colors"
                       >
                         <div className="flex-1 min-w-0">
-                          <p className="font-medium text-sm text-professional-gray truncate">{campaign.name}</p>
+                          <p className="font-medium text-sm text-[#1e293b] truncate">{campaign.name}</p>
                           <div className="flex items-center space-x-2">
-                            <p className="text-xs text-gray-500 truncate">{campaign.campaign_type.replace('_', ' ')}</p>
+                            <p className="text-xs text-[#64748b] truncate">{campaign.campaign_type.replace('_', ' ')}</p>
                             <span className="text-xs text-pravado-purple">• AUTOMATE: {overallMethodologyProgress}%</span>
                           </div>
                         </div>
                         <div className="flex flex-col items-end space-y-1 ml-2">
                           <div className={`px-2 py-1 rounded-full text-xs font-medium ${
                             campaign.status === 'active' ? 'bg-green-100 text-green-800' :
-                            campaign.status === 'draft' ? 'bg-gray-100 text-gray-800' :
+                            campaign.status === 'draft' ? 'bg-[#e2e8f0] text-[#475569]' :
                             'bg-blue-100 text-blue-800'
                           }`}>
                             {campaign.status}
@@ -288,7 +288,7 @@ export function DashboardContent() {
                     ))
                   ) : (
                     <div className="text-center py-4">
-                      <p className="text-sm text-gray-500 mb-3">No campaigns created yet</p>
+                      <p className="text-sm text-[#64748b] mb-3">No campaigns created yet</p>
                       <CreateCampaignModal onCampaignCreated={refetchCampaigns} />
                     </div>
                   )}
@@ -296,20 +296,20 @@ export function DashboardContent() {
               </Card>
 
               {/* Recent Activity with AUTOMATE Integration */}
-              <Card className="p-4 lg:p-6 bg-white border border-border-gray hover:shadow-xl transition-all duration-300 hover:-translate-y-1 animate-fade-in" style={{ animationDelay: '200ms' }}>
+              <Card className="p-4 lg:p-6 bg-[#f8fafc] border border-[#e2e8f0] hover:shadow-xl transition-all duration-300 hover:-translate-y-1 animate-fade-in" style={{ animationDelay: '200ms' }}>
                 <div className="flex items-center space-x-2 mb-4">
                   <Clock className="h-5 w-5 text-enterprise-blue" />
-                  <h3 className="text-lg font-semibold text-professional-gray">Recent Activity</h3>
+                  <h3 className="text-lg font-semibold text-[#1e293b]">Recent Activity</h3>
                 </div>
                 <div className="space-y-3">
                   {getRecentActivities().map((activity, index) => (
                     <div 
                       key={index} 
-                      className="flex items-start space-x-3 transition-all duration-200 hover:bg-soft-gray p-2 rounded-md cursor-pointer"
+                      className="flex items-start space-x-3 transition-all duration-200 hover:bg-[#f1f5f9] p-2 rounded-md cursor-pointer"
                       style={{ animationDelay: `${(index + 3) * 100}ms` }}
                     >
                       <div className="w-2 h-2 bg-enterprise-blue rounded-full mt-2 animate-pulse flex-shrink-0"></div>
-                      <span className="text-sm text-professional-gray">{activity}</span>
+                      <span className="text-sm text-[#475569]">{activity}</span>
                     </div>
                   ))}
                   
@@ -337,16 +337,16 @@ export function DashboardContent() {
 
         {/* Mobile Navigation */}
         <MobileOptimizer showOnlyMobile>
-          <nav className="fixed bottom-0 left-0 right-0 z-50 bg-white border-t border-gray-200">
+          <nav className="fixed bottom-0 left-0 right-0 z-50 bg-[#f8fafc] border-t border-[#e2e8f0]">
             <div className="grid grid-cols-5 h-16">
               {mobileNavItems.map((item, index) => (
                 <Link
                   key={index}
                   to={item.href}
-                  className={`flex flex-col items-center justify-center text-xs font-medium transition-colors active:bg-gray-100 ${
+                  className={`flex flex-col items-center justify-center text-xs font-medium transition-colors active:bg-[#e2e8f0] ${
                     item.active 
                       ? 'text-pravado-purple bg-pravado-purple/5' 
-                      : 'text-gray-600 hover:text-pravado-purple'
+                      : 'text-[#475569] hover:text-pravado-purple'
                   }`}
                 >
                   <div className="w-5 h-5 mb-1">
@@ -367,4 +367,3 @@ export function DashboardContent() {
     </MobileOptimizer>
   );
 }
-alert('TEST - Can you see this?');
