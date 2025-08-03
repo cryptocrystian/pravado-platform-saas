@@ -43,11 +43,27 @@ const queryClient = new QueryClient();
 const App = () => {
   // Enable dark mode by default for PRAVADO's professional aesthetic
   useEffect(() => {
+    console.log('DARK MODE DEBUG: App useEffect running');
+    
     // Apply dark mode class to document
     document.documentElement.classList.add('dark');
+    console.log('DARK MODE DEBUG: Added dark class');
+    console.log('DARK MODE DEBUG: HTML classes:', document.documentElement.className);
     
-    // Apply dark theme background immediately
-    document.body.style.backgroundColor = '#111827'; // Dark background
+    // Apply dark theme background immediately with force
+    document.body.style.backgroundColor = '#111827 !important'; // Dark background
+    document.body.style.color = '#f9fafb !important'; // Light text
+    console.log('DARK MODE DEBUG: Applied inline styles');
+    
+    // Force add styles to root element
+    document.documentElement.style.setProperty('--background', '210 40% 11%');
+    document.documentElement.style.setProperty('--foreground', '210 20% 98%');
+    document.documentElement.style.setProperty('--card', '210 40% 18%');
+    console.log('DARK MODE DEBUG: Set CSS variables directly');
+    
+    // Debug: check computed styles
+    const computedBg = window.getComputedStyle(document.body).backgroundColor;
+    console.log('DARK MODE DEBUG: Computed background color:', computedBg);
   }, []);
 
   return (
