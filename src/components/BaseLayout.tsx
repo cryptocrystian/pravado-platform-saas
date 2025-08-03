@@ -14,23 +14,11 @@ interface BaseLayoutProps {
 export function BaseLayout({ children, title, breadcrumb }: BaseLayoutProps) {
   return (
     <SidebarProvider>
-      <div 
-        className="min-h-screen flex w-full bg-background" 
-        style={{ 
-          backgroundColor: '#111827 !important',
-          color: '#f9fafb !important'
-        }}
-      >
+      <div className="min-h-screen flex w-full bg-background text-foreground">
         <AppSidebar />
         <main className="flex-1 flex flex-col">
           <DashboardHeader title={title} breadcrumb={breadcrumb} />
-          <div 
-            className="flex-1 bg-background"
-            style={{ 
-              backgroundColor: '#111827 !important',
-              color: '#f9fafb !important'
-            }}
-          >
+          <div className="flex-1 bg-background text-foreground">
             {children}
           </div>
         </main>

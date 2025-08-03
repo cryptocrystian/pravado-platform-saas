@@ -125,7 +125,7 @@ export function DashboardContent() {
             >
               <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between">
                 <div className="animate-fade-in">
-                  <h1 className="text-3xl lg:text-4xl font-bold mb-2">
+                  <h1 className="text-3xl lg:text-4xl font-bold mb-2" style={{ color: '#ff0000' }}>
                     Welcome back, {userName}!
                   </h1>
                   <p className="text-lg text-purple-100">Ready to accelerate your marketing success?</p>
@@ -209,8 +209,8 @@ export function DashboardContent() {
             {/* Three Column Layout - Mobile Responsive */}
             <div className="grid grid-cols-1 lg:grid-cols-3 gap-4 lg:gap-6">
               {/* Quick Actions */}
-              <Card className="p-4 lg:p-6 bg-[#f8fafc] border border-[#e2e8f0] hover:shadow-xl transition-all duration-300 hover:-translate-y-1 animate-fade-in">
-                <h3 className="text-lg font-semibold text-[#1e293b] mb-4">Quick Actions</h3>
+              <Card className="p-4 lg:p-6 bg-card border border-border hover:shadow-xl transition-all duration-300 hover:-translate-y-1 animate-fade-in">
+                <h3 className="text-lg font-semibold text-foreground mb-4">Quick Actions</h3>
                 <div className="space-y-3">
                   <div className="w-full">
                     <CreateCampaignModal onCampaignCreated={refetchCampaigns} />
@@ -246,9 +246,9 @@ export function DashboardContent() {
               </Card>
 
               {/* Recent Campaigns with AUTOMATE Status */}
-              <Card className="p-4 lg:p-6 bg-[#f8fafc] border border-[#e2e8f0] hover:shadow-xl transition-all duration-300 hover:-translate-y-1 animate-fade-in" style={{ animationDelay: '100ms' }}>
+              <Card className="p-4 lg:p-6 bg-card border border-border hover:shadow-xl transition-all duration-300 hover:-translate-y-1 animate-fade-in" style={{ animationDelay: '100ms' }}>
                 <div className="flex items-center justify-between mb-4">
-                  <h3 className="text-lg font-semibold text-[#1e293b]">Recent Campaigns</h3>
+                  <h3 className="text-lg font-semibold text-foreground">Recent Campaigns</h3>
                   <Link to="/campaigns">
                     <Button variant="ghost" size="sm" className="text-enterprise-blue hover:text-enterprise-blue/80">
                       <span className="hidden sm:inline">View All</span>
@@ -296,10 +296,10 @@ export function DashboardContent() {
               </Card>
 
               {/* Recent Activity with AUTOMATE Integration */}
-              <Card className="p-4 lg:p-6 bg-[#f8fafc] border border-[#e2e8f0] hover:shadow-xl transition-all duration-300 hover:-translate-y-1 animate-fade-in" style={{ animationDelay: '200ms' }}>
+              <Card className="p-4 lg:p-6 bg-card border border-border hover:shadow-xl transition-all duration-300 hover:-translate-y-1 animate-fade-in" style={{ animationDelay: '200ms' }}>
                 <div className="flex items-center space-x-2 mb-4">
                   <Clock className="h-5 w-5 text-enterprise-blue" />
-                  <h3 className="text-lg font-semibold text-[#1e293b]">Recent Activity</h3>
+                  <h3 className="text-lg font-semibold text-foreground">Recent Activity</h3>
                 </div>
                 <div className="space-y-3">
                   {getRecentActivities().map((activity, index) => (
