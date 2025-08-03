@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en" class="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dark Mode Debug</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    colors: {
+                        background: 'hsl(var(--background))',
+                        foreground: 'hsl(var(--foreground))',
+                        card: 'hsl(var(--card))',
+                        'card-foreground': 'hsl(var(--card-foreground))',
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        :root {
+            --background: 0 0% 100%;
+            --foreground: 220 9% 25%;
+            --card: 0 0% 100%;
+            --card-foreground: 220 9% 25%;
+        }
+        
+        .dark {
+            --background: 210 40% 11%;
+            --foreground: 210 20% 98%;
+            --card: 210 40% 18%;
+            --card-foreground: 210 20% 98%;
+        }
+    </style>
+</head>
+<body class="bg-background text-foreground">
+    <div class="min-h-screen p-8">
+        <h1 class="text-2xl font-bold mb-4">Dark Mode Debug Test</h1>
+        <div class="bg-card text-card-foreground p-6 rounded-lg">
+            <h2 class="text-xl mb-2">Card Component</h2>
+            <p>This should be dark if dark mode is working.</p>
+            <div class="mt-4">
+                <div class="bg-background text-foreground p-4 rounded">
+                    Background color test
+                </div>
+            </div>
+        </div>
+        
+        <script>
+            console.log('HTML class:', document.documentElement.className);
+            console.log('Body computed background:', window.getComputedStyle(document.body).backgroundColor);
+            
+            const bgVar = getComputedStyle(document.documentElement).getPropertyValue('--background');
+            console.log('CSS Variable --background:', bgVar);
+        </script>
+    </div>
+</body>
+</html>

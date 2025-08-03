@@ -7,107 +7,113 @@
 
 @layer base {
   :root {
-    /* ===== SOPHISTICATED GRAYSCALE FOUNDATION (20+ shades) ===== */
+    /* ===== SOPHISTICATED GRAYSCALE FOUNDATION (HSL format) ===== */
     /* Pure whites and near-whites */
-    --white: #ffffff;
-    --gray-25: #fafbfc;          /* Subtle background variations */
-    --gray-50: #f5f6f7;          /* Light section backgrounds */
-    --gray-75: #f0f1f3;          /* Card hover states */
-    --gray-100: #ebedf0;         /* Subtle borders and dividers */
+    --white: 0 0% 100%;
+    --gray-0: 0 0% 100%;         /* Pure white */
+    --gray-25: 220 14% 98%;      /* Subtle background variations */
+    --gray-50: 220 14% 96%;      /* Light section backgrounds */
+    --gray-75: 220 9% 97%;       /* Card hover states */
+    --gray-100: 220 13% 94%;     /* Subtle borders and dividers */
     
     /* Medium Light Grays (UI Elements) */
-    --gray-200: #dfe2e6;         /* Input borders, inactive states */
-    --gray-250: #d4d7dc;         /* Disabled element backgrounds */
-    --gray-300: #c8ccd2;         /* Placeholder text, secondary borders */
-    --gray-350: #bcc1c8;         /* Secondary UI elements */
+    --gray-150: 220 13% 92%;     /* Between 100 and 200 */
+    --gray-200: 220 13% 89%;     /* Input borders, inactive states */
+    --gray-250: 220 10% 85%;     /* Disabled element backgrounds */
+    --gray-300: 220 9% 80%;      /* Placeholder text, secondary borders */
+    --gray-350: 220 8% 75%;      /* Secondary UI elements */
     
     /* Medium Grays (Text & Interactive Elements) */
-    --gray-400: #9ca3af;         /* Secondary text, form labels */
-    --gray-450: #8b92a5;         /* Tertiary text */
-    --gray-500: #6b7280;         /* Body text, icons */
-    --gray-550: #5d646f;         /* Medium emphasis text */
-    --gray-600: #4f565e;         /* High emphasis secondary text */
+    --gray-400: 220 9% 68%;      /* Secondary text, form labels */
+    --gray-450: 220 9% 60%;      /* Tertiary text */
+    --gray-500: 220 9% 45%;      /* Body text, icons */
+    --gray-550: 220 9% 40%;      /* Medium emphasis text */
+    --gray-600: 220 9% 35%;      /* High emphasis secondary text */
     
     /* Dark Grays (Primary Text & UI) */
-    --gray-700: #374151;         /* Primary text color */
-    --gray-750: #2d3748;         /* Strong emphasis text */
-    --gray-800: #1f2937;         /* Headers, navigation */
-    --gray-850: #1a202c;         /* Dark mode backgrounds */
-    --gray-900: #111827;         /* Darkest text, dark mode elements */
-    --gray-950: #0f1114;         /* Darkest backgrounds */
+    --gray-650: 220 13% 32%;     /* Between 600 and 700 */
+    --gray-700: 220 13% 25%;     /* Primary text color */
+    --gray-750: 220 15% 22%;     /* Strong emphasis text */
+    --gray-800: 220 13% 18%;     /* Headers, navigation */
+    --gray-850: 220 15% 15%;     /* Dark mode backgrounds */
+    --gray-900: 220 13% 11%;     /* Darkest text, dark mode elements */
+    --gray-925: 220 13% 8%;      /* Between 900 and 950 */
+    --gray-950: 220 13% 5%;      /* Darkest backgrounds */
+    --gray-975: 220 13% 3%;      /* Near black */
+    --gray-1000: 0 0% 0%;        /* Pure black */
     
     /* Warm Grays (AI & Intelligence Elements) */
-    --warm-gray-50: #faf9f7;     /* Warm light backgrounds */
-    --warm-gray-100: #f5f4f1;    /* AI insight backgrounds */
-    --warm-gray-200: #e8e6e1;    /* AI element borders */
-    --warm-gray-300: #d6d3ce;    /* AI secondary elements */
-    --warm-gray-400: #a8a29e;    /* AI text elements */
-    --warm-gray-500: #78716c;    /* AI body text */
-    --warm-gray-600: #57534e;    /* AI emphasis text */
-    --warm-gray-700: #44403c;    /* AI headers */
+    --warm-gray-50: 30 20% 98%;   /* Warm light backgrounds */
+    --warm-gray-100: 30 14% 96%;  /* AI insight backgrounds */
+    --warm-gray-200: 30 12% 90%;  /* AI element borders */
+    --warm-gray-300: 30 10% 82%;  /* AI secondary elements */
+    --warm-gray-400: 30 8% 65%;   /* AI text elements */
+    --warm-gray-500: 30 8% 45%;   /* AI body text */
+    --warm-gray-600: 30 10% 32%;  /* AI emphasis text */
+    --warm-gray-700: 30 12% 25%;  /* AI headers */
     
     /* Cool Grays (Technical & Data Elements) */
-    --cool-gray-50: #f8fafc;     /* Technical backgrounds */
-    --cool-gray-100: #f1f5f9;    /* Data visualization backgrounds */
-    --cool-gray-200: #e2e8f0;    /* Chart grid lines */
-    --cool-gray-300: #cbd5e1;    /* Data element borders */
-    --cool-gray-400: #94a3b8;    /* Data labels */
-    --cool-gray-500: #64748b;    /* Chart text */
-    --cool-gray-600: #475569;    /* Data emphasis */
-    --cool-gray-700: #334155;    /* Data headers */
+    --cool-gray-50: 210 40% 98%;  /* Technical backgrounds */
+    --cool-gray-100: 214 32% 95%; /* Data visualization backgrounds */
+    --cool-gray-200: 214 32% 89%; /* Chart grid lines */
+    --cool-gray-300: 215 28% 82%; /* Data element borders */
+    --cool-gray-400: 215 20% 68%; /* Data labels */
+    --cool-gray-500: 215 25% 58%; /* Chart text */
+    --cool-gray-600: 215 25% 35%; /* Data emphasis */
+    --cool-gray-700: 215 25% 27%; /* Data headers */
 
-    /* ===== PRAVADO BRAND COLORS (AI Intelligence) ===== */
+    /* ===== PRAVADO BRAND COLORS (AI Intelligence - HSL) ===== */
     /* PRAVADO Purple (AI Intelligence) */
-    --pravado-purple-50: #faf7ff;
-    --pravado-purple-100: #f0e8ff;
-    --pravado-purple-200: #e0d1ff;
-    --pravado-purple-300: #c7a7ff;
-    --pravado-purple-400: #a673ff;
-    --pravado-purple-500: #8b5cf6;    /* Primary brand color */
-    --pravado-purple-600: #7c3aed;    /* Interactive elements */
-    --pravado-purple-700: #6d28d9;    /* Active states */
-    --pravado-purple-800: #5b21b6;    /* Dark mode accents */
-    --pravado-purple-900: #4c1d95;    /* Deepest purple */
+    --pravado-purple-50: 270 100% 98%;   /* Near white with purple hint */
+    --pravado-purple-100: 270 100% 95%;  /* Very light purple */
+    --pravado-purple-200: 270 100% 90%;  /* Light purple */
+    --pravado-purple-300: 270 100% 82%;  /* Medium light purple */
+    --pravado-purple-400: 270 100% 75%;  /* Medium purple */
+    --pravado-purple-500: 255 91% 67%;   /* Primary brand color */
+    --pravado-purple-600: 255 91% 67%;   /* Interactive elements */
+    --pravado-purple-700: 255 87% 63%;   /* Active states */
+    --pravado-purple-800: 255 83% 58%;   /* Dark mode accents */
+    --pravado-purple-900: 255 78% 52%;   /* Deepest purple */
     
     /* Success Green (Achievements & Positive Metrics) */
-    --success-50: #f0fdf4;
-    --success-100: #dcfce7;
-    --success-200: #bbf7d0;
-    --success-300: #86efac;
-    --success-400: #4ade80;
-    --success-500: #22c55e;     /* Primary success color */
-    --success-600: #16a34a;     /* Success emphasis */
-    --success-700: #15803d;     /* Success dark states */
+    --success-50: 142 76% 97%;   /* Very light green */
+    --success-100: 142 71% 92%;  /* Light green */
+    --success-200: 142 69% 85%;  /* Medium light green */
+    --success-300: 142 64% 75%;  /* Medium green */
+    --success-400: 142 69% 68%;  /* Medium strong green */
+    --success-500: 142 71% 45%;  /* Primary success color */
+    --success-600: 142 76% 36%;  /* Success emphasis */
+    --success-700: 142 72% 29%;  /* Success dark states */
     
     /* Alert Red (Urgent Opportunities & Critical Actions) */
-    --alert-50: #fef2f2;
-    --alert-100: #fee2e2;
-    --alert-200: #fecaca;
-    --alert-300: #fca5a5;
-    --alert-400: #f87171;
-    --alert-500: #ef4444;       /* Primary alert color */
-    --alert-600: #dc2626;       /* Alert emphasis */
-    --alert-700: #b91c1c;       /* Alert dark states */
+    --alert-50: 0 86% 97%;       /* Very light red */
+    --alert-100: 0 93% 94%;      /* Light red */
+    --alert-200: 0 96% 89%;      /* Medium light red */
+    --alert-300: 0 94% 82%;      /* Medium red */
+    --alert-400: 0 91% 71%;      /* Medium strong red */
+    --alert-500: 0 84% 60%;      /* Primary alert color */
+    --alert-600: 0 72% 51%;      /* Alert emphasis */
+    --alert-700: 0 74% 42%;      /* Alert dark states */
     
     /* Warning Orange (Review Needed & Medium Priority) */
-    --warning-50: #fffbeb;
-    --warning-100: #fef3c7;
-    --warning-200: #fde68a;
-    --warning-300: #fcd34d;
-    --warning-400: #fbbf24;
-    --warning-500: #f59e0b;     /* Primary warning color */
-    --warning-600: #d97706;     /* Warning emphasis */
-    --warning-700: #b45309;     /* Warning dark states */
+    --warning-50: 48 100% 96%;   /* Very light orange */
+    --warning-100: 48 96% 89%;   /* Light orange */
+    --warning-200: 48 97% 77%;   /* Medium light orange */
+    --warning-300: 45 93% 66%;   /* Medium orange */
+    --warning-400: 43 96% 56%;   /* Medium strong orange */
+    --warning-500: 38 92% 50%;   /* Primary warning color */
+    --warning-600: 32 95% 44%;   /* Warning emphasis */
+    --warning-700: 26 90% 37%;   /* Warning dark states */
     
     /* Intelligence Blue (Data & Analytics) */
-    --intelligence-50: #eff6ff;
-    --intelligence-100: #dbeafe;
-    --intelligence-200: #bfdbfe;
-    --intelligence-300: #93c5fd;
-    --intelligence-400: #60a5fa;
-    --intelligence-500: #3b82f6;  /* Primary intelligence color */
-    --intelligence-600: #2563eb;  /* Intelligence emphasis */
-    --intelligence-700: #1d4ed8;  /* Intelligence dark states */
+    --intelligence-50: 214 100% 97%;  /* Very light blue */
+    --intelligence-100: 214 95% 93%;  /* Light blue */
+    --intelligence-200: 213 97% 87%;  /* Medium light blue */
+    --intelligence-300: 212 96% 78%;  /* Medium blue */
+    --intelligence-400: 213 93% 68%;  /* Medium strong blue */
+    --intelligence-500: 217 91% 60%;  /* Primary intelligence color */
+    --intelligence-600: 221 83% 53%;  /* Intelligence emphasis */
+    --intelligence-700: 224 76% 48%;  /* Intelligence dark states */
 
     /* ===== SHADOW & DEPTH SYSTEM ===== */
     /* Subtle Depth (Cards, Panels) */
