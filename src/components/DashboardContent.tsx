@@ -110,15 +110,15 @@ export function DashboardContent() {
 
   return (
     <MobileOptimizer>
-      <div className="flex-1 bg-[#f1f5f9] min-h-screen">
+      <div className="flex-1 bg-background min-h-screen">
         {/* Hero Section */}
-        <div className="bg-gradient-to-r from-accent to-enterprise-blue text-white p-4 lg:p-8 shadow-lg">
+        <div className="bg-gradient-to-r from-pravado-purple-600 to-pravado-purple-700 text-white p-4 lg:p-8 shadow-lg">
           <div className="max-w-7xl mx-auto">
             <MobileOptimizer
               mobileLayout={
                 <div className="text-center">
                   <h1 className="text-2xl font-bold mb-2">Welcome back!</h1>
-                  <p className="text-sm text-blue-100 mb-4">{userName}</p>
+                  <p className="text-sm text-purple-100 mb-4">{userName}</p>
                   <CreateCampaignModal onCampaignCreated={refetchCampaigns} />
                 </div>
               }
@@ -128,9 +128,9 @@ export function DashboardContent() {
                   <h1 className="text-3xl lg:text-4xl font-bold mb-2">
                     Welcome back, {userName}!
                   </h1>
-                  <p className="text-lg text-blue-100">Ready to accelerate your marketing success?</p>
+                  <p className="text-lg text-purple-100">Ready to accelerate your marketing success?</p>
                   {workspaceName && (
-                    <p className="text-sm text-blue-200 mt-1">Working in: {workspaceName}</p>
+                    <p className="text-sm text-purple-200 mt-1">Working in: {workspaceName}</p>
                   )}
                 </div>
                 <div className="mt-6 lg:mt-0 animate-fade-in" style={{ animationDelay: '200ms' }}>
@@ -146,7 +146,7 @@ export function DashboardContent() {
           <div className="max-w-7xl mx-auto">
             {/* Performance Metrics */}
             <div className="mb-8">
-              <h2 className="text-xl lg:text-2xl font-bold text-[#1e293b] mb-4 lg:mb-6 animate-fade-in">
+              <h2 className="text-xl lg:text-2xl font-bold text-foreground mb-4 lg:mb-6 animate-fade-in">
                 Performance Overview
               </h2>
               <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 lg:gap-6">

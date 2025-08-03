@@ -40,13 +40,13 @@ export function MetricCard({
       case 'down':
         return 'text-red-600';
       default:
-        return 'text-professional-gray';
+        return 'text-foreground';
     }
   };
 
   return (
     <Card 
-      className={`p-6 bg-white border-l-4 transition-all duration-200 hover:shadow-lg hover:-translate-y-0.5 animate-fade-in cursor-pointer focus:outline-none focus:ring-2 focus:ring-enterprise-blue focus:ring-offset-2`} 
+      className={`p-6 bg-card border-l-4 transition-all duration-200 hover:shadow-lg hover:-translate-y-0.5 animate-fade-in cursor-pointer focus:outline-none focus:ring-2 focus:ring-pravado-purple focus:ring-offset-2`} 
       style={{ borderLeftColor: accentColor }}
       tabIndex={0}
       role="button"
@@ -54,7 +54,7 @@ export function MetricCard({
     >
       <div className="flex items-center justify-between mb-4">
         <Icon 
-          className="h-8 w-8 text-professional-gray transition-colors duration-200" 
+          className="h-8 w-8 text-foreground-muted transition-colors duration-200" 
           aria-hidden="true"
         />
         <div className={`text-3xl font-bold transition-all duration-300 ${getTrendColor()}`}>
@@ -64,8 +64,8 @@ export function MetricCard({
           {getTrendIcon()}
         </div>
       </div>
-      <h3 className="text-lg font-semibold text-professional-gray mb-1">{title}</h3>
-      <p className="text-sm text-gray-500">{description}</p>
+      <h3 className="text-lg font-semibold text-foreground mb-1">{title}</h3>
+      <p className="text-sm text-foreground-subtle">{description}</p>
     </Card>
   );
 }

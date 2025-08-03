@@ -240,43 +240,89 @@
     --status-info: var(--intelligence-500);
   }
 
-  /* ===== DARK THEME ===== */
+  /* ===== SOPHISTICATED DARK THEME ===== */
   .dark {
-    /* Dark Mode Backgrounds */
-    --background: var(--gray-900);
-    --background-subtle: var(--gray-850);
+    /* Dark Mode Foundations - Specified Colors */
+    --background: 210 40% 11%;           /* #111827 - Main background (darkest) */
+    --background-subtle: 210 40% 15%;    /* Enhanced subtle background */
     
-    /* Dark Mode Cards */
-    --card: var(--gray-850);
-    --card-foreground: var(--gray-100);
+    /* Dark Mode Content Areas */
+    --card: 210 40% 18%;                 /* #1f2937 - Content areas (dark gray) */
+    --card-foreground: 210 20% 98%;      /* #f9fafb - Near white text */
     
-    /* Dark Mode Text */
-    --foreground: var(--gray-100);
-    --foreground-muted: var(--gray-300);
-    --foreground-subtle: var(--gray-400);
+    /* Dark Mode Card/Panel Variations */
+    --card-elevated: 210 40% 22%;        /* #374151 - Cards/panels (medium dark) */
+    --card-interactive: 210 40% 25%;     /* Interactive card hover states */
     
-    /* Dark Mode Borders */
-    --border: var(--gray-700);
-    --border-strong: var(--gray-600);
-    --border-subtle: var(--gray-750);
+    /* Dark Mode Text Hierarchy */
+    --foreground: 210 20% 98%;           /* #f9fafb - Primary text (near white) */
+    --foreground-secondary: 210 16% 93%; /* #e5e7eb - Secondary text (light gray) */
+    --foreground-muted: 210 14% 83%;     /* #d1d5db - Enhanced muted text */
+    --foreground-subtle: 220 14% 68%;    /* #9ca3af - Muted text (medium gray) */
+    
+    /* Dark Mode Borders - Specified Colors */
+    --border: 210 18% 30%;               /* #4b5563 - Lighter gray for definition */
+    --border-strong: 210 16% 35%;        /* Stronger border emphasis */
+    --border-subtle: 210 40% 20%;        /* Subtle border variation */
     
     /* Dark Mode Form Elements */
-    --input: var(--gray-700);
-    --popover: var(--gray-800);
-    --popover-foreground: var(--gray-100);
+    --input: 210 40% 18%;                /* Input background matches content areas */
+    --input-border: 210 18% 30%;         /* Input border matches main border */
+    --popover: 210 40% 15%;              /* Popover background */
+    --popover-foreground: 210 20% 98%;   /* Popover text */
     
     /* Dark Mode Interactive Elements */
-    --muted: var(--gray-800);
-    --muted-foreground: var(--gray-400);
-    --accent: var(--gray-800);
-    --accent-foreground: var(--gray-100);
-    --secondary: var(--gray-800);
-    --secondary-foreground: var(--gray-100);
+    --muted: 210 40% 15%;                /* Muted background */
+    --muted-foreground: 220 14% 68%;     /* Muted text */
+    --accent: 210 40% 18%;               /* Accent background */
+    --accent-foreground: 210 20% 98%;    /* Accent text */
+    --secondary: 210 40% 18%;            /* Secondary background */
+    --secondary-foreground: 210 20% 98%; /* Secondary text */
     
-    /* Adjusted Shadows for Dark Mode */
-    --shadow-sm: 0 1px 3px 0 rgba(0, 0, 0, 0.3);
-    --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.4);
-    --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.4);
+    /* AI Purple Accents - Perfect for Dark Mode */
+    --pravado-purple-600: 255 91% 67%;   /* #8b5cf6 - AI elements (works in dark mode) */
+    --pravado-purple-700: 255 87% 63%;   /* Slightly adjusted for dark mode */
+    
+    /* Enhanced Dark Shadows - Sophisticated Depth */
+    --shadow-xs: 0 1px 2px 0 rgba(0, 0, 0, 0.15);
+    --shadow-sm: 0 1px 3px 0 rgba(0, 0, 0, 0.25), 
+                 0 1px 2px 0 rgba(0, 0, 0, 0.15);
+    --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.35), 
+                 0 2px 4px -1px rgba(0, 0, 0, 0.25);
+    --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.45), 
+                 0 4px 6px -2px rgba(0, 0, 0, 0.35);
+    --shadow-xl: 0 20px 25px -5px rgba(0, 0, 0, 0.55), 
+                 0 10px 10px -5px rgba(0, 0, 0, 0.25);
+                 
+    /* Premium Dark Shadows */
+    --shadow-premium: 0 8px 32px 0 rgba(0, 0, 0, 0.4);
+    --shadow-premium-hover: 0 12px 40px 0 rgba(0, 0, 0, 0.5);
+    
+    /* AI-Specific Dark Shadows */
+    --shadow-purple: 0 4px 14px 0 rgba(139, 92, 246, 0.25);
+    --shadow-purple-lg: 0 10px 30px 0 rgba(139, 92, 246, 0.35);
+    --glow-ai: 0 0 20px rgba(139, 92, 246, 0.4);
+  }
+  
+  /* Dark Mode Utility Overrides */
+  .dark .card-primary {
+    @apply bg-gray-850 border-gray-700;
+  }
+  
+  .dark .card-primary:hover {
+    @apply bg-gray-800 border-gray-600;
+  }
+  
+  .dark .text-primary {
+    color: hsl(210 20% 98%);  /* #f9fafb */
+  }
+  
+  .dark .text-secondary {
+    color: hsl(210 16% 93%);  /* #e5e7eb */
+  }
+  
+  .dark .text-tertiary {
+    color: hsl(220 14% 68%);  /* #9ca3af */
   }
 }
 
