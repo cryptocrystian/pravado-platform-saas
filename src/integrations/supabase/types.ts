@@ -7,8 +7,151 @@ export type Json =
   | Json[]
 
 export type Database = {
+  // Allows to automatically instanciate createClient with right options
+  // instead of createClient<Database, { PostgrestVersion: 'XX' }>(URL, KEY)
+  __InternalSupabase: {
+    PostgrestVersion: "12.2.3 (519615d)"
+  }
   public: {
     Tables: {
+      ai_citation_queries: {
+        Row: {
+          avg_confidence_score: number | null
+          avg_sentiment_score: number | null
+          created_at: string | null
+          created_by: string | null
+          execution_count: number | null
+          frequency: string | null
+          id: string
+          last_executed_at: string | null
+          next_execution_at: string | null
+          platforms: string[] | null
+          query_text: string
+          status: string | null
+          target_keywords: string[] | null
+          tenant_id: string
+          total_citations_found: number | null
+          updated_at: string | null
+        }
+        Insert: {
+          avg_confidence_score?: number | null
+          avg_sentiment_score?: number | null
+          created_at?: string | null
+          created_by?: string | null
+          execution_count?: number | null
+          frequency?: string | null
+          id?: string
+          last_executed_at?: string | null
+          next_execution_at?: string | null
+          platforms?: string[] | null
+          query_text: string
+          status?: string | null
+          target_keywords?: string[] | null
+          tenant_id: string
+          total_citations_found?: number | null
+          updated_at?: string | null
+        }
+        Update: {
+          avg_confidence_score?: number | null
+          avg_sentiment_score?: number | null
+          created_at?: string | null
+          created_by?: string | null
+          execution_count?: number | null
+          frequency?: string | null
+          id?: string
+          last_executed_at?: string | null
+          next_execution_at?: string | null
+          platforms?: string[] | null
+          query_text?: string
+          status?: string | null
+          target_keywords?: string[] | null
+          tenant_id?: string
+          total_citations_found?: number | null
+          updated_at?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "ai_citation_queries_created_by_fkey"
+            columns: ["created_by"]
+            isOneToOne: false
+            referencedRelation: "user_profiles"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "ai_citation_queries_tenant_id_fkey"
+            columns: ["tenant_id"]
+            isOneToOne: false
+            referencedRelation: "tenants"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      ai_citation_results: {
+        Row: {
+          citations_found: string[] | null
+          confidence_score: number | null
+          context_relevance: number | null
+          created_at: string | null
+          id: string
+          model_used: string | null
+          platform: string
+          query_id: string | null
+          query_text: string
+          query_timestamp: string
+          response_text: string | null
+          response_time_ms: number | null
+          sentiment_score: number | null
+          tenant_id: string
+        }
+        Insert: {
+          citations_found?: string[] | null
+          confidence_score?: number | null
+          context_relevance?: number | null
+          created_at?: string | null
+          id?: string
+          model_used?: string | null
+          platform: string
+          query_id?: string | null
+          query_text: string
+          query_timestamp: string
+          response_text?: string | null
+          response_time_ms?: number | null
+          sentiment_score?: number | null
+          tenant_id: string
+        }
+        Update: {
+          citations_found?: string[] | null
+          confidence_score?: number | null
+          context_relevance?: number | null
+          created_at?: string | null
+          id?: string
+          model_used?: string | null
+          platform?: string
+          query_id?: string | null
+          query_text?: string
+          query_timestamp?: string
+          response_text?: string | null
+          response_time_ms?: number | null
+          sentiment_score?: number | null
+          tenant_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "ai_citation_results_query_id_fkey"
+            columns: ["query_id"]
+            isOneToOne: false
+            referencedRelation: "ai_citation_queries"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "ai_citation_results_tenant_id_fkey"
+            columns: ["tenant_id"]
+            isOneToOne: false
+            referencedRelation: "tenants"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       ai_platform_citations: {
         Row: {
           citation_context: string | null
@@ -322,8 +465,85 @@ export type Database = {
           },
         ]
       }
+      campaign_journalist_relationships: {
+        Row: {
+          actual_response_time_hours: number | null
+          authority_score_at_selection: number | null
+          campaign_id: string | null
+          created_at: string | null
+          id: string
+          journalist_id: string | null
+          notes: string | null
+          outcome: string | null
+          outreach_date: string | null
+          predicted_success_rate: number | null
+          relationship_score_at_selection: number | null
+          response_date: string | null
+          status: string | null
+          tenant_id: string | null
+          updated_at: string | null
+        }
+        Insert: {
+          actual_response_time_hours?: number | null
+          authority_score_at_selection?: number | null
+          campaign_id?: string | null
+          created_at?: string | null
+          id?: string
+          journalist_id?: string | null
+          notes?: string | null
+          outcome?: string | null
+          outreach_date?: string | null
+          predicted_success_rate?: number | null
+          relationship_score_at_selection?: number | null
+          response_date?: string | null
+          status?: string | null
+          tenant_id?: string | null
+          updated_at?: string | null
+        }
+        Update: {
+          actual_response_time_hours?: number | null
+          authority_score_at_selection?: number | null
+          campaign_id?: string | null
+          created_at?: string | null
+          id?: string
+          journalist_id?: string | null
+          notes?: string | null
+          outcome?: string | null
+          outreach_date?: string | null
+          predicted_success_rate?: number | null
+          relationship_score_at_selection?: number | null
+          response_date?: string | null
+          status?: string | null
+          tenant_id?: string | null
+          updated_at?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "campaign_journalist_relationships_campaign_id_fkey"
+            columns: ["campaign_id"]
+            isOneToOne: false
+            referencedRelation: "campaigns"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "campaign_journalist_relationships_journalist_id_fkey"
+            columns: ["journalist_id"]
+            isOneToOne: false
+            referencedRelation: "journalist_contacts"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "campaign_journalist_relationships_tenant_id_fkey"
+            columns: ["tenant_id"]
+            isOneToOne: false
+            referencedRelation: "tenants"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       campaigns: {
         Row: {
+          ai_intelligence: Json | null
           budget: number | null
           campaign_type: string
           created_at: string
@@ -340,6 +560,7 @@ export type Database = {
           updated_at: string
         }
         Insert: {
+          ai_intelligence?: Json | null
           budget?: number | null
           campaign_type: string
           created_at?: string
@@ -356,6 +577,7 @@ export type Database = {
           updated_at?: string
         }
         Update: {
+          ai_intelligence?: Json | null
           budget?: number | null
           campaign_type?: string
           created_at?: string
@@ -381,8 +603,65 @@ export type Database = {
           },
         ]
       }
+      citation_analytics: {
+        Row: {
+          avg_confidence_score: number | null
+          avg_sentiment_score: number | null
+          citations_found: number | null
+          created_at: string | null
+          date_recorded: string
+          id: string
+          negative_mentions: number | null
+          neutral_mentions: number | null
+          platform: string
+          positive_mentions: number | null
+          tenant_id: string
+          total_queries: number | null
+          updated_at: string | null
+        }
+        Insert: {
+          avg_confidence_score?: number | null
+          avg_sentiment_score?: number | null
+          citations_found?: number | null
+          created_at?: string | null
+          date_recorded: string
+          id?: string
+          negative_mentions?: number | null
+          neutral_mentions?: number | null
+          platform: string
+          positive_mentions?: number | null
+          tenant_id: string
+          total_queries?: number | null
+          updated_at?: string | null
+        }
+        Update: {
+          avg_confidence_score?: number | null
+          avg_sentiment_score?: number | null
+          citations_found?: number | null
+          created_at?: string | null
+          date_recorded?: string
+          id?: string
+          negative_mentions?: number | null
+          neutral_mentions?: number | null
+          platform?: string
+          positive_mentions?: number | null
+          tenant_id?: string
+          total_queries?: number | null
+          updated_at?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "citation_analytics_tenant_id_fkey"
+            columns: ["tenant_id"]
+            isOneToOne: false
+            referencedRelation: "tenants"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       content_pieces: {
         Row: {
+          campaign_id: string | null
           comment_count: number | null
           content_body: string | null
           content_type: string
@@ -401,6 +680,7 @@ export type Database = {
           view_count: number | null
         }
         Insert: {
+          campaign_id?: string | null
           comment_count?: number | null
           content_body?: string | null
           content_type?: string
@@ -419,6 +699,7 @@ export type Database = {
           view_count?: number | null
         }
         Update: {
+          campaign_id?: string | null
           comment_count?: number | null
           content_body?: string | null
           content_type?: string
@@ -438,10 +719,181 @@ export type Database = {
         }
         Relationships: [
           {
+            foreignKeyName: "content_pieces_campaign_id_fkey"
+            columns: ["campaign_id"]
+            isOneToOne: false
+            referencedRelation: "campaigns"
+            referencedColumns: ["id"]
+          },
+          {
             foreignKeyName: "content_pieces_tenant_id_fkey"
             columns: ["tenant_id"]
             isOneToOne: false
             referencedRelation: "tenants"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      cross_platform_intelligence: {
+        Row: {
+          ai_learning_data: Json | null
+          campaign_response_history: Json | null
+          created_at: string | null
+          cross_platform_insights: Json | null
+          id: string
+          journalist_first_activity: Json | null
+          journalist_id: string | null
+          last_updated: string | null
+          outreach_success_patterns: Json | null
+          pravado_interactions: Json | null
+          proactive_recommendations: Json | null
+          query_patterns: Json | null
+          source_preferences: Json | null
+          unified_relationship_score: number | null
+        }
+        Insert: {
+          ai_learning_data?: Json | null
+          campaign_response_history?: Json | null
+          created_at?: string | null
+          cross_platform_insights?: Json | null
+          id?: string
+          journalist_first_activity?: Json | null
+          journalist_id?: string | null
+          last_updated?: string | null
+          outreach_success_patterns?: Json | null
+          pravado_interactions?: Json | null
+          proactive_recommendations?: Json | null
+          query_patterns?: Json | null
+          source_preferences?: Json | null
+          unified_relationship_score?: number | null
+        }
+        Update: {
+          ai_learning_data?: Json | null
+          campaign_response_history?: Json | null
+          created_at?: string | null
+          cross_platform_insights?: Json | null
+          id?: string
+          journalist_first_activity?: Json | null
+          journalist_id?: string | null
+          last_updated?: string | null
+          outreach_success_patterns?: Json | null
+          pravado_interactions?: Json | null
+          proactive_recommendations?: Json | null
+          query_patterns?: Json | null
+          source_preferences?: Json | null
+          unified_relationship_score?: number | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "cross_platform_intelligence_journalist_id_fkey"
+            columns: ["journalist_id"]
+            isOneToOne: false
+            referencedRelation: "journalist_contacts"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      discovery_targets: {
+        Row: {
+          created_at: string | null
+          discovery_query: string | null
+          id: string
+          metadata: Json | null
+          source_url: string
+          status: string | null
+        }
+        Insert: {
+          created_at?: string | null
+          discovery_query?: string | null
+          id?: string
+          metadata?: Json | null
+          source_url: string
+          status?: string | null
+        }
+        Update: {
+          created_at?: string | null
+          discovery_query?: string | null
+          id?: string
+          metadata?: Json | null
+          source_url?: string
+          status?: string | null
+        }
+        Relationships: []
+      }
+      email_deliverability_tracking: {
+        Row: {
+          bounce_code: string | null
+          bounce_reason: string | null
+          bounce_type: string | null
+          clicked: boolean | null
+          created_at: string | null
+          delivery_provider: string | null
+          delivery_status: string
+          delivery_timestamp: string | null
+          email_address: string
+          forwarded: boolean | null
+          id: string
+          journalist_id: string | null
+          message_id: string | null
+          opened: boolean | null
+          outreach_session_id: string | null
+          replied: boolean | null
+          smtp_response: string | null
+          tenant_id: string
+        }
+        Insert: {
+          bounce_code?: string | null
+          bounce_reason?: string | null
+          bounce_type?: string | null
+          clicked?: boolean | null
+          created_at?: string | null
+          delivery_provider?: string | null
+          delivery_status: string
+          delivery_timestamp?: string | null
+          email_address: string
+          forwarded?: boolean | null
+          id?: string
+          journalist_id?: string | null
+          message_id?: string | null
+          opened?: boolean | null
+          outreach_session_id?: string | null
+          replied?: boolean | null
+          smtp_response?: string | null
+          tenant_id: string
+        }
+        Update: {
+          bounce_code?: string | null
+          bounce_reason?: string | null
+          bounce_type?: string | null
+          clicked?: boolean | null
+          created_at?: string | null
+          delivery_provider?: string | null
+          delivery_status?: string
+          delivery_timestamp?: string | null
+          email_address?: string
+          forwarded?: boolean | null
+          id?: string
+          journalist_id?: string | null
+          message_id?: string | null
+          opened?: boolean | null
+          outreach_session_id?: string | null
+          replied?: boolean | null
+          smtp_response?: string | null
+          tenant_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "email_deliverability_tracking_journalist_id_fkey"
+            columns: ["journalist_id"]
+            isOneToOne: false
+            referencedRelation: "journalist_contacts"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "email_deliverability_tracking_outreach_session_id_fkey"
+            columns: ["outreach_session_id"]
+            isOneToOne: false
+            referencedRelation: "journalist_outreach_sessions"
             referencedColumns: ["id"]
           },
         ]
@@ -505,75 +957,512 @@ export type Database = {
           },
         ]
       }
-      journalist_contacts: {
+      haro_analytics: {
         Row: {
-          beat: string
-          bio: string | null
+          average_match_confidence: number | null
+          coverage_secured: number | null
           created_at: string | null
-          email: string
-          first_name: string
+          date_period: string
           id: string
-          interaction_count: number | null
+          journalist_replies: number | null
+          requests_matched: number | null
+          responses_submitted: number | null
+          roi_score: number | null
+          success_rate: number | null
+          tenant_id: string | null
+          total_coverage_value: number | null
+          updated_at: string | null
+          user_id: string | null
+        }
+        Insert: {
+          average_match_confidence?: number | null
+          coverage_secured?: number | null
+          created_at?: string | null
+          date_period: string
+          id?: string
+          journalist_replies?: number | null
+          requests_matched?: number | null
+          responses_submitted?: number | null
+          roi_score?: number | null
+          success_rate?: number | null
+          tenant_id?: string | null
+          total_coverage_value?: number | null
+          updated_at?: string | null
+          user_id?: string | null
+        }
+        Update: {
+          average_match_confidence?: number | null
+          coverage_secured?: number | null
+          created_at?: string | null
+          date_period?: string
+          id?: string
+          journalist_replies?: number | null
+          requests_matched?: number | null
+          responses_submitted?: number | null
+          roi_score?: number | null
+          success_rate?: number | null
+          tenant_id?: string | null
+          total_coverage_value?: number | null
+          updated_at?: string | null
+          user_id?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "haro_analytics_tenant_id_fkey"
+            columns: ["tenant_id"]
+            isOneToOne: false
+            referencedRelation: "tenants"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      haro_matches: {
+        Row: {
+          ai_generated_response: string | null
+          coverage_date: string | null
+          coverage_secured: boolean | null
+          coverage_url: string | null
+          coverage_value: number | null
+          created_at: string | null
+          final_response: string | null
+          haro_request_id: string | null
+          id: string
+          journalist_replied: boolean | null
+          journalist_reply_at: string | null
+          match_confidence: number | null
+          match_reasons: string[] | null
+          response_status: string | null
+          submitted: boolean | null
+          submitted_at: string | null
+          tenant_id: string | null
+          updated_at: string | null
+          user_edited_response: string | null
+          user_expertise_profile_id: string | null
+          user_id: string | null
+        }
+        Insert: {
+          ai_generated_response?: string | null
+          coverage_date?: string | null
+          coverage_secured?: boolean | null
+          coverage_url?: string | null
+          coverage_value?: number | null
+          created_at?: string | null
+          final_response?: string | null
+          haro_request_id?: string | null
+          id?: string
+          journalist_replied?: boolean | null
+          journalist_reply_at?: string | null
+          match_confidence?: number | null
+          match_reasons?: string[] | null
+          response_status?: string | null
+          submitted?: boolean | null
+          submitted_at?: string | null
+          tenant_id?: string | null
+          updated_at?: string | null
+          user_edited_response?: string | null
+          user_expertise_profile_id?: string | null
+          user_id?: string | null
+        }
+        Update: {
+          ai_generated_response?: string | null
+          coverage_date?: string | null
+          coverage_secured?: boolean | null
+          coverage_url?: string | null
+          coverage_value?: number | null
+          created_at?: string | null
+          final_response?: string | null
+          haro_request_id?: string | null
+          id?: string
+          journalist_replied?: boolean | null
+          journalist_reply_at?: string | null
+          match_confidence?: number | null
+          match_reasons?: string[] | null
+          response_status?: string | null
+          submitted?: boolean | null
+          submitted_at?: string | null
+          tenant_id?: string | null
+          updated_at?: string | null
+          user_edited_response?: string | null
+          user_expertise_profile_id?: string | null
+          user_id?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "haro_matches_haro_request_id_fkey"
+            columns: ["haro_request_id"]
+            isOneToOne: false
+            referencedRelation: "haro_requests"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "haro_matches_tenant_id_fkey"
+            columns: ["tenant_id"]
+            isOneToOne: false
+            referencedRelation: "tenants"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "haro_matches_user_expertise_profile_id_fkey"
+            columns: ["user_expertise_profile_id"]
+            isOneToOne: false
+            referencedRelation: "user_expertise_profiles"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      haro_requests: {
+        Row: {
+          category: string | null
+          created_at: string | null
+          deadline: string | null
+          description: string
+          difficulty_score: number | null
+          expires_at: string | null
+          external_id: string | null
+          id: string
+          industry_tags: string[] | null
           is_active: boolean | null
-          last_contacted: string | null
-          last_name: string
-          linkedin_url: string | null
-          location: string | null
-          notes: string | null
-          outlet: string
-          phone: string | null
-          preferences: Json | null
-          relationship_score: number | null
-          tenant_id: string
-          title: string | null
-          twitter_handle: string | null
+          journalist_email: string | null
+          journalist_name: string | null
+          keywords: string[] | null
+          opportunity_score: number | null
+          outlet: string | null
+          requirements: string | null
+          source_url: string | null
+          subject: string
+          tenant_id: string | null
           updated_at: string | null
         }
         Insert: {
-          beat: string
-          bio?: string | null
+          category?: string | null
           created_at?: string | null
-          email: string
-          first_name: string
+          deadline?: string | null
+          description: string
+          difficulty_score?: number | null
+          expires_at?: string | null
+          external_id?: string | null
           id?: string
-          interaction_count?: number | null
+          industry_tags?: string[] | null
           is_active?: boolean | null
-          last_contacted?: string | null
-          last_name: string
-          linkedin_url?: string | null
-          location?: string | null
-          notes?: string | null
-          outlet: string
-          phone?: string | null
-          preferences?: Json | null
-          relationship_score?: number | null
-          tenant_id: string
-          title?: string | null
-          twitter_handle?: string | null
+          journalist_email?: string | null
+          journalist_name?: string | null
+          keywords?: string[] | null
+          opportunity_score?: number | null
+          outlet?: string | null
+          requirements?: string | null
+          source_url?: string | null
+          subject: string
+          tenant_id?: string | null
           updated_at?: string | null
         }
         Update: {
-          beat?: string
-          bio?: string | null
+          category?: string | null
           created_at?: string | null
-          email?: string
-          first_name?: string
+          deadline?: string | null
+          description?: string
+          difficulty_score?: number | null
+          expires_at?: string | null
+          external_id?: string | null
           id?: string
-          interaction_count?: number | null
+          industry_tags?: string[] | null
           is_active?: boolean | null
+          journalist_email?: string | null
+          journalist_name?: string | null
+          keywords?: string[] | null
+          opportunity_score?: number | null
+          outlet?: string | null
+          requirements?: string | null
+          source_url?: string | null
+          subject?: string
+          tenant_id?: string | null
+          updated_at?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "haro_requests_tenant_id_fkey"
+            columns: ["tenant_id"]
+            isOneToOne: false
+            referencedRelation: "tenants"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      journalist_contacts: {
+        Row: {
+          authority_score: number | null
+          avg_response_time_hours: number | null
+          beat: string
+          beat_expertise_level: string | null
+          beat_secondary: string[] | null
+          bio: string | null
+          campaign_source: string | null
+          circulation_size: number | null
+          click_through_rate: number | null
+          communication_style_preferences: Json | null
+          confidence_score: number | null
+          contact_restrictions: Json | null
+          content_preferences: Json | null
+          content_restrictions: string[] | null
+          conversion_rate: number | null
+          country: string | null
+          created_at: string | null
+          creator_platform: string[] | null
+          current_title: string | null
+          data_quality_score: number | null
+          data_sources: string[] | null
+          declined_pitches: number | null
+          discovery_method: string | null
+          dynamic_tier: string | null
+          email: string
+          embargo_preferences: Json | null
+          engagement_rate: number | null
+          enrichment_date: string | null
+          enrichment_sources: string[] | null
+          enrichment_status: string | null
+          exclusivity_requirements: string[] | null
+          expertise_score: number | null
+          first_name: string
+          follow_up_preferences: Json | null
+          id: string
+          intelligence: Json | null
+          interaction_count: number | null
+          interaction_quality_score: number | null
+          is_active: boolean | null
+          journalist_first_profile_data: Json | null
+          journalist_first_user_id: string | null
+          language: string | null
+          last_contacted: string | null
+          last_enrichment_at: string | null
+          last_name: string
+          last_response_at: string | null
+          last_verified_at: string | null
+          linkedin_url: string | null
+          location: string | null
+          media_category: string | null
+          media_type: string | null
+          notes: string | null
+          open_rate: number | null
+          optimal_pitch_timing: Json | null
+          outlet: string
+          outlet_authority_rank: number | null
+          outlet_monthly_reach: number | null
+          phone: string | null
+          pitch_preferences: Json | null
+          pitch_success_probability: number | null
+          preferences: Json | null
+          preferred_contact_method: string | null
+          preferred_contact_time: Json | null
+          preferred_pitch_length: string | null
+          profile_image_url: string | null
+          query_posting_preferences: Json | null
+          relationship_score: number | null
+          relevance_score: number | null
+          response_rate: number | null
+          response_time_patterns: Json | null
+          seasonal_availability: Json | null
+          sentiment_score: number | null
+          source: string | null
+          source_interaction_history: Json | null
+          source_url: string | null
+          static_tags: Json | null
+          static_tier: string | null
+          story_performance_data: Json | null
+          successful_pitch_examples: Json | null
+          successful_pitches: number | null
+          tenant_id: string
+          tier_calculation_date: string | null
+          tier_context: Json | null
+          timezone: string | null
+          title: string | null
+          total_interactions: number | null
+          twitter_handle: string | null
+          typical_lead_time_days: number | null
+          updated_at: string | null
+          verification_status: string | null
+        }
+        Insert: {
+          authority_score?: number | null
+          avg_response_time_hours?: number | null
+          beat: string
+          beat_expertise_level?: string | null
+          beat_secondary?: string[] | null
+          bio?: string | null
+          campaign_source?: string | null
+          circulation_size?: number | null
+          click_through_rate?: number | null
+          communication_style_preferences?: Json | null
+          confidence_score?: number | null
+          contact_restrictions?: Json | null
+          content_preferences?: Json | null
+          content_restrictions?: string[] | null
+          conversion_rate?: number | null
+          country?: string | null
+          created_at?: string | null
+          creator_platform?: string[] | null
+          current_title?: string | null
+          data_quality_score?: number | null
+          data_sources?: string[] | null
+          declined_pitches?: number | null
+          discovery_method?: string | null
+          dynamic_tier?: string | null
+          email: string
+          embargo_preferences?: Json | null
+          engagement_rate?: number | null
+          enrichment_date?: string | null
+          enrichment_sources?: string[] | null
+          enrichment_status?: string | null
+          exclusivity_requirements?: string[] | null
+          expertise_score?: number | null
+          first_name: string
+          follow_up_preferences?: Json | null
+          id?: string
+          intelligence?: Json | null
+          interaction_count?: number | null
+          interaction_quality_score?: number | null
+          is_active?: boolean | null
+          journalist_first_profile_data?: Json | null
+          journalist_first_user_id?: string | null
+          language?: string | null
           last_contacted?: string | null
-          last_name?: string
+          last_enrichment_at?: string | null
+          last_name: string
+          last_response_at?: string | null
+          last_verified_at?: string | null
           linkedin_url?: string | null
           location?: string | null
+          media_category?: string | null
+          media_type?: string | null
           notes?: string | null
-          outlet?: string
+          open_rate?: number | null
+          optimal_pitch_timing?: Json | null
+          outlet: string
+          outlet_authority_rank?: number | null
+          outlet_monthly_reach?: number | null
           phone?: string | null
+          pitch_preferences?: Json | null
+          pitch_success_probability?: number | null
           preferences?: Json | null
+          preferred_contact_method?: string | null
+          preferred_contact_time?: Json | null
+          preferred_pitch_length?: string | null
+          profile_image_url?: string | null
+          query_posting_preferences?: Json | null
           relationship_score?: number | null
-          tenant_id?: string
+          relevance_score?: number | null
+          response_rate?: number | null
+          response_time_patterns?: Json | null
+          seasonal_availability?: Json | null
+          sentiment_score?: number | null
+          source?: string | null
+          source_interaction_history?: Json | null
+          source_url?: string | null
+          static_tags?: Json | null
+          static_tier?: string | null
+          story_performance_data?: Json | null
+          successful_pitch_examples?: Json | null
+          successful_pitches?: number | null
+          tenant_id: string
+          tier_calculation_date?: string | null
+          tier_context?: Json | null
+          timezone?: string | null
           title?: string | null
+          total_interactions?: number | null
           twitter_handle?: string | null
+          typical_lead_time_days?: number | null
           updated_at?: string | null
+          verification_status?: string | null
+        }
+        Update: {
+          authority_score?: number | null
+          avg_response_time_hours?: number | null
+          beat?: string
+          beat_expertise_level?: string | null
+          beat_secondary?: string[] | null
+          bio?: string | null
+          campaign_source?: string | null
+          circulation_size?: number | null
+          click_through_rate?: number | null
+          communication_style_preferences?: Json | null
+          confidence_score?: number | null
+          contact_restrictions?: Json | null
+          content_preferences?: Json | null
+          content_restrictions?: string[] | null
+          conversion_rate?: number | null
+          country?: string | null
+          created_at?: string | null
+          creator_platform?: string[] | null
+          current_title?: string | null
+          data_quality_score?: number | null
+          data_sources?: string[] | null
+          declined_pitches?: number | null
+          discovery_method?: string | null
+          dynamic_tier?: string | null
+          email?: string
+          embargo_preferences?: Json | null
+          engagement_rate?: number | null
+          enrichment_date?: string | null
+          enrichment_sources?: string[] | null
+          enrichment_status?: string | null
+          exclusivity_requirements?: string[] | null
+          expertise_score?: number | null
+          first_name?: string
+          follow_up_preferences?: Json | null
+          id?: string
+          intelligence?: Json | null
+          interaction_count?: number | null
+          interaction_quality_score?: number | null
+          is_active?: boolean | null
+          journalist_first_profile_data?: Json | null
+          journalist_first_user_id?: string | null
+          language?: string | null
+          last_contacted?: string | null
+          last_enrichment_at?: string | null
+          last_name?: string
+          last_response_at?: string | null
+          last_verified_at?: string | null
+          linkedin_url?: string | null
+          location?: string | null
+          media_category?: string | null
+          media_type?: string | null
+          notes?: string | null
+          open_rate?: number | null
+          optimal_pitch_timing?: Json | null
+          outlet?: string
+          outlet_authority_rank?: number | null
+          outlet_monthly_reach?: number | null
+          phone?: string | null
+          pitch_preferences?: Json | null
+          pitch_success_probability?: number | null
+          preferences?: Json | null
+          preferred_contact_method?: string | null
+          preferred_contact_time?: Json | null
+          preferred_pitch_length?: string | null
+          profile_image_url?: string | null
+          query_posting_preferences?: Json | null
+          relationship_score?: number | null
+          relevance_score?: number | null
+          response_rate?: number | null
+          response_time_patterns?: Json | null
+          seasonal_availability?: Json | null
+          sentiment_score?: number | null
+          source?: string | null
+          source_interaction_history?: Json | null
+          source_url?: string | null
+          static_tags?: Json | null
+          static_tier?: string | null
+          story_performance_data?: Json | null
+          successful_pitch_examples?: Json | null
+          successful_pitches?: number | null
+          tenant_id?: string
+          tier_calculation_date?: string | null
+          tier_context?: Json | null
+          timezone?: string | null
+          title?: string | null
+          total_interactions?: number | null
+          twitter_handle?: string | null
+          typical_lead_time_days?: number | null
+          updated_at?: string | null
+          verification_status?: string | null
         }
         Relationships: [
           {
@@ -584,6 +1473,108 @@ export type Database = {
             referencedColumns: ["id"]
           },
         ]
+      }
+      journalist_contacts_backup_20250718: {
+        Row: {
+          beat: string | null
+          bio: string | null
+          campaign_source: string | null
+          circulation_size: number | null
+          country: string | null
+          created_at: string | null
+          email: string | null
+          enrichment_date: string | null
+          enrichment_status: string | null
+          first_name: string | null
+          id: string | null
+          intelligence: Json | null
+          interaction_count: number | null
+          is_active: boolean | null
+          language: string | null
+          last_contacted: string | null
+          last_name: string | null
+          linkedin_url: string | null
+          location: string | null
+          media_type: string | null
+          notes: string | null
+          outlet: string | null
+          phone: string | null
+          preferences: Json | null
+          relationship_score: number | null
+          source: string | null
+          static_tags: Json | null
+          tenant_id: string | null
+          title: string | null
+          twitter_handle: string | null
+          updated_at: string | null
+        }
+        Insert: {
+          beat?: string | null
+          bio?: string | null
+          campaign_source?: string | null
+          circulation_size?: number | null
+          country?: string | null
+          created_at?: string | null
+          email?: string | null
+          enrichment_date?: string | null
+          enrichment_status?: string | null
+          first_name?: string | null
+          id?: string | null
+          intelligence?: Json | null
+          interaction_count?: number | null
+          is_active?: boolean | null
+          language?: string | null
+          last_contacted?: string | null
+          last_name?: string | null
+          linkedin_url?: string | null
+          location?: string | null
+          media_type?: string | null
+          notes?: string | null
+          outlet?: string | null
+          phone?: string | null
+          preferences?: Json | null
+          relationship_score?: number | null
+          source?: string | null
+          static_tags?: Json | null
+          tenant_id?: string | null
+          title?: string | null
+          twitter_handle?: string | null
+          updated_at?: string | null
+        }
+        Update: {
+          beat?: string | null
+          bio?: string | null
+          campaign_source?: string | null
+          circulation_size?: number | null
+          country?: string | null
+          created_at?: string | null
+          email?: string | null
+          enrichment_date?: string | null
+          enrichment_status?: string | null
+          first_name?: string | null
+          id?: string | null
+          intelligence?: Json | null
+          interaction_count?: number | null
+          is_active?: boolean | null
+          language?: string | null
+          last_contacted?: string | null
+          last_name?: string | null
+          linkedin_url?: string | null
+          location?: string | null
+          media_type?: string | null
+          notes?: string | null
+          outlet?: string | null
+          phone?: string | null
+          preferences?: Json | null
+          relationship_score?: number | null
+          source?: string | null
+          static_tags?: Json | null
+          tenant_id?: string | null
+          title?: string | null
+          twitter_handle?: string | null
+          updated_at?: string | null
+        }
+        Relationships: []
       }
       journalist_outreach: {
         Row: {
@@ -670,6 +1661,166 @@ export type Database = {
             columns: ["tenant_id"]
             isOneToOne: false
             referencedRelation: "tenants"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      journalist_outreach_sessions: {
+        Row: {
+          ai_insights: Json | null
+          campaign_id: string | null
+          created_at: string | null
+          delivered_at: string | null
+          follow_up_recommendations: Json | null
+          id: string
+          journalist_id: string | null
+          opened_at: string | null
+          optimal_timing: Json | null
+          outcome: string | null
+          pitch_content: string
+          pitch_title: string
+          relevance_score: number | null
+          responded_at: string | null
+          response_content: string | null
+          response_sentiment: string | null
+          sent_at: string | null
+          session_type: string | null
+          status: string | null
+          success_probability: number | null
+          tenant_id: string
+          updated_at: string | null
+        }
+        Insert: {
+          ai_insights?: Json | null
+          campaign_id?: string | null
+          created_at?: string | null
+          delivered_at?: string | null
+          follow_up_recommendations?: Json | null
+          id?: string
+          journalist_id?: string | null
+          opened_at?: string | null
+          optimal_timing?: Json | null
+          outcome?: string | null
+          pitch_content: string
+          pitch_title: string
+          relevance_score?: number | null
+          responded_at?: string | null
+          response_content?: string | null
+          response_sentiment?: string | null
+          sent_at?: string | null
+          session_type?: string | null
+          status?: string | null
+          success_probability?: number | null
+          tenant_id: string
+          updated_at?: string | null
+        }
+        Update: {
+          ai_insights?: Json | null
+          campaign_id?: string | null
+          created_at?: string | null
+          delivered_at?: string | null
+          follow_up_recommendations?: Json | null
+          id?: string
+          journalist_id?: string | null
+          opened_at?: string | null
+          optimal_timing?: Json | null
+          outcome?: string | null
+          pitch_content?: string
+          pitch_title?: string
+          relevance_score?: number | null
+          responded_at?: string | null
+          response_content?: string | null
+          response_sentiment?: string | null
+          sent_at?: string | null
+          session_type?: string | null
+          status?: string | null
+          success_probability?: number | null
+          tenant_id?: string
+          updated_at?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "journalist_outreach_sessions_journalist_id_fkey"
+            columns: ["journalist_id"]
+            isOneToOne: false
+            referencedRelation: "journalist_contacts"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      legal_compliance_tracking: {
+        Row: {
+          can_spam_compliance: boolean | null
+          communication_frequency: string | null
+          consent_date: string | null
+          consent_evidence: Json | null
+          consent_ip_address: unknown | null
+          consent_method: string | null
+          consent_status: string
+          consent_type: string
+          content_preferences: string[] | null
+          created_at: string | null
+          do_not_contact_reason: string | null
+          gdpr_compliance: boolean | null
+          id: string
+          journalist_id: string | null
+          last_updated: string | null
+          regional_compliance: Json | null
+          tenant_id: string
+          unsubscribe_date: string | null
+          unsubscribe_honored: boolean | null
+          unsubscribe_method: string | null
+        }
+        Insert: {
+          can_spam_compliance?: boolean | null
+          communication_frequency?: string | null
+          consent_date?: string | null
+          consent_evidence?: Json | null
+          consent_ip_address?: unknown | null
+          consent_method?: string | null
+          consent_status?: string
+          consent_type: string
+          content_preferences?: string[] | null
+          created_at?: string | null
+          do_not_contact_reason?: string | null
+          gdpr_compliance?: boolean | null
+          id?: string
+          journalist_id?: string | null
+          last_updated?: string | null
+          regional_compliance?: Json | null
+          tenant_id: string
+          unsubscribe_date?: string | null
+          unsubscribe_honored?: boolean | null
+          unsubscribe_method?: string | null
+        }
+        Update: {
+          can_spam_compliance?: boolean | null
+          communication_frequency?: string | null
+          consent_date?: string | null
+          consent_evidence?: Json | null
+          consent_ip_address?: unknown | null
+          consent_method?: string | null
+          consent_status?: string
+          consent_type?: string
+          content_preferences?: string[] | null
+          created_at?: string | null
+          do_not_contact_reason?: string | null
+          gdpr_compliance?: boolean | null
+          id?: string
+          journalist_id?: string | null
+          last_updated?: string | null
+          regional_compliance?: Json | null
+          tenant_id?: string
+          unsubscribe_date?: string | null
+          unsubscribe_honored?: boolean | null
+          unsubscribe_method?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "legal_compliance_tracking_journalist_id_fkey"
+            columns: ["journalist_id"]
+            isOneToOne: false
+            referencedRelation: "journalist_contacts"
             referencedColumns: ["id"]
           },
         ]
@@ -1066,8 +2217,153 @@ export type Database = {
           },
         ]
       }
+      scraper_raw_profiles: {
+        Row: {
+          ai_processed_at: string | null
+          bio: string | null
+          campaign_source: string | null
+          converted_to_contact: boolean | null
+          created_at: string | null
+          email: string | null
+          full_name: string | null
+          geo_focus: string | null
+          id: string
+          industry_tags: string[] | null
+          media_type: string | null
+          organization: string | null
+          processed: boolean | null
+          processed_at: string | null
+          profile_url: string
+          qa_notes: string | null
+          qa_status: string | null
+          role: string | null
+          source: string
+          summary: string | null
+          tags: string[] | null
+        }
+        Insert: {
+          ai_processed_at?: string | null
+          bio?: string | null
+          campaign_source?: string | null
+          converted_to_contact?: boolean | null
+          created_at?: string | null
+          email?: string | null
+          full_name?: string | null
+          geo_focus?: string | null
+          id?: string
+          industry_tags?: string[] | null
+          media_type?: string | null
+          organization?: string | null
+          processed?: boolean | null
+          processed_at?: string | null
+          profile_url: string
+          qa_notes?: string | null
+          qa_status?: string | null
+          role?: string | null
+          source: string
+          summary?: string | null
+          tags?: string[] | null
+        }
+        Update: {
+          ai_processed_at?: string | null
+          bio?: string | null
+          campaign_source?: string | null
+          converted_to_contact?: boolean | null
+          created_at?: string | null
+          email?: string | null
+          full_name?: string | null
+          geo_focus?: string | null
+          id?: string
+          industry_tags?: string[] | null
+          media_type?: string | null
+          organization?: string | null
+          processed?: boolean | null
+          processed_at?: string | null
+          profile_url?: string
+          qa_notes?: string | null
+          qa_status?: string | null
+          role?: string | null
+          source?: string
+          summary?: string | null
+          tags?: string[] | null
+        }
+        Relationships: []
+      }
+      scraper_raw_profiles_backup_20250718: {
+        Row: {
+          ai_processed_at: string | null
+          bio: string | null
+          campaign_source: string | null
+          converted_to_contact: boolean | null
+          created_at: string | null
+          email: string | null
+          full_name: string | null
+          geo_focus: string | null
+          id: string | null
+          industry_tags: string[] | null
+          media_type: string | null
+          organization: string | null
+          processed: boolean | null
+          processed_at: string | null
+          profile_url: string | null
+          qa_notes: string | null
+          qa_status: string | null
+          role: string | null
+          source: string | null
+          summary: string | null
+          tags: string[] | null
+        }
+        Insert: {
+          ai_processed_at?: string | null
+          bio?: string | null
+          campaign_source?: string | null
+          converted_to_contact?: boolean | null
+          created_at?: string | null
+          email?: string | null
+          full_name?: string | null
+          geo_focus?: string | null
+          id?: string | null
+          industry_tags?: string[] | null
+          media_type?: string | null
+          organization?: string | null
+          processed?: boolean | null
+          processed_at?: string | null
+          profile_url?: string | null
+          qa_notes?: string | null
+          qa_status?: string | null
+          role?: string | null
+          source?: string | null
+          summary?: string | null
+          tags?: string[] | null
+        }
+        Update: {
+          ai_processed_at?: string | null
+          bio?: string | null
+          campaign_source?: string | null
+          converted_to_contact?: boolean | null
+          created_at?: string | null
+          email?: string | null
+          full_name?: string | null
+          geo_focus?: string | null
+          id?: string | null
+          industry_tags?: string[] | null
+          media_type?: string | null
+          organization?: string | null
+          processed?: boolean | null
+          processed_at?: string | null
+          profile_url?: string | null
+          qa_notes?: string | null
+          qa_status?: string | null
+          role?: string | null
+          source?: string | null
+          summary?: string | null
+          tags?: string[] | null
+        }
+        Relationships: []
+      }
       seo_keywords: {
         Row: {
+          campaign_id: string | null
           competition_level: string | null
           cpc: number | null
           created_at: string
@@ -1083,6 +2379,7 @@ export type Database = {
           updated_at: string
         }
         Insert: {
+          campaign_id?: string | null
           competition_level?: string | null
           cpc?: number | null
           created_at?: string
@@ -1098,6 +2395,7 @@ export type Database = {
           updated_at?: string
         }
         Update: {
+          campaign_id?: string | null
           competition_level?: string | null
           cpc?: number | null
           created_at?: string
@@ -1114,6 +2412,13 @@ export type Database = {
         }
         Relationships: [
           {
+            foreignKeyName: "seo_keywords_campaign_id_fkey"
+            columns: ["campaign_id"]
+            isOneToOne: false
+            referencedRelation: "campaigns"
+            referencedColumns: ["id"]
+          },
+          {
             foreignKeyName: "seo_keywords_tenant_id_fkey"
             columns: ["tenant_id"]
             isOneToOne: false
@@ -1121,6 +2426,48 @@ export type Database = {
             referencedColumns: ["id"]
           },
         ]
+      }
+      source_catalog: {
+        Row: {
+          contact_count: number | null
+          discovered_at: string | null
+          discovered_by: string | null
+          domain: string
+          id: number
+          last_scraped: string | null
+          outlet_type: string | null
+          patterns: string[] | null
+          region: string | null
+          sample_urls: string[] | null
+          status: string | null
+        }
+        Insert: {
+          contact_count?: number | null
+          discovered_at?: string | null
+          discovered_by?: string | null
+          domain: string
+          id?: number
+          last_scraped?: string | null
+          outlet_type?: string | null
+          patterns?: string[] | null
+          region?: string | null
+          sample_urls?: string[] | null
+          status?: string | null
+        }
+        Update: {
+          contact_count?: number | null
+          discovered_at?: string | null
+          discovered_by?: string | null
+          domain?: string
+          id?: number
+          last_scraped?: string | null
+          outlet_type?: string | null
+          patterns?: string[] | null
+          region?: string | null
+          sample_urls?: string[] | null
+          status?: string | null
+        }
+        Relationships: []
       }
       tenants: {
         Row: {
@@ -1169,6 +2516,74 @@ export type Database = {
           },
         ]
       }
+      user_expertise_profiles: {
+        Row: {
+          bio: string | null
+          company: string | null
+          contact_email: string | null
+          created_at: string | null
+          credentials: string | null
+          expertise_areas: string[] | null
+          full_name: string
+          id: string
+          industries: string[] | null
+          is_active: boolean | null
+          keywords: string[] | null
+          matching_threshold: number | null
+          notification_preferences: Json | null
+          tenant_id: string | null
+          title: string | null
+          updated_at: string | null
+          user_id: string | null
+        }
+        Insert: {
+          bio?: string | null
+          company?: string | null
+          contact_email?: string | null
+          created_at?: string | null
+          credentials?: string | null
+          expertise_areas?: string[] | null
+          full_name: string
+          id?: string
+          industries?: string[] | null
+          is_active?: boolean | null
+          keywords?: string[] | null
+          matching_threshold?: number | null
+          notification_preferences?: Json | null
+          tenant_id?: string | null
+          title?: string | null
+          updated_at?: string | null
+          user_id?: string | null
+        }
+        Update: {
+          bio?: string | null
+          company?: string | null
+          contact_email?: string | null
+          created_at?: string | null
+          credentials?: string | null
+          expertise_areas?: string[] | null
+          full_name?: string
+          id?: string
+          industries?: string[] | null
+          is_active?: boolean | null
+          keywords?: string[] | null
+          matching_threshold?: number | null
+          notification_preferences?: Json | null
+          tenant_id?: string | null
+          title?: string | null
+          updated_at?: string | null
+          user_id?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "user_expertise_profiles_tenant_id_fkey"
+            columns: ["tenant_id"]
+            isOneToOne: false
+            referencedRelation: "tenants"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       user_profiles: {
         Row: {
           created_at: string | null
@@ -1210,304 +2625,6 @@ export type Database = {
           },
         ]
       }
-      haro_requests: {
-        Row: {
-          id: string
-          tenant_id: string
-          subject: string
-          description: string
-          requirements: string | null
-          deadline: string | null
-          journalist_name: string | null
-          journalist_email: string | null
-          outlet: string | null
-          category: string | null
-          keywords: string[]
-          industry_tags: string[]
-          is_active: boolean
-          difficulty_score: number
-          opportunity_score: number
-          expires_at: string | null
-          source_url: string | null
-          external_id: string | null
-          created_at: string
-          updated_at: string
-        }
-        Insert: {
-          id?: string
-          tenant_id: string
-          subject: string
-          description: string
-          requirements?: string | null
-          deadline?: string | null
-          journalist_name?: string | null
-          journalist_email?: string | null
-          outlet?: string | null
-          category?: string | null
-          keywords?: string[]
-          industry_tags?: string[]
-          is_active?: boolean
-          difficulty_score?: number
-          opportunity_score?: number
-          expires_at?: string | null
-          source_url?: string | null
-          external_id?: string | null
-          created_at?: string
-          updated_at?: string
-        }
-        Update: {
-          id?: string
-          tenant_id?: string
-          subject?: string
-          description?: string
-          requirements?: string | null
-          deadline?: string | null
-          journalist_name?: string | null
-          journalist_email?: string | null
-          outlet?: string | null
-          category?: string | null
-          keywords?: string[]
-          industry_tags?: string[]
-          is_active?: boolean
-          difficulty_score?: number
-          opportunity_score?: number
-          expires_at?: string | null
-          source_url?: string | null
-          external_id?: string | null
-          created_at?: string
-          updated_at?: string
-        }
-        Relationships: [
-          {
-            foreignKeyName: "haro_requests_tenant_id_fkey"
-            columns: ["tenant_id"]
-            isOneToOne: false
-            referencedRelation: "tenants"
-            referencedColumns: ["id"]
-          }
-        ]
-      }
-      haro_matches: {
-        Row: {
-          id: string
-          tenant_id: string
-          haro_request_id: string
-          user_expertise_profile_id: string | null
-          user_id: string | null
-          match_confidence: number
-          match_reasons: string[]
-          ai_generated_response: string | null
-          user_edited_response: string | null
-          final_response: string | null
-          response_status: string
-          submitted: boolean
-          submitted_at: string | null
-          journalist_replied: boolean
-          journalist_reply_at: string | null
-          coverage_secured: boolean
-          coverage_url: string | null
-          coverage_value: number
-          coverage_date: string | null
-          created_at: string
-          updated_at: string
-        }
-        Insert: {
-          id?: string
-          tenant_id: string
-          haro_request_id: string
-          user_expertise_profile_id?: string | null
-          user_id?: string | null
-          match_confidence?: number
-          match_reasons?: string[]
-          ai_generated_response?: string | null
-          user_edited_response?: string | null
-          final_response?: string | null
-          response_status?: string
-          submitted?: boolean
-          submitted_at?: string | null
-          journalist_replied?: boolean
-          journalist_reply_at?: string | null
-          coverage_secured?: boolean
-          coverage_url?: string | null
-          coverage_value?: number
-          coverage_date?: string | null
-          created_at?: string
-          updated_at?: string
-        }
-        Update: {
-          id?: string
-          tenant_id?: string
-          haro_request_id?: string
-          user_expertise_profile_id?: string | null
-          user_id?: string | null
-          match_confidence?: number
-          match_reasons?: string[]
-          ai_generated_response?: string | null
-          user_edited_response?: string | null
-          final_response?: string | null
-          response_status?: string
-          submitted?: boolean
-          submitted_at?: string | null
-          journalist_replied?: boolean
-          journalist_reply_at?: string | null
-          coverage_secured?: boolean
-          coverage_url?: string | null
-          coverage_value?: number
-          coverage_date?: string | null
-          created_at?: string
-          updated_at?: string
-        }
-        Relationships: [
-          {
-            foreignKeyName: "haro_matches_tenant_id_fkey"
-            columns: ["tenant_id"]
-            isOneToOne: false
-            referencedRelation: "tenants"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "haro_matches_haro_request_id_fkey"
-            columns: ["haro_request_id"]
-            isOneToOne: false
-            referencedRelation: "haro_requests"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "haro_matches_user_expertise_profile_id_fkey"
-            columns: ["user_expertise_profile_id"]
-            isOneToOne: false
-            referencedRelation: "user_expertise_profiles"
-            referencedColumns: ["id"]
-          }
-        ]
-      }
-      user_expertise_profiles: {
-        Row: {
-          id: string
-          tenant_id: string
-          user_id: string | null
-          full_name: string
-          title: string | null
-          company: string | null
-          expertise_areas: string[]
-          keywords: string[]
-          bio: string | null
-          credentials: string | null
-          industries: string[]
-          contact_email: string | null
-          notification_preferences: Json
-          matching_threshold: number
-          is_active: boolean
-          created_at: string
-          updated_at: string
-        }
-        Insert: {
-          id?: string
-          tenant_id: string
-          user_id?: string | null
-          full_name: string
-          title?: string | null
-          company?: string | null
-          expertise_areas?: string[]
-          keywords?: string[]
-          bio?: string | null
-          credentials?: string | null
-          industries?: string[]
-          contact_email?: string | null
-          notification_preferences?: Json
-          matching_threshold?: number
-          is_active?: boolean
-          created_at?: string
-          updated_at?: string
-        }
-        Update: {
-          id?: string
-          tenant_id?: string
-          user_id?: string | null
-          full_name?: string
-          title?: string | null
-          company?: string | null
-          expertise_areas?: string[]
-          keywords?: string[]
-          bio?: string | null
-          credentials?: string | null
-          industries?: string[]
-          contact_email?: string | null
-          notification_preferences?: Json
-          matching_threshold?: number
-          is_active?: boolean
-          created_at?: string
-          updated_at?: string
-        }
-        Relationships: [
-          {
-            foreignKeyName: "user_expertise_profiles_tenant_id_fkey"
-            columns: ["tenant_id"]
-            isOneToOne: false
-            referencedRelation: "tenants"
-            referencedColumns: ["id"]
-          }
-        ]
-      }
-      haro_analytics: {
-        Row: {
-          id: string
-          tenant_id: string
-          user_id: string | null
-          date_period: string
-          requests_matched: number
-          responses_submitted: number
-          journalist_replies: number
-          coverage_secured: number
-          total_coverage_value: number
-          average_match_confidence: number
-          success_rate: number
-          roi_score: number
-          created_at: string
-          updated_at: string
-        }
-        Insert: {
-          id?: string
-          tenant_id: string
-          user_id?: string | null
-          date_period: string
-          requests_matched?: number
-          responses_submitted?: number
-          journalist_replies?: number
-          coverage_secured?: number
-          total_coverage_value?: number
-          average_match_confidence?: number
-          success_rate?: number
-          roi_score?: number
-          created_at?: string
-          updated_at?: string
-        }
-        Update: {
-          id?: string
-          tenant_id?: string
-          user_id?: string | null
-          date_period?: string
-          requests_matched?: number
-          responses_submitted?: number
-          journalist_replies?: number
-          coverage_secured?: number
-          total_coverage_value?: number
-          average_match_confidence?: number
-          success_rate?: number
-          roi_score?: number
-          created_at?: string
-          updated_at?: string
-        }
-        Relationships: [
-          {
-            foreignKeyName: "haro_analytics_tenant_id_fkey"
-            columns: ["tenant_id"]
-            isOneToOne: false
-            referencedRelation: "tenants"
-            referencedColumns: ["id"]
-          }
-        ]
-      }
     }
     Views: {
       [_ in never]: never
@@ -1541,21 +2658,25 @@ export type Database = {
   }
 }
 
-type DefaultSchema = Database[Extract<keyof Database, "public">]
+type DatabaseWithoutInternals = Omit<Database, "__InternalSupabase">
+
+type DefaultSchema = DatabaseWithoutInternals[Extract<keyof Database, "public">]
 
 export type Tables<
   DefaultSchemaTableNameOrOptions extends
     | keyof (DefaultSchema["Tables"] & DefaultSchema["Views"])
-    | { schema: keyof Database },
+    | { schema: keyof DatabaseWithoutInternals },
   TableName extends DefaultSchemaTableNameOrOptions extends {
-    schema: keyof Database
+    schema: keyof DatabaseWithoutInternals
   }
-    ? keyof (Database[DefaultSchemaTableNameOrOptions["schema"]]["Tables"] &
-        Database[DefaultSchemaTableNameOrOptions["schema"]]["Views"])
+    ? keyof (DatabaseWithoutInternals[DefaultSchemaTableNameOrOptions["schema"]]["Tables"] &
+        DatabaseWithoutInternals[DefaultSchemaTableNameOrOptions["schema"]]["Views"])
     : never = never,
-> = DefaultSchemaTableNameOrOptions extends { schema: keyof Database }
-  ? (Database[DefaultSchemaTableNameOrOptions["schema"]]["Tables"] &
-      Database[DefaultSchemaTableNameOrOptions["schema"]]["Views"])[TableName] extends {
+> = DefaultSchemaTableNameOrOptions extends {
+  schema: keyof DatabaseWithoutInternals
+}
+  ? (DatabaseWithoutInternals[DefaultSchemaTableNameOrOptions["schema"]]["Tables"] &
+      DatabaseWithoutInternals[DefaultSchemaTableNameOrOptions["schema"]]["Views"])[TableName] extends {
       Row: infer R
     }
     ? R
@@ -1573,14 +2694,16 @@ export type Tables<
 export type TablesInsert<
   DefaultSchemaTableNameOrOptions extends
     | keyof DefaultSchema["Tables"]
-    | { schema: keyof Database },
+    | { schema: keyof DatabaseWithoutInternals },
   TableName extends DefaultSchemaTableNameOrOptions extends {
-    schema: keyof Database
+    schema: keyof DatabaseWithoutInternals
   }
-    ? keyof Database[DefaultSchemaTableNameOrOptions["schema"]]["Tables"]
+    ? keyof DatabaseWithoutInternals[DefaultSchemaTableNameOrOptions["schema"]]["Tables"]
     : never = never,
-> = DefaultSchemaTableNameOrOptions extends { schema: keyof Database }
-  ? Database[DefaultSchemaTableNameOrOptions["schema"]]["Tables"][TableName] extends {
+> = DefaultSchemaTableNameOrOptions extends {
+  schema: keyof DatabaseWithoutInternals
+}
+  ? DatabaseWithoutInternals[DefaultSchemaTableNameOrOptions["schema"]]["Tables"][TableName] extends {
       Insert: infer I
     }
     ? I
@@ -1596,14 +2719,16 @@ export type TablesInsert<
 export type TablesUpdate<
   DefaultSchemaTableNameOrOptions extends
     | keyof DefaultSchema["Tables"]
-    | { schema: keyof Database },
+    | { schema: keyof DatabaseWithoutInternals },
   TableName extends DefaultSchemaTableNameOrOptions extends {
-    schema: keyof Database
+    schema: keyof DatabaseWithoutInternals
   }
-    ? keyof Database[DefaultSchemaTableNameOrOptions["schema"]]["Tables"]
+    ? keyof DatabaseWithoutInternals[DefaultSchemaTableNameOrOptions["schema"]]["Tables"]
     : never = never,
-> = DefaultSchemaTableNameOrOptions extends { schema: keyof Database }
-  ? Database[DefaultSchemaTableNameOrOptions["schema"]]["Tables"][TableName] extends {
+> = DefaultSchemaTableNameOrOptions extends {
+  schema: keyof DatabaseWithoutInternals
+}
+  ? DatabaseWithoutInternals[DefaultSchemaTableNameOrOptions["schema"]]["Tables"][TableName] extends {
       Update: infer U
     }
     ? U
@@ -1619,14 +2744,16 @@ export type TablesUpdate<
 export type Enums<
   DefaultSchemaEnumNameOrOptions extends
     | keyof DefaultSchema["Enums"]
-    | { schema: keyof Database },
+    | { schema: keyof DatabaseWithoutInternals },
   EnumName extends DefaultSchemaEnumNameOrOptions extends {
-    schema: keyof Database
+    schema: keyof DatabaseWithoutInternals
   }
-    ? keyof Database[DefaultSchemaEnumNameOrOptions["schema"]]["Enums"]
+    ? keyof DatabaseWithoutInternals[DefaultSchemaEnumNameOrOptions["schema"]]["Enums"]
     : never = never,
-> = DefaultSchemaEnumNameOrOptions extends { schema: keyof Database }
-  ? Database[DefaultSchemaEnumNameOrOptions["schema"]]["Enums"][EnumName]
+> = DefaultSchemaEnumNameOrOptions extends {
+  schema: keyof DatabaseWithoutInternals
+}
+  ? DatabaseWithoutInternals[DefaultSchemaEnumNameOrOptions["schema"]]["Enums"][EnumName]
   : DefaultSchemaEnumNameOrOptions extends keyof DefaultSchema["Enums"]
     ? DefaultSchema["Enums"][DefaultSchemaEnumNameOrOptions]
     : never
@@ -1634,14 +2761,16 @@ export type Enums<
 export type CompositeTypes<
   PublicCompositeTypeNameOrOptions extends
     | keyof DefaultSchema["CompositeTypes"]
-    | { schema: keyof Database },
+    | { schema: keyof DatabaseWithoutInternals },
   CompositeTypeName extends PublicCompositeTypeNameOrOptions extends {
-    schema: keyof Database
+    schema: keyof DatabaseWithoutInternals
   }
-    ? keyof Database[PublicCompositeTypeNameOrOptions["schema"]]["CompositeTypes"]
+    ? keyof DatabaseWithoutInternals[PublicCompositeTypeNameOrOptions["schema"]]["CompositeTypes"]
     : never = never,
-> = PublicCompositeTypeNameOrOptions extends { schema: keyof Database }
-  ? Database[PublicCompositeTypeNameOrOptions["schema"]]["CompositeTypes"][CompositeTypeName]
+> = PublicCompositeTypeNameOrOptions extends {
+  schema: keyof DatabaseWithoutInternals
+}
+  ? DatabaseWithoutInternals[PublicCompositeTypeNameOrOptions["schema"]]["CompositeTypes"][CompositeTypeName]
   : PublicCompositeTypeNameOrOptions extends keyof DefaultSchema["CompositeTypes"]
     ? DefaultSchema["CompositeTypes"][PublicCompositeTypeNameOrOptions]
     : never

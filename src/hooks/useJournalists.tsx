@@ -12,8 +12,9 @@ export type MediaRelationship = Database['public']['Tables']['media_relationship
 export type JournalistOutreach = Database['public']['Tables']['journalist_outreach']['Row'];
 
 export interface EnhancedJournalistContact extends JournalistContact {
+  // Computed fields not in database
   success_rate?: number;
-  days_since_contact?: number;
+  days_since_contact?: number | null;
   response_time_average?: number;
   pitch_effectiveness?: number;
   engagement_trend?: 'increasing' | 'stable' | 'declining';
