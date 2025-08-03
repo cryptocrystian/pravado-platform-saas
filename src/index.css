@@ -190,54 +190,54 @@
 
     --radius: 0.5rem;
 
-    /* ===== LIGHT THEME MAPPING ===== */
+    /* ===== LIGHT THEME MAPPING (HSL format for consistency) ===== */
     --background: 0 0% 100%;
-    --foreground: var(--gray-900);
+    --foreground: 220 9% 25%;
 
     --card: 0 0% 100%;
-    --card-foreground: var(--gray-900);
+    --card-foreground: 220 9% 25%;
 
     --popover: 0 0% 100%;
-    --popover-foreground: var(--gray-900);
+    --popover-foreground: 220 9% 25%;
 
-    --primary: var(--pravado-purple-600);
+    --primary: 255 91% 67%;
     --primary-foreground: 0 0% 100%;
 
-    --secondary: var(--gray-100);
-    --secondary-foreground: var(--gray-900);
+    --secondary: 210 40% 94%;
+    --secondary-foreground: 220 9% 25%;
 
-    --muted: var(--gray-100);
-    --muted-foreground: var(--gray-500);
+    --muted: 210 40% 94%;
+    --muted-foreground: 220 5% 45%;
 
-    --accent: var(--gray-100);
-    --accent-foreground: var(--gray-900);
+    --accent: 210 40% 94%;
+    --accent-foreground: 220 9% 25%;
 
-    --destructive: var(--alert-500);
+    --destructive: 0 84% 60%;
     --destructive-foreground: 0 0% 100%;
 
-    --border: var(--gray-200);
-    --border-strong: var(--gray-300);
-    --border-subtle: var(--gray-100);
-    --input: var(--gray-200);
-    --ring: var(--pravado-purple-600);
+    --border: 220 13% 91%;
+    --border-strong: 220 9% 80%;
+    --border-subtle: 210 40% 96%;
+    --input: 220 13% 91%;
+    --ring: 255 91% 67%;
 
     /* Surface colors */
-    --background-subtle: var(--gray-25);
-    --foreground-muted: var(--gray-600);
-    --foreground-subtle: var(--gray-500);
+    --background-subtle: 220 14% 96%;
+    --foreground-muted: 220 9% 40%;
+    --foreground-subtle: 220 5% 45%;
 
-    /* PRAVADO specific mappings */
-    --pravado-purple: var(--pravado-purple-600);
-    --pravado-purple-light: var(--pravado-purple-400);
-    --pravado-purple-dark: var(--pravado-purple-700);
-    --pravado-purple-subtle: var(--pravado-purple-50);
-    --pravado-purple-muted: var(--pravado-purple-100);
+    /* PRAVADO specific mappings (HSL format) */
+    --pravado-purple: 255 91% 67%;
+    --pravado-purple-light: 255 91% 75%;
+    --pravado-purple-dark: 255 87% 63%;
+    --pravado-purple-subtle: 255 91% 98%;
+    --pravado-purple-muted: 255 91% 95%;
 
-    /* Status colors */
-    --status-success: var(--success-500);
-    --status-warning: var(--warning-500);
-    --status-error: var(--alert-500);
-    --status-info: var(--intelligence-500);
+    /* Status colors (HSL format) */
+    --status-success: 142 71% 45%;
+    --status-warning: 38 92% 50%;
+    --status-error: 0 84% 60%;
+    --status-info: 217 91% 60%;
   }
 
   /* ===== SOPHISTICATED DARK THEME ===== */
