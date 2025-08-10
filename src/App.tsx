@@ -37,6 +37,9 @@ import CustomerSuccess from "./pages/CustomerSuccess";
 import Demo from "./pages/Demo";
 import ROICalculatorPage from "./pages/ROICalculatorPage";
 import SuccessStories from "./pages/SuccessStories";
+import EnterpriseDashboard from "./pages/EnterpriseDashboard";
+import EnterpriseRevolutionary from "./pages/EnterpriseRevolutionary";
+import RevolutionaryIndex from "./pages/RevolutionaryIndex";
 
 const queryClient = new QueryClient();
 
@@ -54,15 +57,46 @@ const App = () => {
           <Sonner />
           <BrowserRouter>
           <Routes>
-            <Route path="/" element={<Index />} />
+            {/* REVOLUTIONARY PRAVADO SHOWCASE */}
+            <Route path="/" element={<RevolutionaryIndex />} />
+            <Route path="/legacy" element={<Index />} />
             <Route path="/auth" element={<Auth />} />
             <Route path="/demo" element={<Demo />} />
             <Route path="/roi-calculator" element={<ROICalculatorPage />} />
             <Route path="/success-stories" element={<SuccessStories />} />
             <Route path="/ai-testing" element={<AITesting />} />
+            
+            {/* REVOLUTIONARY ENTERPRISE ROUTES */}
+            <Route path="/enterprise/command-center" element={
+              <ProtectedRoute>
+                <EnterpriseDashboard />
+              </ProtectedRoute>
+            } />
+            <Route path="/enterprise/revolutionary" element={
+              <ProtectedRoute>
+                <EnterpriseRevolutionary />
+              </ProtectedRoute>
+            } />
+            <Route path="/enterprise/citemind" element={
+              <ProtectedRoute>
+                <EnterpriseRevolutionary />
+              </ProtectedRoute>
+            } />
+            <Route path="/enterprise/geo" element={
+              <ProtectedRoute>
+                <EnterpriseRevolutionary />
+              </ProtectedRoute>
+            } />
+            <Route path="/enterprise/autonomous" element={
+              <ProtectedRoute>
+                <EnterpriseRevolutionary />
+              </ProtectedRoute>
+            } />
+            
+            {/* REDIRECT MAIN DASHBOARD TO ENTERPRISE */}
             <Route path="/dashboard" element={
               <ProtectedRoute>
-                <Dashboard />
+                <EnterpriseDashboard />
               </ProtectedRoute>
             } />
             <Route path="/campaigns" element={
