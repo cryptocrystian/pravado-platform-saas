@@ -1,6 +1,4 @@
-
 #!/usr/bin/env bun
-
 import { createClient } from '@supabase/supabase-js';
 import { parseArgs } from 'util';
 

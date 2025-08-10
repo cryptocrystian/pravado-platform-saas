@@ -94,7 +94,7 @@ const AutomateStepGuidance: React.FC<AutomateStepGuidanceProps> = ({
   onActionComplete,
   className = ''
 }) => {
-  const [methodology, setMethodology] = useState<any>(null);
+  const [methodology, setMethodology] = useState<{ id: string; name: string; steps: AutomateStepProgress[] } | null>(null);
   const [steps, setSteps] = useState<AutomateStepProgress[]>([]);
   const [relevantSteps, setRelevantSteps] = useState<AutomateStepProgress[]>([]);
   const [currentStep, setCurrentStep] = useState<AutomateStepProgress | null>(null);
@@ -171,7 +171,7 @@ const AutomateStepGuidance: React.FC<AutomateStepGuidanceProps> = ({
   };
 
   const getStepIcon = (stepCode: string) => {
-    const iconMap: Record<string, any> = {
+    const iconMap: Record<string, React.ComponentType<any>> = {
       'A': Target,
       'U': Users,
       'T': Brain,

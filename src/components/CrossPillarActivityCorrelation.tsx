@@ -69,7 +69,7 @@ export function CrossPillarActivityCorrelation({
   };
 
   const getStepIcon = (step: string) => {
-    const stepMap: Record<string, any> = {
+    const stepMap: Record<string, React.ComponentType<any>> = {
       'Assess & Audit': Target,
       'Understand Audience': Users,
       'Target & Strategy': Brain,

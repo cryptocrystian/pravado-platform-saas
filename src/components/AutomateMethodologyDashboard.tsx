@@ -136,7 +136,7 @@ const AutomateMethodologyDashboard: React.FC<AutomateMethodologyDashboardProps> 
   };
 
   const getStepIcon = (stepCode: string) => {
-    const iconMap: Record<string, any> = {
+    const iconMap: Record<string, React.ComponentType<any>> = {
       'A': Target,
       'U': Users,
       'T': Brain,
@@ -160,7 +160,7 @@ const AutomateMethodologyDashboard: React.FC<AutomateMethodologyDashboardProps> 
   };
 
   const getInsightIcon = (type: string) => {
-    const iconMap: Record<string, any> = {
+    const iconMap: Record<string, React.ComponentType<any>> = {
       'progress_alert': AlertTriangle,
       'optimization_tip': Lightbulb,
       'best_practice': Award,
@@ -509,7 +509,7 @@ const AutomateMethodologyDashboard: React.FC<AutomateMethodologyDashboardProps> 
                               Recommended Actions:
                             </h5>
                             <ul className="space-y-1">
-                              {insight.recommended_actions.slice(0, 3).map((action: any, index: number) => (
+                              {insight.recommended_actions.slice(0, 3).map((action: string, index: number) => (
                                 <li key={index} className="text-sm text-gray-600 flex items-start">
                                   <ArrowRight className="h-3 w-3 mr-1 mt-0.5 flex-shrink-0" />
                                   {typeof action === 'string' ? action : action.action || action.title}
@@ -578,7 +578,7 @@ const AutomateMethodologyDashboard: React.FC<AutomateMethodologyDashboardProps> 
             <Card className="p-6">
               <h3 className="text-lg font-semibold mb-4">Step Completion Data</h3>
               <div className="space-y-3">
-                {Object.entries(analytics?.step_completion_data || {}).map(([stepCode, data]: [string, any]) => (
+                {Object.entries(analytics?.step_completion_data || {}).map(([stepCode, data]: [string, { completion_rate: number; average_time: number }]) => (
                   <div key={stepCode} className="flex items-center justify-between">
                     <div className="flex items-center space-x-2">
                       {React.createElement(getStepIcon(stepCode), { className: "h-4 w-4" })}

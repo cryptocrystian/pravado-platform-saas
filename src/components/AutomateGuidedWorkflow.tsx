@@ -44,6 +44,18 @@ import {
 import { useAuth } from '@/contexts/AuthContext';
 import { useUserProfile } from '@/hooks/useUserData';
 
+interface ActionItem {
+  title: string;
+  description?: string;
+  status?: string;
+}
+
+interface MethodologyData {
+  id: string;
+  name: string;
+  steps: AutomateStepProgress[];
+}
+
 interface AutomateGuidedWorkflowProps {
   tenantId: string;
   campaignId?: string;
@@ -60,7 +72,7 @@ const AutomateGuidedWorkflow: React.FC<AutomateGuidedWorkflowProps> = ({
   const { user } = useAuth();
   const { data: userProfile } = useUserProfile();
   
-  const [methodology, setMethodology] = useState<any>(null);
+  const [methodology, setMethodology] = useState<MethodologyData | null>(null);
   const [steps, setSteps] = useState<AutomateStepProgress[]>([]);
   const [currentStep, setCurrentStep] = useState<AutomateStepProgress | null>(null);
   const [guidedActions, setGuidedActions] = useState<AutomateGuidedAction[]>([]);
@@ -172,7 +184,7 @@ const AutomateGuidedWorkflow: React.FC<AutomateGuidedWorkflowProps> = ({
   };
 
   const getStepIcon = (stepCode: string) => {
-    const iconMap: Record<string, any> = {
+    const iconMap: Record<string, React.ComponentType<any>> = {
       'A': Target,
       'U': Users,
       'T': Brain,
@@ -418,7 +430,7 @@ const AutomateGuidedWorkflow: React.FC<AutomateGuidedWorkflowProps> = ({
                             <div>
                               <h5 className="font-medium mb-2">Key Action Items:</h5>
                               <ul className="space-y-1">
-                                {step.action_items.slice(0, 3).map((item: any, itemIndex: number) => (
+                                {step.action_items.slice(0, 3).map((item: ActionItem | string, itemIndex: number) => (
                                   <li key={itemIndex} className="text-sm text-gray-600 flex items-center">
                                     <div className="w-1.5 h-1.5 bg-gray-400 rounded-full mr-2"></div>
                                     {typeof item === 'string' ? item : item.title || 'Action item'}
